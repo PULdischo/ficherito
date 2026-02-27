@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Enter Password - {{ title }}{% endblock %}
+
+{% block body %}
+<div class="password-page">
+    <form class="password-form" id="password-form" data-password="{{ password }}" onsubmit="handlePassword(event)">
+        <h1>{{ emoji }} {{ title }}</h1>
+        <p>Enter password to access the document collection</p>
+        
+        <input type="password" id="password" placeholder="Password" autocomplete="current-password" required>
+        <button type="submit">Enter Collection</button>
+        
+        <p class="password-error" id="password-error">Incorrect password. Please try again.</p>
+    </form>
+</div>
+{% endblock %}

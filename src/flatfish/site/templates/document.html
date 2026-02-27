@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+
+{% block title %}{{ document.id }} - {{ title }}{% endblock %}
+
+{% block head %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/openseadragon/4.1.0/openseadragon.min.js"></script>
+<style>
+    .pagefind-meta { display: none !important; }
+</style>
+{% endblock %}
+
+{% block body %}
+<header>
+    <div class="container">
+        <a href="{{ base_url }}/main.html" class="logo">{{ emoji }} {{ title }}</a>
+        <nav>
+            <a href="{{ base_url }}/main.html">← Back to Collection</a>
+        </nav>
+    </div>
+</header>
+
+<main data-pagefind-body>
+    {# Pagefind metadata for filtering - hidden from view #}
+    <div class="pagefind-meta">
+        <span data-pagefind-filter="date">{{ document.date or 'Unknown' }}</span>
+        <span data-pagefind-meta="date">{{ document.date_display }}</span>
+        <span data-pagefind-meta="image:{{ base_url }}/images/{{ document.filename }}"></span>
+        {% for entity in document.entities %}
+        <span data-pagefind-filter="{{ entity.type|lower }}">{{ entity.text }}</span>
+        {% endfor %}
+    </div>
+    
+    <div class="container">
+        <h1 data-pagefind-meta="title">{{ document.id }}</h1>
+        <nav class="doc-navigation">
+            {% if document.prev_doc %}
+            <a href="{{ base_url }}/documents/{{ document.prev_doc }}/">← Previous</a>
+            {% else %}
+            <span></span>
+            {% endif %}
+            
+            {% if document.next_doc %}
+            <a href="{{ base_url }}/documents/{{ document.next_doc }}/">Next →</a>
+            {% else %}
+            <span></span>
+            {% endif %}
+        </nav>
+    </div>
+
+    <div class="document-viewer container">
+        <div class="image-viewer">
+            <div id="openseadragon" data-image="{{ base_url }}/images/{{ document.filename }}"></div>
+        </div>
+
+        <div class="document-content">
+            <section class="transcription-section">
+                <h2>Transcription</h2>
+                <div class="transcription">
+                    {{ document.transcription | safe }}
+                </div>
+            </section>
+
+            {% if document.entities %}
+            <section class="entities-list">
+                <h3>Entities Found</h3>
+                {% for entity in document.entities %}
+                <div class="entity">
+                    <span class="entity-icon">
+                        {% if entity.type == 'PERSON' %}👤
+                        {% elif entity.type == 'LOCATION' %}📍
+                        {% elif entity.type == 'ORGANIZATION' %}🏛️
+                        {% elif entity.type == 'DATE' %}📅
+                        {% elif entity.type == 'MONEY' %}💰
+                        {% elif entity.type == 'LEGAL_TERM' %}⚖️
+                        {% elif entity.type == 'EVENT' %}📌
+                        {% else %}🏷️{% endif %}
+                    </span>
+                    <div>
+                        <div class="entity-text">{{ entity.text }}</div>
+                        <div class="entity-context">{{ entity.context }}</div>
+                    </div>
+                </div>
+                {% endfor %}
+            </section>
+            {% endif %}
+        </div>
+    </div>
+</main>
+
+<footer>
+    <div class="container">
+    </div>
+</footer>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Highlight search terms from query parameter
+    (function() {
+        const params = new URLSearchParams(window.location.search);
+        const query = params.get('q');
+        if (!query) return;
+        
+        const transcription = document.querySelector('.transcription');
+        if (!transcription) return;
+        
+        // Split query into words, filter out short words
+        const words = query.split(/\s+/).filter(w => w.length > 2);
+        if (words.length === 0) return;
+        
+        // Create regex pattern for all words
+        const pattern = new RegExp('(' + words.map(w => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|') + ')', 'gi');
+        
+        // Walk through text nodes and highlight matches
+        function highlightTextNode(node) {
+            if (node.nodeType === Node.TEXT_NODE) {
+                const text = node.textContent;
+                if (pattern.test(text)) {
+                    const span = document.createElement('span');
+                    span.innerHTML = text.replace(pattern, '<mark class="search-highlight">$1</mark>');
+                    node.parentNode.replaceChild(span, node);
+                }
+            } else if (node.nodeType === Node.ELEMENT_NODE && node.tagName !== 'MARK') {
+                Array.from(node.childNodes).forEach(highlightTextNode);
+            }
+        }
+        
+        highlightTextNode(transcription);
+        
+        // Scroll to first highlight
+        const firstHighlight = document.querySelector('.search-highlight');
+        if (firstHighlight) {
+            firstHighlight.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    })();
+</script>
+<style>
+    .search-highlight {
+        background-color: #fef08a;
+        padding: 0.1em 0.2em;
+        border-radius: 2px;
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,99 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "flatfish"
+version = "0.1.0"
+description = "Historical document analysis CLI - Extract, analyze, and present handwritten text from document images"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+authors = [
+    { name = "Your Name", email = "you@example.com" }
+]
+keywords = [
+    "ocr",
+    "htr",
+    "handwriting",
+    "historical-documents",
+    "named-entity-recognition",
+    "document-analysis",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Image Recognition",
+    "Topic :: Text Processing",
+]
+dependencies = [
+    "typer[all]>=0.12",
+    "pyyaml>=6.0",
+    "pydantic>=2.0",
+    "pydantic-settings>=2.0",
+    "python-dotenv>=1.0",
+    "datasets>=2.0",
+    "Pillow>=10.0",
+    "openai>=1.0",
+    "jinja2>=3.0",
+    "rich>=13.0",
+    "httpx>=0.25",
+    "tqdm>=4.0",
+    "markdown>=3.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov>=4.0",
+    "black>=23.0",
+    "ruff>=0.1",
+    "mypy>=1.0",
+    "pre-commit>=3.0",
+]
+
+[project.scripts]
+flatfish = "flatfish.cli:app"
+
+[project.urls]
+Homepage = "https://github.com/username/flatfish"
+Documentation = "https://github.com/username/flatfish#readme"
+Repository = "https://github.com/username/flatfish"
+Issues = "https://github.com/username/flatfish/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/flatfish"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/src",
+    "/tests",
+]
+
+[tool.black]
+line-length = 100
+target-version = ["py310", "py311", "py312"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "C4", "SIM"]
+ignore = ["E501"]
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_ignores = true
+disallow_untyped_defs = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
