@@ -71,6 +71,7 @@ _site/
 transcriptions/
 entities/
 summaries/
+images/
 *.dzi
 tiles/
 
