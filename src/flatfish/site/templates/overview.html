@@ -1,0 +1,249 @@
+{% extends "base.html" %}
+
+{% block title %}Collection Overview - {{ title }}{% endblock %}
+
+{% block head %}
+<style>
+/* Configurable colors */
+:root {
+    --hero-bg: {{ background_color }};
+    --accent: {{ accent_color }};
+}
+
+.overview-header {
+    background: var(--hero-bg);
+    padding: 3rem 0;
+    color: white;
+    text-align: center;
+}
+
+.overview-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.overview-header .subtitle {
+    opacity: 0.9;
+    font-size: 1.1rem;
+}
+
+.overview-meta {
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+.overview-content {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+}
+
+.summary-section {
+    background: white;
+    border-radius: 8px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.summary-section h2 {
+    color: var(--accent);
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid var(--accent);
+    padding-bottom: 0.5rem;
+}
+
+.summary-text {
+    font-family: Georgia, serif;
+    line-height: 1.8;
+    color: #334155;
+}
+
+.summary-text h3 {
+    color: #1e293b;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.summary-text table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+}
+
+.summary-text th,
+.summary-text td {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.summary-text th {
+    background: #f8fafc;
+    font-weight: 600;
+}
+
+.summary-text ul, .summary-text ol {
+    margin: 1rem 0;
+    padding-left: 2rem;
+}
+
+.summary-text li {
+    margin-bottom: 0.5rem;
+}
+
+/* Timeline styling */
+.timeline {
+    margin-top: 1rem;
+}
+
+.timeline-item {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: 1rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.timeline-item:last-child {
+    border-bottom: none;
+}
+
+.timeline-date {
+    font-weight: 600;
+    color: var(--accent);
+    font-size: 0.95rem;
+}
+
+.timeline-description {
+    color: #475569;
+    line-height: 1.6;
+}
+
+/* Key changes styling */
+.change-item {
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+    background: #f8fafc;
+    border-radius: 6px;
+    border-left: 3px solid var(--accent);
+}
+
+.change-type {
+    display: block;
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.change-description {
+    color: #475569;
+    line-height: 1.6;
+}
+
+/* Research questions styling */
+.research-questions ul {
+    list-style: none;
+    padding: 0;
+}
+
+.research-questions li {
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+    background: #fefce8;
+    border-radius: 6px;
+    border-left: 3px solid #ca8a04;
+    color: #713f12;
+}
+
+@media (max-width: 768px) {
+    .timeline-item {
+        grid-template-columns: 1fr;
+    }
+    
+    .timeline-date {
+        margin-bottom: 0.25rem;
+    }
+}
+</style>
+{% endblock %}
+
+{% block body %}
+<header>
+    <div class="container">
+        <a href="{{ base_url }}/main.html" class="logo">{{ emoji }} {{ title }}</a>
+        <nav>
+            <a href="{{ base_url }}/overview.html" class="active">Overview</a>
+            {% if enable_browse_dates %}
+            <a href="{{ base_url }}/browse/dates.html">Browse by Date</a>
+            {% endif %}
+            {% if enable_browse_entities %}
+            <a href="{{ base_url }}/browse/entities.html">Browse by Entity</a>
+            {% endif %}
+        </nav>
+    </div>
+</header>
+
+<section class="overview-header">
+    <div class="container">
+        <h1>📖 Collection Overview</h1>
+        <p class="subtitle">AI-generated summary of {{ summary.document_count }} documents</p>
+        <p class="overview-meta">Generated {{ summary.generated_at }} using {{ summary.model }}</p>
+    </div>
+</section>
+
+<main class="overview-content">
+    {% if summary.full_text %}
+    <section class="summary-section">
+        <h2>📄 Full Summary</h2>
+        <div class="summary-text">
+            {{ summary.full_text | safe }}
+        </div>
+    </section>
+    {% endif %}
+    
+    {% if summary.timeline %}
+    <section class="summary-section">
+        <h2>📅 Timeline of Events</h2>
+        <div class="timeline">
+            {% for event in summary.timeline %}
+            <div class="timeline-item">
+                <span class="timeline-date">{{ event.date or 'Unknown' }}</span>
+                <span class="timeline-description">{{ event.description }}</span>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+
+    {% if summary.key_changes %}
+    <section class="summary-section">
+        <h2>🔄 Key Changes Across Documents</h2>
+        {% for change in summary.key_changes %}
+        <div class="change-item">
+            {% if change.type %}<span class="change-type">{{ change.type }}</span>{% endif %}
+            <span class="change-description">{{ change.description }}</span>
+        </div>
+        {% endfor %}
+    </section>
+    {% endif %}
+
+    {% if summary.research_questions %}
+    <section class="summary-section">
+        <h2>❓ Research Questions</h2>
+        <ul class="research-questions">
+        {% for question in summary.research_questions %}
+            <li>{{ question }}</li>
+        {% endfor %}
+        </ul>
+    </section>
+    {% endif %}
+</main>
+
+<footer>
+    <div class="container">
+    </div>
+</footer>
+{% endblock %}

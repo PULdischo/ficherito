@@ -98,6 +98,7 @@ class SiteBuilder:
         # Build pages
         self._build_index_page(output_dir)
         self._build_main_page(output_dir, documents, summary, consolidated_entities)
+        self._build_overview_page(output_dir, summary)
         self._build_document_pages(output_dir, documents)
         self._build_browse_pages(output_dir, documents, consolidated_entities)
 
@@ -248,6 +249,27 @@ class SiteBuilder:
         )
 
         with open(output_dir / "main.html", "w", encoding="utf-8") as f:
+            f.write(html)
+
+    def _build_overview_page(self, output_dir: Path, summary: Optional[dict]) -> None:
+        """Build collection overview page."""
+        if not summary:
+            return
+
+        template = self.env.get_template("overview.html")
+
+        html = template.render(
+            title=self.config.website.title,
+            emoji=self.config.website.emoji,
+            background_color=self.config.website.background_color,
+            accent_color=self.config.website.accent_color,
+            summary=summary,
+            enable_browse_dates=self.config.website.enable_browse_dates,
+            enable_browse_entities=self.config.website.enable_browse_entities,
+            base_url=self.base_url,
+        )
+
+        with open(output_dir / "overview.html", "w", encoding="utf-8") as f:
             f.write(html)
 
     def _build_document_pages(self, output_dir: Path, documents: list[dict]) -> None:

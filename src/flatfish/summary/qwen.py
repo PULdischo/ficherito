@@ -132,6 +132,15 @@ class QwenSummarizer:
         # Sort documents by date
         sorted_docs = sort_by_date(documents, date_key="date")
 
+        # Sample documents if there are too many
+        sample_size = self.config.summary.sample_size
+        if sample_size > 0 and len(sorted_docs) > sample_size:
+            logger.info(f"Sampling {sample_size} documents from {len(sorted_docs)} total")
+            # Take evenly spaced samples to cover the full date range
+            step = len(sorted_docs) / sample_size
+            indices = [int(i * step) for i in range(sample_size)]
+            sorted_docs = [sorted_docs[i] for i in indices]
+
         # Process in batches if needed
         if len(sorted_docs) > self.MAX_IMAGES_PER_CALL:
             # For large batches, use async
@@ -260,14 +269,15 @@ class QwenSummarizer:
             Combined DocumentSummary.
         """
         batch_summaries = []
+        total_batches = (len(documents) + self.MAX_IMAGES_PER_CALL - 1) // self.MAX_IMAGES_PER_CALL
 
         # Process in batches
         for i in range(0, len(documents), self.MAX_IMAGES_PER_CALL):
             batch = documents[i:i + self.MAX_IMAGES_PER_CALL]
             batch_num = i // self.MAX_IMAGES_PER_CALL + 1
-            total_batches = (len(documents) + self.MAX_IMAGES_PER_CALL - 1) // self.MAX_IMAGES_PER_CALL
 
             logger.info(f"Processing batch {batch_num}/{total_batches}")
+            print(f"  Processing batch {batch_num}/{total_batches}...", flush=True)
 
             # Build content for this batch
             content = self._build_multimodal_content(batch)
@@ -386,30 +396,51 @@ Please synthesize these into a single coherent summary with:
 
         # Look for Timeline section
         timeline_match = re.search(
-            r"##?\s*Timeline.*?\n(.*?)(?=##|\Z)",
+            r"##?\s*\*?\*?Timeline.*?\n(.*?)(?=##|\Z)",
             content,
             re.IGNORECASE | re.DOTALL,
         )
 
         if timeline_match:
             section = timeline_match.group(1)
-            # Parse bullet points
-            for line in section.split("\n"):
-                line = line.strip()
-                if line.startswith(("-", "*", "•")):
-                    text = line.lstrip("-*• ").strip()
-                    # Try to extract date
-                    date_match = re.match(r"(\d{4}[-/]\d{2}[-/]\d{2}|\d{4}[-/]\d{2}|\d{4})[:\s]*(.*)", text)
-                    if date_match:
-                        events.append({
-                            "date": date_match.group(1),
-                            "description": date_match.group(2).strip(),
-                        })
-                    else:
-                        events.append({
-                            "date": None,
-                            "description": text,
-                        })
+            
+            # Check if it's a markdown table format
+            if "|" in section:
+                # Parse table rows
+                for line in section.split("\n"):
+                    line = line.strip()
+                    # Skip header separator line (|---|---|)
+                    if line.startswith("|") and "---" not in line:
+                        # Split by | and clean up
+                        parts = [p.strip() for p in line.split("|")]
+                        # Filter out empty parts (from leading/trailing |)
+                        parts = [p for p in parts if p]
+                        if len(parts) >= 2:
+                            date_part = parts[0].strip("*").strip()
+                            desc_part = parts[1].strip()
+                            if date_part and desc_part:
+                                events.append({
+                                    "date": date_part,
+                                    "description": desc_part,
+                                })
+            else:
+                # Parse bullet points
+                for line in section.split("\n"):
+                    line = line.strip()
+                    if line.startswith(("-", "*", "•")):
+                        text = line.lstrip("-*• ").strip()
+                        # Try to extract date
+                        date_match = re.match(r"(\d{4}[-/]\d{2}[-/]\d{2}|\d{4}[-/]\d{2}|\d{4})[:\s]*(.*)", text)
+                        if date_match:
+                            events.append({
+                                "date": date_match.group(1),
+                                "description": date_match.group(2).strip(),
+                            })
+                        else:
+                            events.append({
+                                "date": None,
+                                "description": text,
+                            })
 
         return events
 
@@ -418,19 +449,32 @@ Please synthesize these into a single coherent summary with:
         changes = []
 
         changes_match = re.search(
-            r"##?\s*Key Changes.*?\n(.*?)(?=##|\Z)",
+            r"##?\s*\*?\*?Key Changes.*?\n(.*?)(?=###\s*\*?\*?Research|\Z)",
             content,
             re.IGNORECASE | re.DOTALL,
         )
 
         if changes_match:
             section = changes_match.group(1)
+            current_type = None
+            
             for line in section.split("\n"):
                 line = line.strip()
-                if line.startswith(("-", "*", "•")):
+                
+                # Check for subheading (#### **1. Shift in Role**)
+                heading_match = re.match(r"#{1,4}\s*\*?\*?\d*\.?\s*(.+?)\*?\*?\s*$", line)
+                if heading_match:
+                    current_type = heading_match.group(1).strip("* ")
+                    continue
+                
+                # Parse bullet points
+                if line.startswith(("-", "*", "•")) and not line.startswith("**"):
                     text = line.lstrip("-*• ").strip()
                     if text:
-                        changes.append({"description": text})
+                        changes.append({
+                            "type": current_type,
+                            "description": text
+                        })
 
         return changes
 

@@ -104,6 +104,7 @@ class SummaryConfig(BaseModel):
 
     enabled: bool = Field(default=True, description="Enable summary generation")
     model: str = Field(default="qwen-vl-plus", description="Qwen model to use")
+    sample_size: int = Field(default=100, description="Max documents to sample for summary (0 = all)")
     include_timeline: bool = Field(default=True, description="Include timeline in summary")
     include_key_changes: bool = Field(default=True, description="Include key changes analysis")
     include_research_questions: bool = Field(

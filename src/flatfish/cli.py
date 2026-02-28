@@ -486,5 +486,91 @@ def status(
         raise typer.Exit(1)
 
 
+@app.command()
+def deploy(
+    config: Annotated[
+        Path,
+        typer.Option("--config", "-c", help="Path to config file."),
+    ] = Path("flatfish.yaml"),
+    prod: Annotated[
+        bool,
+        typer.Option("--prod", help="Deploy to production (default is draft)."),
+    ] = False,
+    site: Annotated[
+        Optional[str],
+        typer.Option("--site", "-s", help="Netlify site name or ID."),
+    ] = None,
+    build_first: Annotated[
+        bool,
+        typer.Option("--build/--no-build", help="Build site before deploying."),
+    ] = True,
+) -> None:
+    """Deploy site to Netlify using Netlify CLI.
+    
+    Requires Netlify CLI to be installed: npm install -g netlify-cli
+    And authenticated: netlify login
+    """
+    import subprocess
+    import shutil
+
+    try:
+        cfg = load_config(config)
+        site_dir = Path(cfg.output.site_dir)
+
+        # Check if Netlify CLI is installed
+        if not shutil.which("netlify"):
+            rprint(
+                "[red]Error:[/red] Netlify CLI not found.\n"
+                "Install it with: [cyan]npm install -g netlify-cli[/cyan]\n"
+                "Then authenticate: [cyan]netlify login[/cyan]"
+            )
+            raise typer.Exit(1)
+
+        # Build site first if requested
+        if build_first:
+            from flatfish.site.builder import build_site
+            rprint("[dim]Building site...[/dim]")
+            build_site(config=cfg, base_url="/")
+            rprint(f"[green]✓[/green] Site built to {site_dir}/")
+
+        # Check if site directory exists
+        if not site_dir.exists():
+            rprint(
+                f"[red]Error:[/red] Site directory not found: {site_dir}\n"
+                "Run 'flatfish build' first or use --build flag."
+            )
+            raise typer.Exit(1)
+
+        # Build netlify deploy command
+        cmd = ["netlify", "deploy", "--dir", str(site_dir)]
+        
+        if prod:
+            cmd.append("--prod")
+            deploy_type = "production"
+        else:
+            deploy_type = "draft"
+        
+        if site:
+            cmd.extend(["--site", site])
+
+        rprint(f"[dim]Deploying to Netlify ({deploy_type})...[/dim]")
+        
+        # Run netlify deploy
+        result = subprocess.run(cmd, capture_output=False)
+        
+        if result.returncode == 0:
+            rprint(f"[green]✓[/green] Site deployed to Netlify ({deploy_type})")
+        else:
+            rprint("[red]Error:[/red] Netlify deploy failed")
+            raise typer.Exit(1)
+
+    except subprocess.CalledProcessError as e:
+        rprint(f"[red]Error:[/red] Netlify CLI failed: {e}")
+        raise typer.Exit(1)
+    except Exception as e:
+        rprint(f"[red]Error:[/red] {e}")
+        raise typer.Exit(1)
+
+
 if __name__ == "__main__":
     app()

@@ -77,8 +77,31 @@ DASHSCOPE_API_KEY=sk-xxxxxxxxxxxxx
 | `flatfish entities` | Extract entities only |
 | `flatfish summarize` | Generate AI summary only |
 | `flatfish build` | Build static site only |
-| `flatfish publish` | Preview site locally |
+| `flatfish serve` | Preview site locally |
+| `flatfish deploy` | Deploy to Netlify |
+| `flatfish status` | Show processing status |
 | `flatfish validate` | Validate configuration |
+
+## Deployment
+
+Deploy your site to Netlify:
+
+```bash
+# Install Netlify CLI
+npm install -g netlify-cli
+
+# Login to Netlify
+netlify login
+
+# Deploy a draft preview
+flatfish deploy
+
+# Deploy to production
+flatfish deploy --prod
+
+# Specify a site
+flatfish deploy --prod --site your-site-name
+```
 
 ## Output
 
