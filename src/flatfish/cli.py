@@ -316,6 +316,10 @@ def summarize(
         Path,
         typer.Option("--config", "-c", help="Path to config file."),
     ] = Path("flatfish.yaml"),
+    force: Annotated[
+        bool,
+        typer.Option("--force", "-f", help="Force regeneration even if summary exists."),
+    ] = False,
 ) -> None:
     """Generate AI summary from documents."""
     from flatfish.pipeline import run_summary
@@ -324,7 +328,57 @@ def summarize(
         cfg = load_config(config)
         env = load_env()
 
-        run_summary(config=cfg, env=env)
+        run_summary(config=cfg, env=env, force=force)
+
+    except Exception as e:
+        rprint(f"[red]Error:[/red] {e}")
+        raise typer.Exit(1)
+
+
+@app.command()
+def combine(
+    config: Annotated[
+        Path,
+        typer.Option("--config", "-c", help="Path to config file."),
+    ] = Path("flatfish.yaml"),
+) -> None:
+    """Combine batch summaries into final summary.
+    
+    Use this after 'summarize' to merge batch files into the final summary.
+    Useful when summarization is interrupted or combining failed previously.
+    """
+    from flatfish.summary.qwen import QwenSummarizer
+
+    try:
+        cfg = load_config(config)
+        env = load_env()
+
+        # Check for batch files
+        summaries_dir = Path(cfg.output.summaries_dir)
+        batches_dir = summaries_dir / "batches"
+        
+        if not batches_dir.exists():
+            rprint(f"[yellow]No batch files found at {batches_dir}[/yellow]")
+            raise typer.Exit(1)
+        
+        batch_files = sorted(batches_dir.glob("batch_*.md"))
+        if not batch_files:
+            rprint(f"[yellow]No batch files found in {batches_dir}[/yellow]")
+            raise typer.Exit(1)
+        
+        rprint(f"[blue]Found {len(batch_files)} batch files to combine[/blue]")
+        
+        summarizer = QwenSummarizer(
+            api_key=env.dashscope_api_key,
+            model=cfg.summary.model,
+        )
+        
+        # Run combine
+        summary = summarizer.combine_batches(summaries_dir)
+        
+        # Save the combined summary
+        summarizer.save_summary(summary, summaries_dir)
+        rprint(f"[green]✓ Combined summary saved to {summaries_dir}[/green]")
 
     except Exception as e:
         rprint(f"[red]Error:[/red] {e}")

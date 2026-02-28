@@ -117,12 +117,14 @@ class QwenSummarizer:
         self,
         documents: list[dict],
         model: Optional[str] = None,
+        output_dir: Optional[Path] = None,
     ) -> DocumentSummary:
         """Generate a summary from a sequence of documents with images (sync).
 
         Args:
             documents: List of document dicts with 'id', 'date', 'image', and optionally 'text' keys.
             model: Model to use (defaults to config value).
+            output_dir: Optional directory to save batch summaries for resume.
 
         Returns:
             DocumentSummary object.
@@ -144,7 +146,7 @@ class QwenSummarizer:
         # Process in batches if needed
         if len(sorted_docs) > self.MAX_IMAGES_PER_CALL:
             # For large batches, use async
-            return asyncio.run(self._generate_batched_summary_async(sorted_docs, model))
+            return asyncio.run(self._generate_batched_summary_async(sorted_docs, model, output_dir))
 
         # Build multimodal message with images and timestamps
         content = self._build_multimodal_content(sorted_docs)
@@ -258,23 +260,40 @@ class QwenSummarizer:
         self,
         documents: list[dict],
         model: str,
+        output_dir: Optional[Path] = None,
     ) -> DocumentSummary:
         """Generate summary for large document sets by batching.
 
         Args:
             documents: List of all documents.
             model: Model to use.
+            output_dir: Optional directory to save batch summaries.
 
         Returns:
             Combined DocumentSummary.
         """
         batch_summaries = []
         total_batches = (len(documents) + self.MAX_IMAGES_PER_CALL - 1) // self.MAX_IMAGES_PER_CALL
+        
+        # Create batches directory if output_dir provided
+        batches_dir = None
+        if output_dir:
+            batches_dir = output_dir / "batches"
+            batches_dir.mkdir(parents=True, exist_ok=True)
 
         # Process in batches
         for i in range(0, len(documents), self.MAX_IMAGES_PER_CALL):
             batch = documents[i:i + self.MAX_IMAGES_PER_CALL]
             batch_num = i // self.MAX_IMAGES_PER_CALL + 1
+            
+            # Check if batch already exists
+            if batches_dir:
+                batch_file = batches_dir / f"batch_{batch_num:03d}.md"
+                if batch_file.exists():
+                    logger.info(f"Loading existing batch {batch_num}/{total_batches}")
+                    print(f"  Loading existing batch {batch_num}/{total_batches}...", flush=True)
+                    batch_summaries.append(batch_file.read_text(encoding="utf-8"))
+                    continue
 
             logger.info(f"Processing batch {batch_num}/{total_batches}")
             print(f"  Processing batch {batch_num}/{total_batches}...", flush=True)
@@ -298,6 +317,12 @@ class QwenSummarizer:
 
                 text = completion.choices[0].message.content or ""
                 batch_summaries.append(text)
+                
+                # Save batch summary
+                if batches_dir:
+                    batch_file = batches_dir / f"batch_{batch_num:03d}.md"
+                    batch_file.write_text(text, encoding="utf-8")
+                    logger.info(f"Saved batch {batch_num} to {batch_file}")
 
             except asyncio.TimeoutError:
                 logger.error(f"Batch {batch_num} timed out")
@@ -326,10 +351,50 @@ class QwenSummarizer:
         Returns:
             Combined DocumentSummary.
         """
+        # If too many batch summaries, recursively combine them in groups
+        MAX_BATCHES_TO_COMBINE = 5
+        
+        if len(batch_summaries) > MAX_BATCHES_TO_COMBINE:
+            logger.info(f"Too many batches ({len(batch_summaries)}), combining in stages...")
+            print(f"  Combining {len(batch_summaries)} batch summaries in stages...", flush=True)
+            
+            # Combine in groups of MAX_BATCHES_TO_COMBINE
+            intermediate_summaries = []
+            for i in range(0, len(batch_summaries), MAX_BATCHES_TO_COMBINE):
+                group = batch_summaries[i:i + MAX_BATCHES_TO_COMBINE]
+                group_num = i // MAX_BATCHES_TO_COMBINE + 1
+                total_groups = (len(batch_summaries) + MAX_BATCHES_TO_COMBINE - 1) // MAX_BATCHES_TO_COMBINE
+                print(f"  Combining group {group_num}/{total_groups}...", flush=True)
+                
+                intermediate = await self._combine_small_batch_async(group, model)
+                intermediate_summaries.append(intermediate)
+            
+            # Recursively combine the intermediate summaries
+            return await self._combine_batch_summaries_async(intermediate_summaries, model, doc_count)
+        
+        # Combine the batch summaries
+        return await self._combine_small_batch_async(batch_summaries, model, doc_count)
+
+    async def _combine_small_batch_async(
+        self,
+        batch_summaries: list[str],
+        model: str,
+        doc_count: int = 0,
+    ) -> str | DocumentSummary:
+        """Combine a small number of batch summaries.
+        
+        Returns string if doc_count is 0 (intermediate), DocumentSummary if final.
+        """
         combined_text = "\n\n---\n\n".join(
             f"## Batch {i+1} Summary\n\n{text}"
             for i, text in enumerate(batch_summaries)
         )
+        
+        # Truncate if still too long (rough estimate: 4 chars per token, limit ~100k tokens)
+        MAX_CHARS = 400000
+        if len(combined_text) > MAX_CHARS:
+            logger.warning(f"Combined text too long ({len(combined_text)} chars), truncating...")
+            combined_text = combined_text[:MAX_CHARS] + "\n\n[... truncated due to length ...]"
 
         combine_prompt = f"""The following are summaries of document batches from a larger collection.
 Please synthesize these into a single coherent summary with:
@@ -351,12 +416,18 @@ Please synthesize these into a single coherent summary with:
             )
 
             result_text = completion.choices[0].message.content or ""
+            
+            # Return string for intermediate, DocumentSummary for final
+            if doc_count == 0:
+                return result_text
             return self._parse_summary(result_text, model, doc_count)
 
         except Exception as e:
             logger.error(f"Combining summaries failed: {e}")
 
         # Fallback: return parsed version of combined batch summaries
+        if doc_count == 0:
+            return combined_text
         return self._parse_summary(combined_text, model, doc_count)
 
     def _parse_summary(
@@ -608,6 +679,42 @@ Please synthesize these into a single coherent summary with:
         except Exception as e:
             logger.error(f"Text-only summary generation failed: {e}")
             return self._empty_summary(model, len(documents))
+
+    def combine_batches(
+        self,
+        output_dir: Path,
+        model: Optional[str] = None,
+    ) -> DocumentSummary:
+        """Combine existing batch summaries into a final summary.
+
+        Args:
+            output_dir: Directory containing batches/ subdirectory.
+            model: Model to use for combining.
+
+        Returns:
+            Combined DocumentSummary.
+        """
+        model = model or self.config.summary.model
+        batches_dir = output_dir / "batches"
+        
+        if not batches_dir.exists():
+            raise ValueError(f"No batches directory found at {batches_dir}")
+        
+        # Load all batch files
+        batch_files = sorted(batches_dir.glob("batch_*.md"))
+        if not batch_files:
+            raise ValueError(f"No batch files found in {batches_dir}")
+        
+        print(f"Loading {len(batch_files)} batch summaries...", flush=True)
+        batch_summaries = []
+        for bf in batch_files:
+            batch_summaries.append(bf.read_text(encoding="utf-8"))
+        
+        # Count documents (estimate from batch count)
+        doc_count = len(batch_files) * self.MAX_IMAGES_PER_CALL
+        
+        print(f"Combining batch summaries...", flush=True)
+        return asyncio.run(self._combine_batch_summaries_async(batch_summaries, model, doc_count))
 
     def save_summary(
         self,

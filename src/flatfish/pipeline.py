@@ -310,6 +310,7 @@ def run_summary(
     config: FlatfishConfig,
     env: EnvSettings,
     progress: Optional[Progress] = None,
+    force: bool = False,
 ) -> None:
     """Generate summary from all documents.
 
@@ -317,10 +318,18 @@ def run_summary(
         config: Flatfish configuration.
         env: Environment settings.
         progress: Optional progress bar.
+        force: Force regeneration even if summary exists.
     """
     transcriptions_dir = Path(config.output.transcriptions_dir)
     summaries_dir = Path(config.output.summaries_dir)
     summaries_dir.mkdir(parents=True, exist_ok=True)
+
+    # Check if summary already exists
+    summary_path = summaries_dir / "full_summary.md"
+    if summary_path.exists() and not force:
+        console.print(f"[yellow]Summary already exists at {summary_path}[/yellow]")
+        console.print("Use --force to regenerate.")
+        return
 
     # Load all transcriptions
     documents = []
@@ -347,9 +356,9 @@ def run_summary(
     else:
         console.print(f"Generating summary from {len(documents)} documents...")
 
-    # Generate summary
+    # Generate summary (pass output_dir for batch resume support)
     summarizer = QwenSummarizer(config, env)
-    summary = summarizer.generate_summary(documents)
+    summary = summarizer.generate_summary(documents, output_dir=summaries_dir)
 
     # Save
     summarizer.save_summary(summary, summaries_dir)
