@@ -1,7 +1,7 @@
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="logo_dark.png">
+  <source media="(prefers-color-scheme: dark)" srcset="logo-dark.png">
   <source media="(prefers-color-scheme: light)" srcset="logo-light.png">
-  <img width="100" src="logo.png" alt="Flatfish Logo">
+  <img width="100" src="logo-light.png" alt="Flatfish Logo">
 </picture>
 
 # Flatfish
