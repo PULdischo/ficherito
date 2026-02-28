@@ -59,3 +59,4 @@ website:
   enable_browse_dates: true
   enable_browse_entities: true
   default_sort: date
+  netlify_site_id: "7c0c0383-1582-45fb-98e2-1a07571d8dbc"  # Your Netlify site ID

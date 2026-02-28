@@ -498,31 +498,56 @@ def deploy(
     ] = False,
     site: Annotated[
         Optional[str],
-        typer.Option("--site", "-s", help="Netlify site name or ID."),
+        typer.Option("--site", "-s", help="Netlify site ID (required)."),
     ] = None,
     build_first: Annotated[
         bool,
         typer.Option("--build/--no-build", help="Build site before deploying."),
     ] = True,
 ) -> None:
-    """Deploy site to Netlify using Netlify CLI.
+    """Deploy site to Netlify using netlify-python.
     
-    Requires Netlify CLI to be installed: npm install -g netlify-cli
-    And authenticated: netlify login
+    Requires NETLIFY_TOKEN in .env file or environment.
+    Get a token from: https://app.netlify.com/user/applications#personal-access-tokens
     """
-    import subprocess
-    import shutil
+    import zipfile
+    import tempfile
+    import os
+    from dotenv import load_dotenv
+
+    # Load .env file
+    load_dotenv()
+
+    try:
+        from netlify import NetlifyClient
+    except ImportError:
+        rprint(
+            "[red]Error:[/red] netlify-python not installed.\n"
+            "Install it with: [cyan]pip install netlify-python[/cyan]"
+        )
+        raise typer.Exit(1)
 
     try:
         cfg = load_config(config)
         site_dir = Path(cfg.output.site_dir)
 
-        # Check if Netlify CLI is installed
-        if not shutil.which("netlify"):
+        # Check for Netlify token
+        token = os.environ.get("NETLIFY_TOKEN")
+        if not token:
             rprint(
-                "[red]Error:[/red] Netlify CLI not found.\n"
-                "Install it with: [cyan]npm install -g netlify-cli[/cyan]\n"
-                "Then authenticate: [cyan]netlify login[/cyan]"
+                "[red]Error:[/red] NETLIFY_TOKEN not found.\n"
+                "Add it to your .env file: [cyan]NETLIFY_TOKEN=your-token[/cyan]\n"
+                "Get a token from: [cyan]https://app.netlify.com/user/applications#personal-access-tokens[/cyan]"
+            )
+            raise typer.Exit(1)
+
+        # Check for site ID (CLI flag > config > env var)
+        site_id = site or cfg.website.netlify_site_id or os.environ.get("NETLIFY_SITE_ID")
+        if not site_id:
+            rprint(
+                "[red]Error:[/red] No site ID provided.\n"
+                "Set netlify_site_id in flatfish.yaml, use --site flag, or set NETLIFY_SITE_ID env var.\n"
+                "Find your site ID in the Netlify dashboard under Site Settings > General."
             )
             raise typer.Exit(1)
 
@@ -541,33 +566,38 @@ def deploy(
             )
             raise typer.Exit(1)
 
-        # Build netlify deploy command
-        cmd = ["netlify", "deploy", "--dir", str(site_dir)]
+        # Create zip file of site
+        rprint("[dim]Creating deployment package...[/dim]")
+        with tempfile.NamedTemporaryFile(suffix=".zip", delete=False) as tmp:
+            zip_path = tmp.name
         
-        if prod:
-            cmd.append("--prod")
-            deploy_type = "production"
-        else:
-            deploy_type = "draft"
-        
-        if site:
-            cmd.extend(["--site", site])
+        with zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
+            for file_path in site_dir.rglob('*'):
+                if file_path.is_file():
+                    arcname = file_path.relative_to(site_dir)
+                    zipf.write(file_path, arcname)
 
+        deploy_type = "production" if prod else "draft"
         rprint(f"[dim]Deploying to Netlify ({deploy_type})...[/dim]")
-        
-        # Run netlify deploy
-        result = subprocess.run(cmd, capture_output=False)
-        
-        if result.returncode == 0:
-            rprint(f"[green]✓[/green] Site deployed to Netlify ({deploy_type})")
-        else:
-            rprint("[red]Error:[/red] Netlify deploy failed")
-            raise typer.Exit(1)
 
-    except subprocess.CalledProcessError as e:
-        rprint(f"[red]Error:[/red] Netlify CLI failed: {e}")
-        raise typer.Exit(1)
+        # Deploy using netlify-python
+        client = NetlifyClient(access_token=token)
+        
+        # Note: netlify-python's create_site_deploy handles both draft and prod
+        deploy = client.create_site_deploy(site_id, zip_path)
+        
+        # Clean up zip file
+        os.unlink(zip_path)
+
+        # Get deploy URL
+        deploy_url = getattr(deploy, 'deploy_ssl_url', None) or getattr(deploy, 'deploy_url', None) or getattr(deploy, 'ssl_url', 'Netlify')
+        
+        rprint(f"[green]✓[/green] Site deployed to Netlify ({deploy_type})")
+        rprint(f"[cyan]URL:[/cyan] {deploy_url}")
+
     except Exception as e:
+        rprint(f"[red]Error:[/red] {e}")
+        raise typer.Exit(1)
         rprint(f"[red]Error:[/red] {e}")
         raise typer.Exit(1)
 

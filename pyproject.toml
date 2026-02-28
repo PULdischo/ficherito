@@ -46,6 +46,7 @@ dependencies = [
     "httpx>=0.25",
     "tqdm>=4.0",
     "markdown>=3.0",
+    "netlify-python>=0.4.0",
 ]
 
 [project.optional-dependencies]

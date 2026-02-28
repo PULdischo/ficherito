@@ -87,11 +87,12 @@ DASHSCOPE_API_KEY=sk-xxxxxxxxxxxxx
 Deploy your site to Netlify:
 
 ```bash
-# Install Netlify CLI
-npm install -g netlify-cli
+# Install netlify-python
+pip install netlify-python
 
-# Login to Netlify
-netlify login
+# Set your Netlify token (get from https://app.netlify.com/user/applications)
+export NETLIFY_TOKEN=your-token
+export NETLIFY_SITE_ID=your-site-id
 
 # Deploy a draft preview
 flatfish deploy
@@ -99,8 +100,8 @@ flatfish deploy
 # Deploy to production
 flatfish deploy --prod
 
-# Specify a site
-flatfish deploy --prod --site your-site-name
+# Specify a site ID directly
+flatfish deploy --prod --site your-site-id
 ```
 
 ## Output

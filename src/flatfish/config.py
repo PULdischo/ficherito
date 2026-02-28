@@ -133,6 +133,7 @@ class WebsiteConfig(BaseModel):
     enable_browse_dates: bool = Field(default=True, description="Enable browse by dates")
     enable_browse_entities: bool = Field(default=True, description="Enable browse by entities")
     default_sort: str = Field(default="date", description="Default sort order (date, name)")
+    netlify_site_id: Optional[str] = Field(default=None, description="Netlify site ID for deployment")
 
 
 class FlatfishConfig(BaseModel):
