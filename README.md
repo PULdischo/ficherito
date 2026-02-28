@@ -1,5 +1,10 @@
-# Flatfish <img width="100" src="logo.png" alt="Flatfish Logo">
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="logo_dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="logo-light.png">
+  <img width="100" src="logo.png" alt="Flatfish Logo">
+</picture>
 
+# Flatfish
 
 Historical document analysis CLI - Extract, analyze, and present handwritten text from document images.
 
