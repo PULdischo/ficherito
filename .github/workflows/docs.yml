@@ -32,12 +32,12 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install jupyter-book>=2.0.0 myst-nb sphinx-design
+          pip install "jupyter-book>=2.0.0" myst-nb sphinx-design
 
       - name: Build documentation
         working-directory: docs
         run: |
-          jupyter-book build .
+          jupyter-book build . --html
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
@@ -45,7 +45,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: docs/_build
+          path: docs/_build/html
 
   deploy:
     environment:
