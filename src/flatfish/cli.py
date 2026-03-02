@@ -353,7 +353,7 @@ def combine(
         cfg = load_config(config)
         env = load_env()
 
-        # Check for batch files
+        # Check for batch files - support both old and new directory structures
         summaries_dir = Path(cfg.output.summaries_dir)
         batches_dir = summaries_dir / "batches"
         
@@ -361,16 +361,37 @@ def combine(
             rprint(f"[yellow]No batch files found at {batches_dir}[/yellow]")
             raise typer.Exit(1)
         
-        batch_files = sorted(batches_dir.glob("batch_*.md"))
-        if not batch_files:
-            rprint(f"[yellow]No batch files found in {batches_dir}[/yellow]")
-            raise typer.Exit(1)
+        # Check for new track-based structure first
+        track_dirs = ["timeline", "key_changes", "research_questions", "narrative"]
+        has_track_dirs = any((batches_dir / track).exists() for track in track_dirs)
         
-        rprint(f"[blue]Found {len(batch_files)} batch files to combine[/blue]")
+        if has_track_dirs:
+            # New track-based structure
+            total_batches = 0
+            for track in track_dirs:
+                track_dir = batches_dir / track
+                if track_dir.exists():
+                    count = len(list(track_dir.glob("batch_*.md")))
+                    total_batches = max(total_batches, count)
+                    rprint(f"[blue]  {track}: {count} batch files[/blue]")
+            
+            if total_batches == 0:
+                rprint(f"[yellow]No batch files found in track directories[/yellow]")
+                raise typer.Exit(1)
+            
+            rprint(f"[blue]Found {total_batches} batches across 4 tracks to combine[/blue]")
+        else:
+            # Old-style flat structure
+            batch_files = sorted(batches_dir.glob("batch_*.md"))
+            if not batch_files:
+                rprint(f"[yellow]No batch files found in {batches_dir}[/yellow]")
+                raise typer.Exit(1)
+            
+            rprint(f"[blue]Found {len(batch_files)} batch files to combine[/blue]")
         
         summarizer = QwenSummarizer(
-            api_key=env.dashscope_api_key,
-            model=cfg.summary.model,
+            config=cfg,
+            env=env,
         )
         
         # Run combine

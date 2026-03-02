@@ -1,0 +1,5 @@
+# Jupyter Book Documentation Requirements
+jupyter-book>=1.0.0
+sphinx-design
+sphinx-copybutton
+myst-parser

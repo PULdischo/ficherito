@@ -7,8 +7,19 @@
     <div class="container">
         <a href="{{ base_url }}/main.html" class="logo">{{ emoji }} {{ title }}</a>
         <nav>
-            <a href="{{ base_url }}/main.html">← Back to Collection</a>
+            {% if summary %}
+            <div class="dropdown">
+                <button class="dropdown-toggle">Overview</button>
+                <div class="dropdown-menu">
+                    <a href="{{ base_url }}/overview/summary.html">📄 Finding Aid</a>
+                    <a href="{{ base_url }}/overview/timeline.html">📅 Timeline</a>
+                    <a href="{{ base_url }}/overview/changes.html">🔄 Key Changes</a>
+                    <a href="{{ base_url }}/overview/questions.html">❓ Research Questions</a>
+                </div>
+            </div>
+            {% endif %}
             <a href="{{ base_url }}/browse/dates.html">Browse by Date</a>
+            <a href="{{ base_url }}/browse/entities.html" class="active">Browse by Entity</a>
         </nav>
     </div>
 </header>

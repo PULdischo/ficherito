@@ -78,20 +78,28 @@ Analyze these documents and provide:
 ## Timeline of Events
 A chronological list of key events mentioned or implied across the documents.
 Include dates (exact or approximate) and brief descriptions.
+Use markdown table format: | Date | Event |
 
 ## Key Changes
 Identify significant changes between documents:
-- Shifts in tone, position, or claims
-- New information introduced
-- Contradictions or amendments to previous statements
-- Changes in parties involved
+- Geographic/Location changes (moves, travels, relocations)
+- Occupational/Professional changes (jobs, roles, responsibilities)
+- Social/Relationship changes (marriages, deaths, new connections)
+- Economic changes (financial status, property, business ventures)
+- Health/Personal changes
+- Political/Historical context changes
 
 ## Research Questions
-Suggest 3-5 historical research questions that emerge from these documents:
-- Gaps in the record that warrant investigation
-- Connections to broader historical contexts
-- Potential related sources to consult
-- Unanswered questions about motivations or outcomes
+Generate 3-5 substantive research questions that a doctoral student or professional historian 
+might pursue based on these documents. Consider:
+
+- What historiographical debates might these documents contribute to?
+- What silences or absences in the record warrant investigation?
+- How do these documents complicate or confirm existing historical narratives?
+- What comparative or transnational connections might be explored?
+- What methodological questions arise about source production and preservation?
+
+Avoid basic factual questions. Focus on interpretive significance.
 
 Documents:
 {documents}""",

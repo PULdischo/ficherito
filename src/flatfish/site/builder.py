@@ -99,8 +99,8 @@ class SiteBuilder:
         self._build_index_page(output_dir)
         self._build_main_page(output_dir, documents, summary, consolidated_entities)
         self._build_overview_page(output_dir, summary)
-        self._build_document_pages(output_dir, documents)
-        self._build_browse_pages(output_dir, documents, consolidated_entities)
+        self._build_document_pages(output_dir, documents, summary)
+        self._build_browse_pages(output_dir, documents, consolidated_entities, summary)
 
         # Copy assets
         self._copy_assets(output_dir)
@@ -175,7 +175,7 @@ class SiteBuilder:
                 "timeline": summary.timeline,
                 "key_changes": summary.key_changes,
                 "research_questions": summary.research_questions,
-                "full_text": markdown.markdown(summary.full_text, extensions=['nl2br', 'sane_lists']),
+                "full_text": markdown.markdown(summary.full_text, extensions=['tables', 'sane_lists']),
                 "generated_at": summary.generated_at,
                 "model": summary.model,
                 "document_count": summary.document_count,
@@ -252,27 +252,47 @@ class SiteBuilder:
             f.write(html)
 
     def _build_overview_page(self, output_dir: Path, summary: Optional[dict]) -> None:
-        """Build collection overview page."""
+        """Build collection overview pages (summary, timeline, changes, questions)."""
         if not summary:
             return
 
-        template = self.env.get_template("overview.html")
+        # Create overview directory
+        overview_dir = output_dir / "overview"
+        overview_dir.mkdir(exist_ok=True)
 
-        html = template.render(
-            title=self.config.website.title,
-            emoji=self.config.website.emoji,
-            background_color=self.config.website.background_color,
-            accent_color=self.config.website.accent_color,
-            summary=summary,
-            enable_browse_dates=self.config.website.enable_browse_dates,
-            enable_browse_entities=self.config.website.enable_browse_entities,
-            base_url=self.base_url,
-        )
+        # Common template context
+        context = {
+            "title": self.config.website.title,
+            "emoji": self.config.website.emoji,
+            "background_color": self.config.website.background_color,
+            "accent_color": self.config.website.accent_color,
+            "summary": summary,
+            "enable_browse_dates": self.config.website.enable_browse_dates,
+            "enable_browse_entities": self.config.website.enable_browse_entities,
+            "base_url": self.base_url,
+        }
 
+        # Build each overview page
+        overview_pages = [
+            ("overview/summary.html", "summary.html"),
+            ("overview/timeline.html", "timeline.html"),
+            ("overview/changes.html", "changes.html"),
+            ("overview/questions.html", "questions.html"),
+        ]
+
+        for template_path, output_name in overview_pages:
+            template = self.env.get_template(template_path)
+            html = template.render(**context)
+            with open(overview_dir / output_name, "w", encoding="utf-8") as f:
+                f.write(html)
+
+        # Also build redirect page at old location
+        redirect_template = self.env.get_template("overview.html")
+        redirect_html = redirect_template.render(**context)
         with open(output_dir / "overview.html", "w", encoding="utf-8") as f:
-            f.write(html)
+            f.write(redirect_html)
 
-    def _build_document_pages(self, output_dir: Path, documents: list[dict]) -> None:
+    def _build_document_pages(self, output_dir: Path, documents: list[dict], summary: Optional[dict] = None) -> None:
         """Build individual document pages."""
         template = self.env.get_template("document.html")
         docs_dir = output_dir / "documents"
@@ -289,6 +309,9 @@ class SiteBuilder:
                 accent_color=self.config.website.accent_color,
                 document=doc,
                 base_url=self.base_url,
+                summary=summary,
+                enable_browse_dates=self.config.website.enable_browse_dates,
+                enable_browse_entities=self.config.website.enable_browse_entities,
             )
 
             with open(doc_dir / "index.html", "w", encoding="utf-8") as f:
@@ -299,6 +322,7 @@ class SiteBuilder:
         output_dir: Path,
         documents: list[dict],
         consolidated_entities: dict,
+        summary: Optional[dict] = None,
     ) -> None:
         """Build browse by dates and entities pages."""
         browse_dir = output_dir / "browse"
@@ -323,6 +347,7 @@ class SiteBuilder:
                 accent_color=self.config.website.accent_color,
                 documents_by_date=by_date,
                 base_url=self.base_url,
+                summary=summary,
             )
 
             with open(browse_dir / "dates.html", "w", encoding="utf-8") as f:
@@ -339,6 +364,7 @@ class SiteBuilder:
                 accent_color=self.config.website.accent_color,
                 entities=consolidated_entities,
                 base_url=self.base_url,
+                summary=summary,
             )
 
             with open(browse_dir / "entities.html", "w", encoding="utf-8") as f:
@@ -466,6 +492,83 @@ nav a {
 
 nav a:hover {
     color: var(--primary-color);
+}
+
+nav a.active {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+/* Dropdown menu */
+.dropdown {
+    position: relative;
+    display: inline-block;
+    margin-left: 1.5rem;
+}
+
+.dropdown-toggle {
+    color: var(--secondary-color);
+    text-decoration: none;
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-size: inherit;
+    font-family: inherit;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.dropdown-toggle:hover {
+    color: var(--primary-color);
+}
+
+.dropdown-toggle.active {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.dropdown-toggle::after {
+    content: '▾';
+    font-size: 0.75rem;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    min-width: 200px;
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    padding: 0.5rem 0;
+    display: none;
+    z-index: 1000;
+}
+
+.dropdown:hover .dropdown-menu,
+.dropdown.open .dropdown-menu {
+    display: block;
+}
+
+.dropdown-menu a {
+    display: block;
+    padding: 0.5rem 1rem;
+    color: var(--text-color);
+    text-decoration: none;
+    margin: 0;
+}
+
+.dropdown-menu a:hover {
+    background: var(--background-color);
+    color: var(--primary-color);
+}
+
+.dropdown-menu a.active {
+    color: var(--primary-color);
+    font-weight: 600;
 }
 
 /* Search */

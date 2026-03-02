@@ -1,0 +1,233 @@
+{% extends "base.html" %}
+
+{% block title %}Key Changes - {{ title }}{% endblock %}
+
+{% block head %}
+<style>
+:root {
+    --hero-bg: {{ background_color }};
+    --accent: {{ accent_color }};
+}
+
+.page-header {
+    background: var(--hero-bg);
+    padding: 3rem 0;
+    color: white;
+    text-align: center;
+}
+
+.page-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.page-header .subtitle {
+    opacity: 0.9;
+    font-size: 1.1rem;
+}
+
+.page-meta {
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+.page-content {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+}
+
+.content-section {
+    background: white;
+    border-radius: 8px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* Category filter */
+.category-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.category-filter {
+    padding: 0.5rem 1rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 20px;
+    background: white;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+}
+
+.category-filter:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.category-filter.active {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+}
+
+/* Change items */
+.changes-list {
+    margin-top: 1rem;
+}
+
+.change-item {
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+    background: #f8fafc;
+    border-radius: 8px;
+    border-left: 4px solid var(--accent);
+}
+
+.change-type {
+    display: inline-block;
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.change-description {
+    color: #475569;
+    line-height: 1.7;
+    font-family: Georgia, serif;
+}
+
+/* Different category colors */
+.change-item[data-category="geographic"] { border-left-color: #10b981; }
+.change-item[data-category="geographic"] .change-type { color: #10b981; }
+
+.change-item[data-category="occupational"] { border-left-color: #f59e0b; }
+.change-item[data-category="occupational"] .change-type { color: #f59e0b; }
+
+.change-item[data-category="social"] { border-left-color: #ec4899; }
+.change-item[data-category="social"] .change-type { color: #ec4899; }
+
+.change-item[data-category="economic"] { border-left-color: #8b5cf6; }
+.change-item[data-category="economic"] .change-type { color: #8b5cf6; }
+
+.change-item[data-category="health"] { border-left-color: #ef4444; }
+.change-item[data-category="health"] .change-type { color: #ef4444; }
+
+.change-item[data-category="political"] { border-left-color: #6366f1; }
+.change-item[data-category="political"] .change-type { color: #6366f1; }
+
+.changes-count {
+    color: #64748b;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+</style>
+{% endblock %}
+
+{% block body %}
+<header>
+    <div class="container">
+        <a href="{{ base_url }}/main.html" class="logo">{{ emoji }} {{ title }}</a>
+        <nav>
+            <div class="dropdown">
+                <button class="dropdown-toggle active">Overview</button>
+                <div class="dropdown-menu">
+                    <a href="{{ base_url }}/overview/summary.html">📄 Finding Aid</a>
+                    <a href="{{ base_url }}/overview/timeline.html">📅 Timeline</a>
+                    <a href="{{ base_url }}/overview/changes.html" class="active">🔄 Key Changes</a>
+                    <a href="{{ base_url }}/overview/questions.html">❓ Research Questions</a>
+                </div>
+            </div>
+            {% if enable_browse_dates %}
+            <a href="{{ base_url }}/browse/dates.html">Browse by Date</a>
+            {% endif %}
+            {% if enable_browse_entities %}
+            <a href="{{ base_url }}/browse/entities.html">Browse by Entity</a>
+            {% endif %}
+        </nav>
+    </div>
+</header>
+
+<section class="page-header">
+    <div class="container">
+        <h1>🔄 Key Changes</h1>
+        <p class="subtitle">Significant developments across {{ summary.document_count }} documents</p>
+        <p class="page-meta">Generated {{ summary.generated_at }} using {{ summary.model }}</p>
+    </div>
+</section>
+
+<main class="page-content">
+    <section class="content-section">
+        {% if summary.key_changes %}
+        <div class="category-filters">
+            <button class="category-filter active" data-filter="all">All</button>
+            <button class="category-filter" data-filter="geographic">🌍 Geographic</button>
+            <button class="category-filter" data-filter="occupational">💼 Occupational</button>
+            <button class="category-filter" data-filter="social">👥 Social</button>
+            <button class="category-filter" data-filter="economic">💰 Economic</button>
+            <button class="category-filter" data-filter="health">🏥 Health</button>
+            <button class="category-filter" data-filter="political">🏛️ Political</button>
+        </div>
+        
+        <p class="changes-count"><span id="visible-count">{{ summary.key_changes|length }}</span> of {{ summary.key_changes|length }} changes</p>
+        
+        <div class="changes-list" id="changes-list">
+            {% for change in summary.key_changes %}
+            {% set category = change.type|lower|replace(' ', '')|replace('/', '') if change.type else 'general' %}
+            <div class="change-item" data-category="{{ category }}">
+                {% if change.type %}<span class="change-type">{{ change.type }}</span>{% endif %}
+                <div class="change-description">{{ change.description }}</div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p>No key changes identified. Run <code>flatfish summarize</code> to generate them.</p>
+        {% endif %}
+    </section>
+</main>
+
+<footer>
+    <div class="container"></div>
+</footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const filters = document.querySelectorAll('.category-filter');
+    const changesList = document.getElementById('changes-list');
+    const visibleCount = document.getElementById('visible-count');
+    
+    filters.forEach(filter => {
+        filter.addEventListener('click', function() {
+            // Update active state
+            filters.forEach(f => f.classList.remove('active'));
+            this.classList.add('active');
+            
+            const category = this.dataset.filter;
+            const items = changesList.querySelectorAll('.change-item');
+            let count = 0;
+            
+            items.forEach(item => {
+                const itemCategory = item.dataset.category || '';
+                if (category === 'all' || itemCategory.includes(category)) {
+                    item.style.display = '';
+                    count++;
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+            
+            if (visibleCount) {
+                visibleCount.textContent = count;
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

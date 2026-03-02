@@ -147,7 +147,15 @@
         <a href="{{ base_url }}/main.html" class="logo">{{ emoji }} {{ title }}</a>
         <nav>
             {% if summary %}
-            <a href="{{ base_url }}/overview.html">Overview</a>
+            <div class="dropdown">
+                <button class="dropdown-toggle">Overview</button>
+                <div class="dropdown-menu">
+                    <a href="{{ base_url }}/overview/summary.html">📄 Finding Aid</a>
+                    <a href="{{ base_url }}/overview/timeline.html">📅 Timeline</a>
+                    <a href="{{ base_url }}/overview/changes.html">🔄 Key Changes</a>
+                    <a href="{{ base_url }}/overview/questions.html">❓ Research Questions</a>
+                </div>
+            </div>
             {% endif %}
             {% if enable_browse_dates %}
             <a href="{{ base_url }}/browse/dates.html">Browse by Date</a>

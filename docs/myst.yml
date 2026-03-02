@@ -1,0 +1,74 @@
+# See docs at https://mystmd.org/guide/frontmatter
+version: 1
+project:
+  title: Flatfish Documentation
+  description: Historical document analysis CLI - Extract, analyze, and present handwritten text from document images
+  keywords:
+    - historical documents
+    - HTR
+    - OCR
+    - named entity recognition
+    - AI summarization
+  authors:
+    - name: Princeton University Library
+      affiliation: Princeton University
+  github: https://github.com/PULdischo/flatfish
+  license: MIT
+  toc:
+    - file: index.md
+    - title: Getting Started
+      children:
+        - file: getting-started/installation.md
+        - file: getting-started/quickstart.md
+        - file: getting-started/first-project.md
+    - title: Usage Guide
+      children:
+        - file: usage/configuration.md
+        - file: usage/processing-documents.md
+        - file: usage/transcription.md
+        - file: usage/entities.md
+        - file: usage/summarization.md
+        - file: usage/building-sites.md
+        - file: usage/deployment.md
+    - title: Concepts
+      children:
+        - file: concepts/pipeline.md
+        - file: concepts/htr-ocr.md
+        - file: concepts/named-entities.md
+        - file: concepts/ai-summarization.md
+        - file: concepts/track-summarization.md
+        - file: concepts/hierarchical-combining.md
+    - title: Command Reference
+      children:
+        - file: commands/overview.md
+        - file: commands/init.md
+        - file: commands/process.md
+        - file: commands/transcribe.md
+        - file: commands/entities.md
+        - file: commands/summarize.md
+        - file: commands/combine.md
+        - file: commands/build.md
+        - file: commands/serve.md
+        - file: commands/deploy.md
+    - title: API Reference
+      children:
+        - file: api/overview.md
+    - title: Help & Support
+      children:
+        - file: help/troubleshooting.md
+        - file: help/faq.md
+        - file: help/glossary.md
+site:
+  title: Flatfish
+  options:
+    favicon: images/logo-light.png
+    logo: images/logo-light.png
+    logo_dark: images/logo-dark.png
+    hide_myst: true
+  nav:
+    - title: GitHub
+      url: https://github.com/PULdischo/flatfish
+  actions:
+    - title: Get Started
+      url: /getting-started/installation
+  template: book-theme
