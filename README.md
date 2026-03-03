@@ -87,7 +87,7 @@ DASHSCOPE_API_KEY=sk-xxxxxxxxxxxxx
 | `flatfish status` | Show processing status |
 | `flatfish validate` | Validate configuration |
 
-## Deployment
+## Deployment  .
 
 Deploy your site to Netlify:
 
