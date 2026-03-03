@@ -569,8 +569,8 @@ def deploy(
     ] = Path("flatfish.yaml"),
     prod: Annotated[
         bool,
-        typer.Option("--prod", help="Deploy to production (default is draft)."),
-    ] = False,
+        typer.Option("--prod/--draft", help="Deploy to production (default) or draft preview."),
+    ] = True,
     site: Annotated[
         Optional[str],
         typer.Option("--site", "-s", help="Netlify site ID (required)."),

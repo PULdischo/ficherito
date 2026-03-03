@@ -278,10 +278,9 @@ class SiteBuilder:
             "base_url": self.base_url,
         }
 
-        # Build each overview page
+        # Build each overview page (timeline removed - it's in the finding aid summary)
         overview_pages = [
             ("overview/summary.html", "summary.html"),
-            ("overview/timeline.html", "timeline.html"),
             ("overview/changes.html", "changes.html"),
             ("overview/questions.html", "questions.html"),
         ]
@@ -464,18 +463,24 @@ class SiteBuilder:
 
     def _run_pagefind(self, output_dir: Path) -> None:
         """Run Pagefind to index the site."""
+        import shutil
+        
+        # Try to find pagefind binary - check direct command first, then npx
+        pagefind_cmd = shutil.which("pagefind")
+        
+        if pagefind_cmd:
+            cmd = [pagefind_cmd, "--source", str(output_dir), "--bundle-dir", "pagefind"]
+        else:
+            cmd = ["npx", "pagefind", "--source", str(output_dir), "--bundle-dir", "pagefind"]
+        
         try:
-            result = subprocess.run(
-                ["npx", "pagefind", "--source", str(output_dir), "--bundle-dir", "pagefind"],
-                capture_output=True,
-                text=True,
-            )
+            result = subprocess.run(cmd, capture_output=True, text=True)
             if result.returncode == 0:
                 logger.info("Pagefind indexing complete")
             else:
                 logger.warning(f"Pagefind failed: {result.stderr}")
         except FileNotFoundError:
-            logger.warning("Pagefind not found. Install with: npm install -g pagefind")
+            logger.warning("Pagefind not found. Install with: cargo install pagefind or npm install -g pagefind")
 
     def _generate_css(self) -> str:
         """Generate the main CSS file."""

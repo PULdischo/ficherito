@@ -1609,45 +1609,31 @@ def load_summary(output_dir: Path) -> DocumentSummary:
     if questions_txt.exists():
         with open(questions_txt, encoding="utf-8") as f:
             content = f.read()
-        # Parse the numbered format: 1. QUESTION
-        # and look for "   WHY THIS MATTERS:" lines
-        current_question = None
-        current_context = []
         
+        # First try: Parse numbered format (1. Question text)
         for line in content.split("\n"):
-            if line.startswith("#") or line.startswith("---"):
+            if line.startswith("#") or line.startswith("---") or not line.strip():
                 continue
             
             # Check for numbered question
             q_match = re.match(r"^\d+\.\s+(.+)$", line)
             if q_match:
-                # Save previous question if exists
-                if current_question:
-                    research_questions.append({
-                        "question": current_question,
-                        "context": " ".join(current_context).strip(),
-                        "source": ""
-                    })
-                current_question = q_match.group(1).strip()
-                current_context = []
-            elif line.strip().startswith("WHY THIS MATTERS:"):
-                # This is the context line
-                context = line.strip().replace("WHY THIS MATTERS:", "").strip()
-                current_context.append(context)
-            elif current_question and line.strip():
-                # Continuation of context
-                current_context.append(line.strip())
-        
-        # Don't forget the last question
-        if current_question:
-            research_questions.append({
-                "question": current_question,
-                "context": " ".join(current_context).strip(),
-                "source": ""
-            })
-    elif questions_json.exists():
+                research_questions.append(q_match.group(1).strip())
+            elif line.strip() and len(line.strip()) > 20:
+                # Plain paragraph format - each non-empty line is a question
+                # Skip short lines that might be metadata
+                research_questions.append(line.strip())
+    
+    # Fall back to JSON if text parsing yielded nothing
+    if not research_questions and questions_json.exists():
         with open(questions_json, encoding="utf-8") as f:
-            research_questions = json.load(f)
+            loaded = json.load(f)
+            # Handle both list of strings and list of dicts
+            for item in loaded:
+                if isinstance(item, str):
+                    research_questions.append(item)
+                elif isinstance(item, dict) and "question" in item:
+                    research_questions.append(item["question"])
 
     # Parse metadata from full text
     generated_match = re.search(r"Generated: (.+)", full_text)
