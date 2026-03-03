@@ -1,0 +1,1034 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Hierarchical Combining &#8212; Flatfish Documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'concepts/hierarchical-combining';</script>
+    <link rel="icon" href="../_static/logo-light.png"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Command Reference" href="../commands/overview.html" />
+    <link rel="prev" title="Track-Based Summarization" href="track-summarization.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo-light.png" class="logo__image only-light" alt="Flatfish Documentation - Home"/>
+    <script>document.write(`<img src="../_static/logo-light.png" class="logo__image only-dark" alt="Flatfish Documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../getting-started/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started/quickstart.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started/first-project.html">Your First Project</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Usage Guide</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../usage/configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage/processing-documents.html">Processing Documents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage/transcription.html">Transcription</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage/entities.html">Entity Extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage/summarization.html">Summarization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage/building-sites.html">Building Sites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage/deployment.html">Deployment</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Concepts</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="pipeline.html">The Processing Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="htr-ocr.html">HTR and OCR</a></li>
+<li class="toctree-l1"><a class="reference internal" href="named-entities.html">Named Entity Recognition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ai-summarization.html">AI Summarization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="track-summarization.html">Track-Based Summarization</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Hierarchical Combining</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Command Reference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../commands/overview.html">Command Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/init.html">flatfish init</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/process.html">flatfish process</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/transcribe.html">flatfish transcribe</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/entities.html">flatfish entities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/summarize.html">flatfish summarize</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/combine.html">flatfish combine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/build.html">flatfish build</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/serve.html">flatfish serve</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/deploy.html">flatfish deploy</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../api/overview.html">API Reference</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Help &amp; Support</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../help/troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../help/faq.html">Frequently Asked Questions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../help/glossary.html">Glossary</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/concepts/hierarchical-combining.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Hierarchical Combining</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-problem">The Problem</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-solution-hierarchical-combining">The Solution: Hierarchical Combining</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-it-works">How It Works</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-group-batches">Step 1: Group Batches</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-combine-each-group">Step 2: Combine Each Group</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-check-result-size">Step 3: Check Result Size</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4-final-combination">Step 4: Final Combination</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visual-example">Visual Example</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#code-implementation">Code Implementation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parameters">Parameters</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#max-combine-chars">MAX_COMBINE_CHARS</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#batch-group-size">BATCH_GROUP_SIZE</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#track-specific-combining">Track-Specific Combining</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#timeline-combining">Timeline Combining</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#key-changes-combining">Key Changes Combining</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#research-questions-combining">Research Questions Combining</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#information-preservation">Information Preservation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#challenge">Challenge</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#solution-smart-summarization">Solution: Smart Summarization</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#quality-checks">Quality Checks</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#performance">Performance</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#api-calls-required">API Calls Required</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#time-estimates">Time Estimates</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#debugging">Debugging</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#view-intermediate-results">View Intermediate Results</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#common-issues">Common Issues</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#best-practices">Best Practices</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#process-chronologically">1. Process Chronologically</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#review-intermediates">2. Review Intermediates</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#iterative-refinement">3. Iterative Refinement</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#version-control">4. Version Control</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#technical-details">Technical Details</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#memory-usage">Memory Usage</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#async-processing">Async Processing</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fault-tolerance">Fault Tolerance</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#next-steps">Next Steps</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="hierarchical-combining">
+<h1>Hierarchical Combining<a class="headerlink" href="#hierarchical-combining" title="Link to this heading">#</a></h1>
+<p>How Flatfish combines hundreds of batch summaries without exceeding AI context limits.</p>
+<hr class="docutils" />
+<section id="the-problem">
+<h2>The Problem<a class="headerlink" href="#the-problem" title="Link to this heading">#</a></h2>
+<p>Imagine you have a large collection:</p>
+<ul class="simple">
+<li><p>500 documents</p></li>
+<li><p>25 batches (20 documents each)</p></li>
+<li><p>4 tracks per batch</p></li>
+<li><p>= 100 batch files to combine</p></li>
+</ul>
+<p>Sending all 100 files to an AI at once would exceed context limits (typically 32K-128K tokens).</p>
+</section>
+<hr class="docutils" />
+<section id="the-solution-hierarchical-combining">
+<h2>The Solution: Hierarchical Combining<a class="headerlink" href="#the-solution-hierarchical-combining" title="Link to this heading">#</a></h2>
+<p>Instead of combining everything at once, Flatfish uses a <strong>tree structure</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Level 0: 337 batch summaries
+         ├── Group 1 (batches 1-50)   ──→ Intermediate 1
+         ├── Group 2 (batches 51-100) ──→ Intermediate 2
+         ├── Group 3 (batches 101-150)──→ Intermediate 3
+         ├── Group 4 (batches 151-200)──→ Intermediate 4
+         ├── Group 5 (batches 201-250)──→ Intermediate 5
+         ├── Group 6 (batches 251-300)──→ Intermediate 6
+         └── Group 7 (batches 301-337)──→ Intermediate 7
+                                              │
+Level 1: 7 intermediate summaries ────────────┘
+         └── Combined ──→ Final Summary
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="how-it-works">
+<h2>How It Works<a class="headerlink" href="#how-it-works" title="Link to this heading">#</a></h2>
+<section id="step-1-group-batches">
+<h3>Step 1: Group Batches<a class="headerlink" href="#step-1-group-batches" title="Link to this heading">#</a></h3>
+<p>Split batch files into manageable groups:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">MAX_COMBINE_CHARS</span> <span class="o">=</span> <span class="mi">80000</span>  <span class="c1"># Context limit</span>
+<span class="n">BATCH_GROUP_SIZE</span> <span class="o">=</span> <span class="mi">50</span>       <span class="c1"># Files per group</span>
+
+<span class="c1"># 337 batches → 7 groups</span>
+<span class="c1"># [1-50], [51-100], [101-150], [151-200], [201-250], [251-300], [301-337]</span>
+</pre></div>
+</div>
+</section>
+<section id="step-2-combine-each-group">
+<h3>Step 2: Combine Each Group<a class="headerlink" href="#step-2-combine-each-group" title="Link to this heading">#</a></h3>
+<p>Send each group to the AI:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Group 1 (batches 1-50):
+  &quot;Combine these 50 timeline summaries into one coherent timeline...&quot;
+  
+  → Intermediate Timeline 1
+</pre></div>
+</div>
+</section>
+<section id="step-3-check-result-size">
+<h3>Step 3: Check Result Size<a class="headerlink" href="#step-3-check-result-size" title="Link to this heading">#</a></h3>
+<p>If intermediates still too large, recurse:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">total_chars</span><span class="p">(</span><span class="n">intermediates</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">MAX_COMBINE_CHARS</span><span class="p">:</span>
+    <span class="c1"># Combine intermediates hierarchically</span>
+    <span class="k">return</span> <span class="n">hierarchical_combine</span><span class="p">(</span><span class="n">intermediates</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="c1"># Final combination</span>
+    <span class="k">return</span> <span class="n">combine</span><span class="p">(</span><span class="n">intermediates</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="step-4-final-combination">
+<h3>Step 4: Final Combination<a class="headerlink" href="#step-4-final-combination" title="Link to this heading">#</a></h3>
+<p>Combine intermediates into final output:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Intermediate 1 ─┐
+Intermediate 2 ─┤
+Intermediate 3 ─┼─→ Final Timeline
+Intermediate 4 ─┤
+...            ─┘
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="visual-example">
+<h2>Visual Example<a class="headerlink" href="#visual-example" title="Link to this heading">#</a></h2>
+<p>For a collection with 337 batches:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>┌─────────────────────────────────────────────────────────────┐
+│ LEVEL 0: 337 batch files                                    │
+│                                                             │
+│ batch_001 batch_002 ... batch_050 │ batch_051 ... batch_100 │
+│ └───────────────┬────────────────┘ └───────────┬───────────┘│
+│                 ▼                              ▼            │
+│           Intermediate 1                 Intermediate 2     │
+│                                                             │
+│ batch_101 ... batch_150 │ batch_151 ... batch_200          │
+│ └───────────┬───────────┘ └───────────┬───────────┘        │
+│             ▼                         ▼                     │
+│       Intermediate 3            Intermediate 4              │
+│                                                             │
+│ ... (continues for all 337 batches)                        │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│ LEVEL 1: 7 intermediate summaries                           │
+│                                                             │
+│ Int_1  Int_2  Int_3  Int_4  Int_5  Int_6  Int_7            │
+│ └──────────────────────┬────────────────────────┘          │
+│                        ▼                                    │
+│                 Final Summary                               │
+└─────────────────────────────────────────────────────────────┘
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="code-implementation">
+<h2>Code Implementation<a class="headerlink" href="#code-implementation" title="Link to this heading">#</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_hierarchical_combine</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">batch_contents</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+    <span class="n">combine_prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">track_name</span><span class="p">:</span> <span class="nb">str</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Recursively combine batches in manageable groups.&quot;&quot;&quot;</span>
+    
+    <span class="c1"># Check if all content fits in context</span>
+    <span class="n">total_chars</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">batch_contents</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">total_chars</span> <span class="o">&lt;=</span> <span class="n">MAX_COMBINE_CHARS</span><span class="p">:</span>
+        <span class="c1"># Base case: combine directly</span>
+        <span class="n">combined_text</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">---</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">batch_contents</span><span class="p">)</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call_api</span><span class="p">(</span><span class="n">combine_prompt</span><span class="p">,</span> <span class="n">combined_text</span><span class="p">)</span>
+    
+    <span class="c1"># Recursive case: split into groups</span>
+    <span class="n">groups</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">batch_contents</span><span class="p">),</span> <span class="n">BATCH_GROUP_SIZE</span><span class="p">):</span>
+        <span class="n">group</span> <span class="o">=</span> <span class="n">batch_contents</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span> <span class="o">+</span> <span class="n">BATCH_GROUP_SIZE</span><span class="p">]</span>
+        <span class="n">groups</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">group</span><span class="p">)</span>
+    
+    <span class="c1"># Combine each group</span>
+    <span class="n">intermediates</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">groups</span><span class="p">:</span>
+        <span class="n">group_text</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">---</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">group</span><span class="p">)</span>
+        <span class="n">intermediate</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call_api</span><span class="p">(</span><span class="n">combine_prompt</span><span class="p">,</span> <span class="n">group_text</span><span class="p">)</span>
+        <span class="n">intermediates</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">intermediate</span><span class="p">)</span>
+    
+    <span class="c1"># Recurse on intermediates</span>
+    <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hierarchical_combine</span><span class="p">(</span>
+        <span class="n">intermediates</span><span class="p">,</span> <span class="n">combine_prompt</span><span class="p">,</span> <span class="n">track_name</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Link to this heading">#</a></h2>
+<section id="max-combine-chars">
+<h3>MAX_COMBINE_CHARS<a class="headerlink" href="#max-combine-chars" title="Link to this heading">#</a></h3>
+<p>Maximum characters to send in one API call:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">MAX_COMBINE_CHARS</span> <span class="o">=</span> <span class="mi">80000</span>
+</pre></div>
+</div>
+<p><strong>Calculation</strong>:</p>
+<ul class="simple">
+<li><p>Average: ~4 characters per token</p></li>
+<li><p>80,000 chars ≈ 20,000 tokens</p></li>
+<li><p>Leaves room for prompt + response</p></li>
+<li><p>Works with 32K context window</p></li>
+</ul>
+<p><strong>Adjust if needed</strong>:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># flatfish.yaml</span>
+<span class="nt">summary</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">max_combine_chars</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100000</span><span class="w">  </span><span class="c1"># For larger context models</span>
+</pre></div>
+</div>
+</section>
+<section id="batch-group-size">
+<h3>BATCH_GROUP_SIZE<a class="headerlink" href="#batch-group-size" title="Link to this heading">#</a></h3>
+<p>Number of batches to combine at once:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">BATCH_GROUP_SIZE</span> <span class="o">=</span> <span class="mi">50</span>
+</pre></div>
+</div>
+<p><strong>Tradeoffs</strong>:</p>
+<ul class="simple">
+<li><p>Larger: Fewer levels, more context per call</p></li>
+<li><p>Smaller: More levels, less context per call</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="track-specific-combining">
+<h2>Track-Specific Combining<a class="headerlink" href="#track-specific-combining" title="Link to this heading">#</a></h2>
+<p>Each track has optimized combining prompts:</p>
+<section id="timeline-combining">
+<h3>Timeline Combining<a class="headerlink" href="#timeline-combining" title="Link to this heading">#</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Combine</span> <span class="n">these</span> <span class="n">chronological</span> <span class="n">timeline</span> <span class="n">sections</span> <span class="n">into</span> <span class="n">a</span> <span class="n">single</span> 
+<span class="n">coherent</span> <span class="n">timeline</span><span class="p">:</span>
+
+<span class="mf">1.</span> <span class="n">Merge</span> <span class="n">overlapping</span> <span class="n">events</span> <span class="p">(</span><span class="n">same</span> <span class="n">date</span><span class="o">/</span><span class="n">event</span><span class="p">)</span>
+<span class="mf">2.</span> <span class="n">Resolve</span> <span class="n">conflicts</span> <span class="p">(</span><span class="n">prefer</span> <span class="n">more</span> <span class="n">detailed</span> <span class="n">version</span><span class="p">)</span>
+<span class="mf">3.</span> <span class="n">Maintain</span> <span class="n">strict</span> <span class="n">chronological</span> <span class="n">order</span>
+<span class="mf">4.</span> <span class="n">Preserve</span> <span class="n">date</span> <span class="n">formats</span><span class="p">:</span> <span class="n">YYYY</span><span class="o">-</span><span class="n">MM</span><span class="o">-</span><span class="n">DD</span>
+<span class="mf">5.</span> <span class="n">Keep</span> <span class="n">cause</span><span class="o">-</span><span class="n">effect</span> <span class="n">relationships</span> <span class="n">clear</span>
+</pre></div>
+</div>
+</section>
+<section id="key-changes-combining">
+<h3>Key Changes Combining<a class="headerlink" href="#key-changes-combining" title="Link to this heading">#</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Synthesize</span> <span class="n">these</span> <span class="n">theme</span> <span class="n">analyses</span> <span class="n">into</span> <span class="n">a</span> <span class="n">comprehensive</span> <span class="n">overview</span><span class="p">:</span>
+
+<span class="mf">1.</span> <span class="n">Group</span> <span class="n">related</span> <span class="n">themes</span> <span class="n">together</span>
+<span class="mf">2.</span> <span class="n">Track</span> <span class="n">how</span> <span class="n">themes</span> <span class="n">evolve</span> <span class="n">across</span> <span class="n">the</span> <span class="n">timeline</span>
+<span class="mf">3.</span> <span class="n">Identify</span> <span class="n">major</span> <span class="n">turning</span> <span class="n">points</span>
+<span class="mf">4.</span> <span class="n">Note</span> <span class="n">conflicting</span> <span class="n">interpretations</span>
+<span class="mf">5.</span> <span class="n">Prioritize</span> <span class="n">themes</span> <span class="n">by</span> <span class="n">significance</span>
+</pre></div>
+</div>
+</section>
+<section id="research-questions-combining">
+<h3>Research Questions Combining<a class="headerlink" href="#research-questions-combining" title="Link to this heading">#</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Consolidate</span> <span class="n">these</span> <span class="n">research</span> <span class="n">questions</span><span class="p">:</span>
+
+<span class="mf">1.</span> <span class="n">Remove</span> <span class="n">duplicate</span> <span class="n">questions</span>
+<span class="mf">2.</span> <span class="n">Merge</span> <span class="n">similar</span> <span class="n">questions</span>
+<span class="mf">3.</span> <span class="n">Group</span> <span class="n">by</span> <span class="n">topic</span><span class="o">/</span><span class="n">theme</span>
+<span class="mf">4.</span> <span class="n">Prioritize</span> <span class="n">by</span> <span class="n">importance</span>
+<span class="mf">5.</span> <span class="n">Remove</span> <span class="n">questions</span> <span class="n">answered</span> <span class="n">elsewhere</span>
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="information-preservation">
+<h2>Information Preservation<a class="headerlink" href="#information-preservation" title="Link to this heading">#</a></h2>
+<section id="challenge">
+<h3>Challenge<a class="headerlink" href="#challenge" title="Link to this heading">#</a></h3>
+<p>Each level of combining risks losing details:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>100 pages → 10 pages → 1 page
+           (90% lost) (90% lost)
+           = 99% total information loss!
+</pre></div>
+</div>
+</section>
+<section id="solution-smart-summarization">
+<h3>Solution: Smart Summarization<a class="headerlink" href="#solution-smart-summarization" title="Link to this heading">#</a></h3>
+<p>The combining prompts emphasize:</p>
+<ol class="arabic simple">
+<li><p><strong>Key facts</strong> - Always preserve dates, names, numbers</p></li>
+<li><p><strong>Unique information</strong> - Don’t lose rare details</p></li>
+<li><p><strong>Relationships</strong> - Maintain cause-effect links</p></li>
+<li><p><strong>Context</strong> - Keep enough for understanding</p></li>
+</ol>
+</section>
+<section id="quality-checks">
+<h3>Quality Checks<a class="headerlink" href="#quality-checks" title="Link to this heading">#</a></h3>
+<p>After combining, verify:</p>
+<ul class="simple">
+<li><p>✅ Major events present</p></li>
+<li><p>✅ Key names preserved</p></li>
+<li><p>✅ Date range accurate</p></li>
+<li><p>✅ Themes identified</p></li>
+<li><p>✅ No hallucinations</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="performance">
+<h2>Performance<a class="headerlink" href="#performance" title="Link to this heading">#</a></h2>
+<section id="api-calls-required">
+<h3>API Calls Required<a class="headerlink" href="#api-calls-required" title="Link to this heading">#</a></h3>
+<p>For 337 batches:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Level</p></th>
+<th class="head"><p>Groups</p></th>
+<th class="head"><p>Calls per Track</p></th>
+<th class="head"><p>Total Calls</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0→1</p></td>
+<td><p>7</p></td>
+<td><p>7</p></td>
+<td><p>28</p></td>
+</tr>
+<tr class="row-odd"><td><p>1→Final</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>4</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Total</strong></p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p><strong>32</strong></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Without hierarchical combining: Would need to somehow fit 337 files in one call (impossible).</p>
+</section>
+<section id="time-estimates">
+<h3>Time Estimates<a class="headerlink" href="#time-estimates" title="Link to this heading">#</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Level 0→1:  7 groups × 4 tracks = 28 calls × ~5s = ~2 minutes
+Level 1→2:  1 call × 4 tracks = 4 calls × ~10s = ~40 seconds
+────────────────────────────────────────────────────────────
+Total combining time: ~3 minutes
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="debugging">
+<h2>Debugging<a class="headerlink" href="#debugging" title="Link to this heading">#</a></h2>
+<section id="view-intermediate-results">
+<h3>View Intermediate Results<a class="headerlink" href="#view-intermediate-results" title="Link to this heading">#</a></h3>
+<p>Intermediates are saved for debugging:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>batches/
+├── timeline/
+│   ├── batch_001.md
+│   ├── ...
+│   └── _intermediate_1.md  # Level 1 intermediate
+│   └── _intermediate_2.md
+└── ...
+</pre></div>
+</div>
+</section>
+<section id="common-issues">
+<h3>Common Issues<a class="headerlink" href="#common-issues" title="Link to this heading">#</a></h3>
+<p><strong>Issue</strong>: Final summary too short</p>
+<p><strong>Cause</strong>: Over-compression at multiple levels</p>
+<p><strong>Solution</strong>: Increase <code class="docutils literal notranslate"><span class="pre">MAX_COMBINE_CHARS</span></code> or decrease <code class="docutils literal notranslate"><span class="pre">BATCH_GROUP_SIZE</span></code></p>
+<hr class="docutils" />
+<p><strong>Issue</strong>: Final summary repetitive</p>
+<p><strong>Cause</strong>: Similar batches combined separately</p>
+<p><strong>Solution</strong>: Reorder batches chronologically before processing</p>
+<hr class="docutils" />
+<p><strong>Issue</strong>: Missing important details</p>
+<p><strong>Cause</strong>: Details lost in combining</p>
+<p><strong>Solution</strong>: Add explicit preservation instructions to combine prompt:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">prompts</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">combine_timeline</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">    </span><span class="no">MUST PRESERVE:</span>
+<span class="w">    </span><span class="no">- All named individuals</span>
+<span class="w">    </span><span class="no">- All specific dates</span>
+<span class="w">    </span><span class="no">- All monetary amounts</span>
+<span class="w">    </span><span class="no">- All place names</span>
+<span class="w">    </span>
+<span class="w">    </span><span class="no">Combine these timeline sections...</span>
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="best-practices">
+<h2>Best Practices<a class="headerlink" href="#best-practices" title="Link to this heading">#</a></h2>
+<section id="process-chronologically">
+<h3>1. Process Chronologically<a class="headerlink" href="#process-chronologically" title="Link to this heading">#</a></h3>
+<p>Order documents by date before batching:</p>
+<ul class="simple">
+<li><p>Similar content grouped naturally</p></li>
+<li><p>Combining produces coherent narratives</p></li>
+</ul>
+</section>
+<section id="review-intermediates">
+<h3>2. Review Intermediates<a class="headerlink" href="#review-intermediates" title="Link to this heading">#</a></h3>
+<p>Check intermediate files before final combine:</p>
+<ul class="simple">
+<li><p>Catch errors early</p></li>
+<li><p>Adjust prompts if needed</p></li>
+</ul>
+</section>
+<section id="iterative-refinement">
+<h3>3. Iterative Refinement<a class="headerlink" href="#iterative-refinement" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p>Run initial combine</p></li>
+<li><p>Review output</p></li>
+<li><p>Adjust parameters/prompts</p></li>
+<li><p>Re-run if needed</p></li>
+</ol>
+</section>
+<section id="version-control">
+<h3>4. Version Control<a class="headerlink" href="#version-control" title="Link to this heading">#</a></h3>
+<p>Track changes to intermediates:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>add<span class="w"> </span>batches/timeline/_intermediate_*.md
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Timeline intermediates - round 1&quot;</span>
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="technical-details">
+<h2>Technical Details<a class="headerlink" href="#technical-details" title="Link to this heading">#</a></h2>
+<section id="memory-usage">
+<h3>Memory Usage<a class="headerlink" href="#memory-usage" title="Link to this heading">#</a></h3>
+<p>Hierarchical combining is memory-efficient:</p>
+<ul class="simple">
+<li><p>Only loads one group at a time</p></li>
+<li><p>Streams results to disk</p></li>
+<li><p>Doesn’t hold all batches in memory</p></li>
+</ul>
+</section>
+<section id="async-processing">
+<h3>Async Processing<a class="headerlink" href="#async-processing" title="Link to this heading">#</a></h3>
+<p>Groups can be processed in parallel:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Process all groups in level simultaneously</span>
+<span class="n">intermediates</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span>
+    <span class="o">*</span><span class="p">[</span><span class="n">combine_group</span><span class="p">(</span><span class="n">g</span><span class="p">)</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">groups</span><span class="p">]</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="fault-tolerance">
+<h3>Fault Tolerance<a class="headerlink" href="#fault-tolerance" title="Link to this heading">#</a></h3>
+<p>If a group fails:</p>
+<ul class="simple">
+<li><p>Other groups continue</p></li>
+<li><p>Failed group can be retried</p></li>
+<li><p>Progress is saved</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="next-steps">
+<h2>Next Steps<a class="headerlink" href="#next-steps" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong><a class="reference internal" href="track-summarization.html"><span class="std std-doc">Track Summarization</span></a></strong> - Understanding tracks</p></li>
+<li><p><strong><a class="reference internal" href="ai-summarization.html"><span class="std std-doc">AI Summarization</span></a></strong> - Overview of summarization</p></li>
+<li><p><strong><a class="reference internal" href="../usage/summarization.html"><span class="std std-doc">Summarization Guide</span></a></strong> - Practical how-to</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./concepts"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="track-summarization.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Track-Based Summarization</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../commands/overview.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Command Reference</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-problem">The Problem</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-solution-hierarchical-combining">The Solution: Hierarchical Combining</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-it-works">How It Works</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-group-batches">Step 1: Group Batches</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-combine-each-group">Step 2: Combine Each Group</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-check-result-size">Step 3: Check Result Size</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4-final-combination">Step 4: Final Combination</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visual-example">Visual Example</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#code-implementation">Code Implementation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parameters">Parameters</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#max-combine-chars">MAX_COMBINE_CHARS</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#batch-group-size">BATCH_GROUP_SIZE</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#track-specific-combining">Track-Specific Combining</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#timeline-combining">Timeline Combining</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#key-changes-combining">Key Changes Combining</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#research-questions-combining">Research Questions Combining</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#information-preservation">Information Preservation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#challenge">Challenge</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#solution-smart-summarization">Solution: Smart Summarization</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#quality-checks">Quality Checks</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#performance">Performance</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#api-calls-required">API Calls Required</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#time-estimates">Time Estimates</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#debugging">Debugging</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#view-intermediate-results">View Intermediate Results</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#common-issues">Common Issues</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#best-practices">Best Practices</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#process-chronologically">1. Process Chronologically</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#review-intermediates">2. Review Intermediates</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#iterative-refinement">3. Iterative Refinement</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#version-control">4. Version Control</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#technical-details">Technical Details</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#memory-usage">Memory Usage</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#async-processing">Async Processing</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fault-tolerance">Fault Tolerance</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#next-steps">Next Steps</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Princeton University Library
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

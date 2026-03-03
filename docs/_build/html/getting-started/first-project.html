@@ -1,0 +1,985 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Your First Project &#8212; Flatfish Documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'getting-started/first-project';</script>
+    <link rel="icon" href="../_static/logo-light.png"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Configuration" href="../usage/configuration.html" />
+    <link rel="prev" title="Quick Start" href="quickstart.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo-light.png" class="logo__image only-light" alt="Flatfish Documentation - Home"/>
+    <script>document.write(`<img src="../_static/logo-light.png" class="logo__image only-dark" alt="Flatfish Documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Your First Project</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Usage Guide</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../usage/configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage/processing-documents.html">Processing Documents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage/transcription.html">Transcription</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage/entities.html">Entity Extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage/summarization.html">Summarization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage/building-sites.html">Building Sites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage/deployment.html">Deployment</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Concepts</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../concepts/pipeline.html">The Processing Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../concepts/htr-ocr.html">HTR and OCR</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../concepts/named-entities.html">Named Entity Recognition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../concepts/ai-summarization.html">AI Summarization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../concepts/track-summarization.html">Track-Based Summarization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../concepts/hierarchical-combining.html">Hierarchical Combining</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Command Reference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../commands/overview.html">Command Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/init.html">flatfish init</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/process.html">flatfish process</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/transcribe.html">flatfish transcribe</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/entities.html">flatfish entities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/summarize.html">flatfish summarize</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/combine.html">flatfish combine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/build.html">flatfish build</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/serve.html">flatfish serve</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/deploy.html">flatfish deploy</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../api/overview.html">API Reference</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Help &amp; Support</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../help/troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../help/faq.html">Frequently Asked Questions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../help/glossary.html">Glossary</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/getting-started/first-project.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Your First Project</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-we-ll-cover">What We’ll Cover</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#before-you-begin">Before You Begin</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-1-preparing-your-documents">Part 1: Preparing Your Documents</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#understanding-document-images">Understanding Document Images</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#naming-your-files">Naming Your Files</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-2-creating-a-hugging-face-dataset">Part 2: Creating a Hugging Face Dataset</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-create-a-hugging-face-account">Step 1: Create a Hugging Face Account</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-create-a-new-dataset">Step 2: Create a New Dataset</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-upload-your-images">Step 3: Upload Your Images</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4-create-a-dataset-loading-script-optional">Step 4: Create a Dataset Loading Script (Optional)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-3-setting-up-your-flatfish-project">Part 3: Setting Up Your Flatfish Project</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#create-the-project">Create the Project</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#configure-your-api-keys">Configure Your API Keys</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#configure-the-project">Configure the Project</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#validate-your-configuration">Validate Your Configuration</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-4-running-the-pipeline-step-by-step">Part 4: Running the Pipeline Step by Step</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-extract-text">Step 1: Extract Text</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-extract-entities">Step 2: Extract Entities</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-generate-summary">Step 3: Generate Summary</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4-build-the-website">Step 4: Build the Website</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-5-reviewing-and-editing">Part 5: Reviewing and Editing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#editing-transcriptions">Editing Transcriptions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#editing-the-summary">Editing the Summary</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-6-preview-and-deploy">Part 6: Preview and Deploy</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#preview-locally">Preview Locally</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#deploy-to-the-web">Deploy to the Web</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#next-steps">Next Steps</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="your-first-project">
+<h1>Your First Project<a class="headerlink" href="#your-first-project" title="Link to this heading">#</a></h1>
+<p>This tutorial walks you through creating a complete Flatfish project from start to finish. We’ll work with a real historical document collection and explore all of Flatfish’s features.</p>
+<hr class="docutils" />
+<section id="what-we-ll-cover">
+<h2>What We’ll Cover<a class="headerlink" href="#what-we-ll-cover" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p>Understanding your source material</p></li>
+<li><p>Uploading documents to Hugging Face</p></li>
+<li><p>Configuring Flatfish</p></li>
+<li><p>Running individual pipeline stages</p></li>
+<li><p>Reviewing and editing outputs</p></li>
+<li><p>Building and deploying your site</p></li>
+</ol>
+<p><strong>Time needed:</strong> 30-45 minutes</p>
+</section>
+<hr class="docutils" />
+<section id="before-you-begin">
+<h2>Before You Begin<a class="headerlink" href="#before-you-begin" title="Link to this heading">#</a></h2>
+<p>Make sure you have:</p>
+<ul class="simple">
+<li><p>[ ] Flatfish installed (<a class="reference internal" href="installation.html"><span class="std std-doc">Installation Guide</span></a>)</p></li>
+<li><p>[ ] Your API keys ready (<a class="reference internal" href="installation.html#step-4-get-your-api-keys"><span class="std std-ref">Getting API Keys</span></a>)</p></li>
+<li><p>[ ] A collection of document images (we’ll show you how to prepare these)</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="part-1-preparing-your-documents">
+<h2>Part 1: Preparing Your Documents<a class="headerlink" href="#part-1-preparing-your-documents" title="Link to this heading">#</a></h2>
+<section id="understanding-document-images">
+<h3>Understanding Document Images<a class="headerlink" href="#understanding-document-images" title="Link to this heading">#</a></h3>
+<p>Flatfish works best with:</p>
+<ul class="simple">
+<li><p><strong>Clear, high-resolution scans</strong> (300 DPI or higher)</p></li>
+<li><p><strong>Individual pages</strong> (one document per image)</p></li>
+<li><p><strong>Common image formats</strong> (JPEG, PNG, TIFF)</p></li>
+<li><p><strong>Consistent orientation</strong> (upright, not rotated)</p></li>
+</ul>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>If your documents are in PDF format, you’ll need to convert them to images first. Tools like <code class="docutils literal notranslate"><span class="pre">pdftoppm</span></code> or Adobe Acrobat can help.</p>
+</div>
+</section>
+<section id="naming-your-files">
+<h3>Naming Your Files<a class="headerlink" href="#naming-your-files" title="Link to this heading">#</a></h3>
+<p>Good file naming helps Flatfish understand the order of your documents. We recommend including dates or sequence numbers:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Good naming patterns</span>
+<span class="mi">1913</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">15</span><span class="n">_page_001</span><span class="o">.</span><span class="n">jpg</span>
+<span class="mi">1913</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">15</span><span class="n">_page_002</span><span class="o">.</span><span class="n">jpg</span>
+<span class="mi">1913</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">16</span><span class="n">_page_001</span><span class="o">.</span><span class="n">jpg</span>
+
+<span class="c1"># Also acceptable</span>
+<span class="n">diary_001</span><span class="o">.</span><span class="n">jpg</span>
+<span class="n">diary_002</span><span class="o">.</span><span class="n">jpg</span>
+<span class="n">letter_1913</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mf">15.</span><span class="n">jpg</span>
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="part-2-creating-a-hugging-face-dataset">
+<h2>Part 2: Creating a Hugging Face Dataset<a class="headerlink" href="#part-2-creating-a-hugging-face-dataset" title="Link to this heading">#</a></h2>
+<p>Flatfish reads documents from Hugging Face datasets. This makes it easy to share and version your collections.</p>
+<section id="step-1-create-a-hugging-face-account">
+<h3>Step 1: Create a Hugging Face Account<a class="headerlink" href="#step-1-create-a-hugging-face-account" title="Link to this heading">#</a></h3>
+<p>If you haven’t already, sign up at <a class="reference external" href="https://huggingface.co">huggingface.co</a>.</p>
+</section>
+<section id="step-2-create-a-new-dataset">
+<h3>Step 2: Create a New Dataset<a class="headerlink" href="#step-2-create-a-new-dataset" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p>Click the <strong>+</strong> icon in the top navigation</p></li>
+<li><p>Select <strong>New Dataset</strong></p></li>
+<li><p>Give it a name like <code class="docutils literal notranslate"><span class="pre">my-document-collection</span></code></p></li>
+<li><p>Choose <strong>Private</strong> (you can make it public later)</p></li>
+<li><p>Click <strong>Create dataset</strong></p></li>
+</ol>
+</section>
+<section id="step-3-upload-your-images">
+<h3>Step 3: Upload Your Images<a class="headerlink" href="#step-3-upload-your-images" title="Link to this heading">#</a></h3>
+<p>The easiest way to upload is using the web interface:</p>
+<ol class="arabic simple">
+<li><p>Click <strong>Files and versions</strong> tab</p></li>
+<li><p>Click <strong>Add file</strong> → <strong>Upload files</strong></p></li>
+<li><p>Drag and drop your images</p></li>
+<li><p>Click <strong>Commit changes</strong></p></li>
+</ol>
+<p>For larger collections, use the Hugging Face CLI:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Install the CLI</span>
+pip<span class="w"> </span>install<span class="w"> </span>huggingface_hub
+
+<span class="c1"># Login</span>
+huggingface-cli<span class="w"> </span>login
+
+<span class="c1"># Upload a folder of images</span>
+huggingface-cli<span class="w"> </span>upload<span class="w"> </span>your-username/your-dataset<span class="w"> </span>./images<span class="w"> </span>--repo-type<span class="w"> </span>dataset
+</pre></div>
+</div>
+</section>
+<section id="step-4-create-a-dataset-loading-script-optional">
+<h3>Step 4: Create a Dataset Loading Script (Optional)<a class="headerlink" href="#step-4-create-a-dataset-loading-script-optional" title="Link to this heading">#</a></h3>
+<p>For more control, create a <code class="docutils literal notranslate"><span class="pre">dataset.py</span></code> file that tells Hugging Face how to load your data:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># This goes in your dataset repository</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">datasets</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">MyDocuments</span><span class="p">(</span><span class="n">datasets</span><span class="o">.</span><span class="n">GeneratorBasedBuilder</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">datasets</span><span class="o">.</span><span class="n">DatasetInfo</span><span class="p">(</span>
+            <span class="n">features</span><span class="o">=</span><span class="n">datasets</span><span class="o">.</span><span class="n">Features</span><span class="p">({</span>
+                <span class="s2">&quot;image&quot;</span><span class="p">:</span> <span class="n">datasets</span><span class="o">.</span><span class="n">Image</span><span class="p">(),</span>
+                <span class="s2">&quot;filename&quot;</span><span class="p">:</span> <span class="n">datasets</span><span class="o">.</span><span class="n">Value</span><span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">),</span>
+                <span class="s2">&quot;date&quot;</span><span class="p">:</span> <span class="n">datasets</span><span class="o">.</span><span class="n">Value</span><span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">),</span>
+            <span class="p">})</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_split_generators</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dl_manager</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="n">datasets</span><span class="o">.</span><span class="n">SplitGenerator</span><span class="p">(</span>
+                <span class="n">name</span><span class="o">=</span><span class="n">datasets</span><span class="o">.</span><span class="n">Split</span><span class="o">.</span><span class="n">TRAIN</span><span class="p">,</span>
+                <span class="n">gen_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;images_dir&quot;</span><span class="p">:</span> <span class="s2">&quot;images/&quot;</span><span class="p">},</span>
+            <span class="p">),</span>
+        <span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_generate_examples</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">images_dir</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">image_path</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">images_dir</span><span class="p">)</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;*.jpg&quot;</span><span class="p">))):</span>
+            <span class="c1"># Extract date from filename if present</span>
+            <span class="n">date</span> <span class="o">=</span> <span class="n">image_path</span><span class="o">.</span><span class="n">stem</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="s2">&quot;_&quot;</span> <span class="ow">in</span> <span class="n">image_path</span><span class="o">.</span><span class="n">stem</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+            <span class="k">yield</span> <span class="n">idx</span><span class="p">,</span> <span class="p">{</span>
+                <span class="s2">&quot;image&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">image_path</span><span class="p">),</span>
+                <span class="s2">&quot;filename&quot;</span><span class="p">:</span> <span class="n">image_path</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                <span class="s2">&quot;date&quot;</span><span class="p">:</span> <span class="n">date</span><span class="p">,</span>
+            <span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="part-3-setting-up-your-flatfish-project">
+<h2>Part 3: Setting Up Your Flatfish Project<a class="headerlink" href="#part-3-setting-up-your-flatfish-project" title="Link to this heading">#</a></h2>
+<section id="create-the-project">
+<h3>Create the Project<a class="headerlink" href="#create-the-project" title="Link to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>~/flatfish-projects
+flatfish<span class="w"> </span>init<span class="w"> </span>civil-war-letters
+<span class="nb">cd</span><span class="w"> </span>civil-war-letters
+</pre></div>
+</div>
+</section>
+<section id="configure-your-api-keys">
+<h3>Configure Your API Keys<a class="headerlink" href="#configure-your-api-keys" title="Link to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cp<span class="w"> </span>.env.example<span class="w"> </span>.env
+nano<span class="w"> </span>.env
+</pre></div>
+</div>
+<p>Add your keys:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">HUGGINGFACE_TOKEN</span><span class="o">=</span>hf_xxxxxxxxxxxxx
+<span class="nv">DASHSCOPE_API_KEY</span><span class="o">=</span>sk_xxxxxxxxxxxxx
+</pre></div>
+</div>
+</section>
+<section id="configure-the-project">
+<h3>Configure the Project<a class="headerlink" href="#configure-the-project" title="Link to this heading">#</a></h3>
+<p>Edit <code class="docutils literal notranslate"><span class="pre">flatfish.yaml</span></code>:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># Dataset Configuration</span>
+<span class="nt">dataset</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">source</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;your-username/your-dataset-name&quot;</span>
+<span class="w">  </span><span class="nt">splits</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;train&quot;</span>
+<span class="w">  </span><span class="nt">image_column</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;image&quot;</span>
+<span class="w">  </span><span class="nt">date_column</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;date&quot;</span><span class="w">  </span><span class="c1"># Optional: if your dataset has dates</span>
+
+<span class="c1"># Processing Options</span>
+<span class="nt">processing</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">extract_entities</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">entity_context</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">  </span><span class="c1"># Include descriptions like &quot;Person; the letter&#39;s recipient&quot;</span>
+
+<span class="c1"># Custom Prompts (optional - defaults work well for most documents)</span>
+<span class="nt">prompts</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">text_extraction</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">    </span><span class="no">You are a historical document transcription assistant working with </span>
+<span class="w">    </span><span class="no">Civil War era letters. Given the raw OCR output from a handwritten </span>
+<span class="w">    </span><span class="no">document, clean up and correct the text while:</span>
+<span class="w">    </span>
+<span class="w">    </span><span class="no">1. Preserving original 19th-century spelling conventions</span>
+<span class="w">    </span><span class="no">2. Maintaining original punctuation style</span>
+<span class="w">    </span><span class="no">3. Fixing obvious OCR errors</span>
+<span class="w">    </span><span class="no">4. Marking unclear portions with [?]</span>
+<span class="w">    </span>
+<span class="w">    </span><span class="no">Raw OCR text:</span>
+<span class="w">    </span><span class="no">{raw_text}</span>
+<span class="w">    </span>
+<span class="w">    </span><span class="no">Cleaned transcription:</span>
+
+<span class="c1"># Summary Options</span>
+<span class="nt">summary</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">model</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;qwen-vl-max&quot;</span>
+<span class="w">  </span><span class="nt">sample_size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100</span><span class="w">  </span><span class="c1"># Process up to 100 documents for summary</span>
+
+<span class="c1"># Website Options</span>
+<span class="nt">website</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Civil</span><span class="nv"> </span><span class="s">War</span><span class="nv"> </span><span class="s">Family</span><span class="nv"> </span><span class="s">Letters&quot;</span>
+<span class="w">  </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Letters</span><span class="nv"> </span><span class="s">from</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">Smith</span><span class="nv"> </span><span class="s">family,</span><span class="nv"> </span><span class="s">1861-1865&quot;</span>
+<span class="w">  </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;family2024&quot;</span><span class="w">  </span><span class="c1"># Optional password protection</span>
+
+<span class="c1"># Output Directories</span>
+<span class="nt">output</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">transcriptions_dir</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;transcriptions&quot;</span>
+<span class="w">  </span><span class="nt">entities_dir</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;entities&quot;</span>
+<span class="w">  </span><span class="nt">summaries_dir</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;summaries&quot;</span>
+<span class="w">  </span><span class="nt">site_dir</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;_site&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="validate-your-configuration">
+<h3>Validate Your Configuration<a class="headerlink" href="#validate-your-configuration" title="Link to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>flatfish<span class="w"> </span>validate
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="part-4-running-the-pipeline-step-by-step">
+<h2>Part 4: Running the Pipeline Step by Step<a class="headerlink" href="#part-4-running-the-pipeline-step-by-step" title="Link to this heading">#</a></h2>
+<p>While <code class="docutils literal notranslate"><span class="pre">flatfish</span> <span class="pre">process</span></code> runs everything at once, let’s go through each step individually to understand what’s happening.</p>
+<section id="step-1-extract-text">
+<h3>Step 1: Extract Text<a class="headerlink" href="#step-1-extract-text" title="Link to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>flatfish<span class="w"> </span>extract
+</pre></div>
+</div>
+<p>This downloads images and extracts text from each one. Progress is shown in the terminal:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Extracting text from 50 documents...
+  [1/50] 1863-04-15_page_001.jpg ✓
+  [2/50] 1863-04-15_page_002.jpg ✓
+  ...
+</pre></div>
+</div>
+<p><strong>Output:</strong> Transcriptions are saved to <code class="docutils literal notranslate"><span class="pre">transcriptions/</span></code> as JSON files:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1863-04-15_page_001&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;date&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1863-04-15&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;raw_text&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;April 15th 1863\nDear Sarah...&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;cleaned_text&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;April 15th 1863\nDear Sarah,\n\nI write to you from camp...&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;confidence&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.92</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="step-2-extract-entities">
+<h3>Step 2: Extract Entities<a class="headerlink" href="#step-2-extract-entities" title="Link to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>flatfish<span class="w"> </span>entities
+</pre></div>
+</div>
+<p>This identifies people, places, dates, and other entities:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Extracting entities from 50 documents...
+  [1/50] 1863-04-15_page_001.json ✓ (12 entities)
+  ...
+</pre></div>
+</div>
+<p><strong>Output:</strong> Entities are saved to <code class="docutils literal notranslate"><span class="pre">entities/</span></code>:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;entities&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;text&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Sarah&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;PERSON&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;context&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Person; the recipient of the letter, likely the writer&#39;s wife&quot;</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;text&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Gettysburg&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;LOCATION&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;context&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Location; a town in Pennsylvania mentioned as the army&#39;s destination&quot;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="step-3-generate-summary">
+<h3>Step 3: Generate Summary<a class="headerlink" href="#step-3-generate-summary" title="Link to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>flatfish<span class="w"> </span>summarize
+</pre></div>
+</div>
+<p>This analyzes all documents and generates:</p>
+<ul class="simple">
+<li><p>A timeline of events</p></li>
+<li><p>Key changes across documents</p></li>
+<li><p>Research questions</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Generating summary from 50 documents...
+  Processing batch 1/3...
+  Processing batch 2/3...
+  Processing batch 3/3...
+  Combining batches...
+✓ Summary generated
+</pre></div>
+</div>
+<p><strong>Output:</strong> Summary files in <code class="docutils literal notranslate"><span class="pre">summaries/</span></code>:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">finding_aid.txt</span></code> - Narrative summary in archival format</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">timeline.txt</span></code> - Chronological events</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">key_changes.txt</span></code> - Changes observed across documents</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">research_questions.txt</span></code> - Suggested research questions</p></li>
+</ul>
+</section>
+<section id="step-4-build-the-website">
+<h3>Step 4: Build the Website<a class="headerlink" href="#step-4-build-the-website" title="Link to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>flatfish<span class="w"> </span>build
+</pre></div>
+</div>
+<p>This generates a static website from all your processed data:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Building website...
+  Generating document pages...
+  Generating entity index...
+  Generating overview pages...
+  Indexing for search...
+✓ Website built at _site/
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="part-5-reviewing-and-editing">
+<h2>Part 5: Reviewing and Editing<a class="headerlink" href="#part-5-reviewing-and-editing" title="Link to this heading">#</a></h2>
+<section id="editing-transcriptions">
+<h3>Editing Transcriptions<a class="headerlink" href="#editing-transcriptions" title="Link to this heading">#</a></h3>
+<p>Sometimes the AI makes mistakes. You can edit the transcription files directly:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>nano<span class="w"> </span>transcriptions/1863-04-15_page_001.json
+</pre></div>
+</div>
+<p>Find the <code class="docutils literal notranslate"><span class="pre">cleaned_text</span></code> field and make corrections. Then rebuild the site:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>flatfish<span class="w"> </span>build
+</pre></div>
+</div>
+</section>
+<section id="editing-the-summary">
+<h3>Editing the Summary<a class="headerlink" href="#editing-the-summary" title="Link to this heading">#</a></h3>
+<p>The summary files are designed for human editing:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Edit the timeline</span>
+nano<span class="w"> </span>summaries/timeline.txt
+
+<span class="c1"># Edit research questions</span>
+nano<span class="w"> </span>summaries/research_questions.txt
+</pre></div>
+</div>
+<p>Timeline format:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># One event per line: DATE | DESCRIPTION</span>
+<span class="mi">1863</span><span class="o">-</span><span class="mi">04</span><span class="o">-</span><span class="mi">15</span> <span class="o">|</span> <span class="n">John</span> <span class="n">writes</span> <span class="n">to</span> <span class="n">Sarah</span> <span class="kn">from</span><span class="w"> </span><span class="nn">camp</span> <span class="n">near</span> <span class="n">Fredericksburg</span>
+<span class="mi">1863</span><span class="o">-</span><span class="mi">04</span><span class="o">-</span><span class="mi">18</span> <span class="o">|</span> <span class="n">Regiment</span> <span class="n">receives</span> <span class="n">orders</span> <span class="n">to</span> <span class="n">march</span> <span class="n">north</span>
+</pre></div>
+</div>
+<p>After editing, rebuild:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>flatfish<span class="w"> </span>build
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="part-6-preview-and-deploy">
+<h2>Part 6: Preview and Deploy<a class="headerlink" href="#part-6-preview-and-deploy" title="Link to this heading">#</a></h2>
+<section id="preview-locally">
+<h3>Preview Locally<a class="headerlink" href="#preview-locally" title="Link to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>flatfish<span class="w"> </span>serve
+</pre></div>
+</div>
+<p>Open <a class="reference external" href="http://localhost:8000">http://localhost:8000</a> to see your site.</p>
+</section>
+<section id="deploy-to-the-web">
+<h3>Deploy to the Web<a class="headerlink" href="#deploy-to-the-web" title="Link to this heading">#</a></h3>
+<p>When you’re ready to share your site:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set your Netlify credentials</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">NETLIFY_TOKEN</span><span class="o">=</span>your-token
+
+<span class="c1"># Deploy (first time creates a new site)</span>
+flatfish<span class="w"> </span>deploy
+
+<span class="c1"># Or deploy to an existing site</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">NETLIFY_SITE_ID</span><span class="o">=</span>your-site-id
+flatfish<span class="w"> </span>deploy
+</pre></div>
+</div>
+<p>Your site is now live! Flatfish will show you the URL.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
+<p>You’ve now completed a full Flatfish project! Here’s what you accomplished:</p>
+<ul class="simple">
+<li><p>✅ Prepared and uploaded document images</p></li>
+<li><p>✅ Configured a Flatfish project</p></li>
+<li><p>✅ Extracted text from historical handwriting</p></li>
+<li><p>✅ Identified named entities with context</p></li>
+<li><p>✅ Generated AI-powered summaries</p></li>
+<li><p>✅ Built and deployed a searchable website</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="next-steps">
+<h2>Next Steps<a class="headerlink" href="#next-steps" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong><a class="reference internal" href="../usage/configuration.html"><span class="std std-doc">Configuration Deep Dive</span></a></strong> - Customize prompts and settings</p></li>
+<li><p><strong><a class="reference internal" href="../usage/processing-documents.html"><span class="std std-doc">Working with Large Collections</span></a></strong> - Handle thousands of documents</p></li>
+<li><p><strong><a class="reference internal" href="../help/troubleshooting.html"><span class="std std-doc">Troubleshooting</span></a></strong> - Solve common problems</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./getting-started"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="quickstart.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Quick Start</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../usage/configuration.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Configuration</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-we-ll-cover">What We’ll Cover</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#before-you-begin">Before You Begin</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-1-preparing-your-documents">Part 1: Preparing Your Documents</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#understanding-document-images">Understanding Document Images</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#naming-your-files">Naming Your Files</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-2-creating-a-hugging-face-dataset">Part 2: Creating a Hugging Face Dataset</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-create-a-hugging-face-account">Step 1: Create a Hugging Face Account</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-create-a-new-dataset">Step 2: Create a New Dataset</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-upload-your-images">Step 3: Upload Your Images</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4-create-a-dataset-loading-script-optional">Step 4: Create a Dataset Loading Script (Optional)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-3-setting-up-your-flatfish-project">Part 3: Setting Up Your Flatfish Project</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#create-the-project">Create the Project</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#configure-your-api-keys">Configure Your API Keys</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#configure-the-project">Configure the Project</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#validate-your-configuration">Validate Your Configuration</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-4-running-the-pipeline-step-by-step">Part 4: Running the Pipeline Step by Step</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-extract-text">Step 1: Extract Text</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-extract-entities">Step 2: Extract Entities</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-generate-summary">Step 3: Generate Summary</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4-build-the-website">Step 4: Build the Website</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-5-reviewing-and-editing">Part 5: Reviewing and Editing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#editing-transcriptions">Editing Transcriptions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#editing-the-summary">Editing the Summary</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-6-preview-and-deploy">Part 6: Preview and Deploy</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#preview-locally">Preview Locally</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#deploy-to-the-web">Deploy to the Web</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#next-steps">Next Steps</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Princeton University Library
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

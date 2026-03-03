@@ -1,0 +1,945 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Processing Documents &#8212; Flatfish Documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'usage/processing-documents';</script>
+    <link rel="icon" href="../_static/logo-light.png"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Transcription" href="transcription.html" />
+    <link rel="prev" title="Configuration" href="configuration.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo-light.png" class="logo__image only-light" alt="Flatfish Documentation - Home"/>
+    <script>document.write(`<img src="../_static/logo-light.png" class="logo__image only-dark" alt="Flatfish Documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../getting-started/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started/quickstart.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started/first-project.html">Your First Project</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Usage Guide</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Processing Documents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transcription.html">Transcription</a></li>
+<li class="toctree-l1"><a class="reference internal" href="entities.html">Entity Extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="summarization.html">Summarization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="building-sites.html">Building Sites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="deployment.html">Deployment</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Concepts</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../concepts/pipeline.html">The Processing Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../concepts/htr-ocr.html">HTR and OCR</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../concepts/named-entities.html">Named Entity Recognition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../concepts/ai-summarization.html">AI Summarization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../concepts/track-summarization.html">Track-Based Summarization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../concepts/hierarchical-combining.html">Hierarchical Combining</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Command Reference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../commands/overview.html">Command Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/init.html">flatfish init</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/process.html">flatfish process</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/transcribe.html">flatfish transcribe</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/entities.html">flatfish entities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/summarize.html">flatfish summarize</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/combine.html">flatfish combine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/build.html">flatfish build</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/serve.html">flatfish serve</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/deploy.html">flatfish deploy</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../api/overview.html">API Reference</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Help &amp; Support</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../help/troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../help/faq.html">Frequently Asked Questions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../help/glossary.html">Glossary</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/usage/processing-documents.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Processing Documents</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-processing-pipeline">The Processing Pipeline</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#running-the-full-pipeline">Running the Full Pipeline</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#running-individual-stages">Running Individual Stages</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#extract-text-only">Extract Text Only</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#extract-entities-only">Extract Entities Only</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#generate-summary-only">Generate Summary Only</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#build-website-only">Build Website Only</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#working-with-large-collections">Working with Large Collections</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#understanding-batch-processing">Understanding Batch Processing</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#resuming-interrupted-processing">Resuming Interrupted Processing</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#monitoring-progress">Monitoring Progress</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#setting-sample-size-for-testing">Setting Sample Size for Testing</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#performance-tips">Performance Tips</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#optimize-for-speed">Optimize for Speed</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#optimize-for-cost">Optimize for Cost</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#estimate-processing-time">Estimate Processing Time</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#handling-errors">Handling Errors</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#common-errors">Common Errors</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#viewing-error-logs">Viewing Error Logs</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#skipping-problematic-documents">Skipping Problematic Documents</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#checking-processing-status">Checking Processing Status</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reprocessing-documents">Reprocessing Documents</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reprocess-everything">Reprocess Everything</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reprocess-specific-documents">Reprocess Specific Documents</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#regenerate-summary-only">Regenerate Summary Only</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#regenerate-summary-combination-only">Regenerate Summary Combination Only</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#processing-different-document-types">Processing Different Document Types</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#handwritten-documents">Handwritten Documents</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#printed-historical-documents">Printed Historical Documents</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mixed-collections">Mixed Collections</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#next-steps">Next Steps</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="processing-documents">
+<h1>Processing Documents<a class="headerlink" href="#processing-documents" title="Link to this heading">#</a></h1>
+<p>Learn how to process document collections efficiently, handle large datasets, and troubleshoot common issues.</p>
+<hr class="docutils" />
+<section id="the-processing-pipeline">
+<h2>The Processing Pipeline<a class="headerlink" href="#the-processing-pipeline" title="Link to this heading">#</a></h2>
+<p>When you run <code class="docutils literal notranslate"><span class="pre">flatfish</span> <span class="pre">process</span></code>, several stages happen in sequence:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>┌─────────────────┐
+│  1. Download    │  Fetch images from Hugging Face
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│  2. Extract     │  OCR/HTR to get raw text
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│  3. Clean       │  AI cleanup of transcription
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│  4. Entities    │  Extract people, places, dates
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│  5. Summarize   │  Generate timeline &amp; analysis
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│  6. Build       │  Create static website
+└─────────────────┘
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="running-the-full-pipeline">
+<h2>Running the Full Pipeline<a class="headerlink" href="#running-the-full-pipeline" title="Link to this heading">#</a></h2>
+<p>Process everything with one command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>flatfish<span class="w"> </span>process
+</pre></div>
+</div>
+<p>This is equivalent to running each stage separately:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>flatfish<span class="w"> </span>extract
+flatfish<span class="w"> </span>entities
+flatfish<span class="w"> </span>summarize
+flatfish<span class="w"> </span>build
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="running-individual-stages">
+<h2>Running Individual Stages<a class="headerlink" href="#running-individual-stages" title="Link to this heading">#</a></h2>
+<section id="extract-text-only">
+<h3>Extract Text Only<a class="headerlink" href="#extract-text-only" title="Link to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>flatfish<span class="w"> </span>extract
+</pre></div>
+</div>
+<p><strong>What it does:</strong></p>
+<ul class="simple">
+<li><p>Downloads images from your Hugging Face dataset</p></li>
+<li><p>Sends each image to the Qwen-VL model for text extraction</p></li>
+<li><p>Cleans up the raw OCR output using your prompt</p></li>
+<li><p>Saves results to <code class="docutils literal notranslate"><span class="pre">transcriptions/</span></code></p></li>
+</ul>
+<p><strong>When to use:</strong></p>
+<ul class="simple">
+<li><p>You only need transcriptions, not entities or summaries</p></li>
+<li><p>You want to review transcriptions before proceeding</p></li>
+</ul>
+</section>
+<section id="extract-entities-only">
+<h3>Extract Entities Only<a class="headerlink" href="#extract-entities-only" title="Link to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>flatfish<span class="w"> </span>entities
+</pre></div>
+</div>
+<p><strong>What it does:</strong></p>
+<ul class="simple">
+<li><p>Reads transcriptions from <code class="docutils literal notranslate"><span class="pre">transcriptions/</span></code></p></li>
+<li><p>Identifies named entities (people, places, dates, etc.)</p></li>
+<li><p>Adds contextual descriptions</p></li>
+<li><p>Saves results to <code class="docutils literal notranslate"><span class="pre">entities/</span></code></p></li>
+</ul>
+<p><strong>Prerequisites:</strong></p>
+<ul class="simple">
+<li><p>Must run <code class="docutils literal notranslate"><span class="pre">flatfish</span> <span class="pre">extract</span></code> first</p></li>
+</ul>
+</section>
+<section id="generate-summary-only">
+<h3>Generate Summary Only<a class="headerlink" href="#generate-summary-only" title="Link to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>flatfish<span class="w"> </span>summarize
+</pre></div>
+</div>
+<p><strong>What it does:</strong></p>
+<ul class="simple">
+<li><p>Reads transcriptions and sorts by date</p></li>
+<li><p>Processes documents in batches (20 images per batch)</p></li>
+<li><p>Generates timeline, key changes, and research questions</p></li>
+<li><p>Saves results to <code class="docutils literal notranslate"><span class="pre">summaries/</span></code></p></li>
+</ul>
+<p><strong>Prerequisites:</strong></p>
+<ul class="simple">
+<li><p>Must run <code class="docutils literal notranslate"><span class="pre">flatfish</span> <span class="pre">extract</span></code> first</p></li>
+</ul>
+</section>
+<section id="build-website-only">
+<h3>Build Website Only<a class="headerlink" href="#build-website-only" title="Link to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>flatfish<span class="w"> </span>build
+</pre></div>
+</div>
+<p><strong>What it does:</strong></p>
+<ul class="simple">
+<li><p>Reads transcriptions, entities, and summaries</p></li>
+<li><p>Generates HTML pages for each document</p></li>
+<li><p>Creates entity index and search index</p></li>
+<li><p>Outputs to <code class="docutils literal notranslate"><span class="pre">_site/</span></code></p></li>
+</ul>
+<p><strong>Prerequisites:</strong></p>
+<ul class="simple">
+<li><p>Must run <code class="docutils literal notranslate"><span class="pre">flatfish</span> <span class="pre">extract</span></code> first</p></li>
+<li><p>Entities and summaries are optional</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="working-with-large-collections">
+<h2>Working with Large Collections<a class="headerlink" href="#working-with-large-collections" title="Link to this heading">#</a></h2>
+<section id="understanding-batch-processing">
+<h3>Understanding Batch Processing<a class="headerlink" href="#understanding-batch-processing" title="Link to this heading">#</a></h3>
+<p>For collections with more than 20 documents, Flatfish processes them in batches. This is necessary because:</p>
+<ol class="arabic simple">
+<li><p><strong>AI model limits</strong> - Qwen-VL can only process ~20 images per request</p></li>
+<li><p><strong>Memory management</strong> - Processing thousands of images at once would crash</p></li>
+<li><p><strong>Resume capability</strong> - If processing fails, you can resume from where you left off</p></li>
+</ol>
+</section>
+<section id="resuming-interrupted-processing">
+<h3>Resuming Interrupted Processing<a class="headerlink" href="#resuming-interrupted-processing" title="Link to this heading">#</a></h3>
+<p>If processing stops (network error, timeout, etc.), simply run the same command again:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>flatfish<span class="w"> </span>extract
+</pre></div>
+</div>
+<p>Flatfish automatically:</p>
+<ul class="simple">
+<li><p>Detects which documents are already processed</p></li>
+<li><p>Skips completed documents</p></li>
+<li><p>Continues from where it left off</p></li>
+</ul>
+</section>
+<section id="monitoring-progress">
+<h3>Monitoring Progress<a class="headerlink" href="#monitoring-progress" title="Link to this heading">#</a></h3>
+<p>Watch the terminal for progress updates:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Extracting text from 500 documents...
+  [125/500] document_125.jpg ✓ (25% complete)
+  Estimated time remaining: 45 minutes
+</pre></div>
+</div>
+</section>
+<section id="setting-sample-size-for-testing">
+<h3>Setting Sample Size for Testing<a class="headerlink" href="#setting-sample-size-for-testing" title="Link to this heading">#</a></h3>
+<p>For large collections, test with a subset first:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># In flatfish.yaml</span>
+<span class="nt">summary</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">sample_size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">50</span><span class="w">  </span><span class="c1"># Only use 50 documents for summary</span>
+</pre></div>
+</div>
+<p>Or use command-line options:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>flatfish<span class="w"> </span>extract<span class="w"> </span>--limit<span class="w"> </span><span class="m">20</span><span class="w">  </span><span class="c1"># Only process first 20 documents</span>
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="performance-tips">
+<h2>Performance Tips<a class="headerlink" href="#performance-tips" title="Link to this heading">#</a></h2>
+<section id="optimize-for-speed">
+<h3>Optimize for Speed<a class="headerlink" href="#optimize-for-speed" title="Link to this heading">#</a></h3>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">processing</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">concurrency</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span><span class="w">  </span><span class="c1"># Process 5 documents at once (default: 3)</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Higher concurrency may hit API rate limits. Start with 3 and increase gradually.</p>
+</div>
+</section>
+<section id="optimize-for-cost">
+<h3>Optimize for Cost<a class="headerlink" href="#optimize-for-cost" title="Link to this heading">#</a></h3>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">summary</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">model</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;qwen-vl-plus&quot;</span><span class="w">  </span><span class="c1"># Cheaper than qwen-vl-max</span>
+<span class="w">  </span><span class="nt">sample_size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100</span><span class="w">       </span><span class="c1"># Limit documents in summary</span>
+</pre></div>
+</div>
+</section>
+<section id="estimate-processing-time">
+<h3>Estimate Processing Time<a class="headerlink" href="#estimate-processing-time" title="Link to this heading">#</a></h3>
+<p>Rough estimates per document:</p>
+<ul class="simple">
+<li><p>Text extraction: 5-15 seconds</p></li>
+<li><p>Entity extraction: 3-8 seconds</p></li>
+<li><p>Summary generation: 10-30 seconds per batch</p></li>
+</ul>
+<p>For a 500-document collection:</p>
+<ul class="simple">
+<li><p>Text extraction: ~45-90 minutes</p></li>
+<li><p>Entities: ~30-60 minutes</p></li>
+<li><p>Summary: ~15-30 minutes</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="handling-errors">
+<h2>Handling Errors<a class="headerlink" href="#handling-errors" title="Link to this heading">#</a></h2>
+<section id="common-errors">
+<h3>Common Errors<a class="headerlink" href="#common-errors" title="Link to this heading">#</a></h3>
+<p><strong>API Rate Limits</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Error</span><span class="p">:</span> <span class="n">Rate</span> <span class="n">limit</span> <span class="n">exceeded</span><span class="o">.</span> <span class="n">Retrying</span> <span class="ow">in</span> <span class="mi">60</span> <span class="n">seconds</span><span class="o">...</span>
+</pre></div>
+</div>
+<p>Flatfish automatically retries with backoff. If it persists, reduce concurrency.</p>
+<p><strong>Timeout Errors</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Error</span><span class="p">:</span> <span class="n">Request</span> <span class="n">timed</span> <span class="n">out</span> <span class="k">for</span> <span class="n">document_123</span><span class="o">.</span><span class="n">jpg</span>
+</pre></div>
+</div>
+<p>The document may be too large or complex. It will be skipped and noted.</p>
+<p><strong>Invalid Images</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Error</span><span class="p">:</span> <span class="n">Cannot</span> <span class="n">process</span> <span class="n">document_456</span><span class="o">.</span><span class="n">jpg</span> <span class="o">-</span> <span class="n">invalid</span> <span class="n">image</span> <span class="nb">format</span>
+</pre></div>
+</div>
+<p>Check that the file is a valid image (JPEG, PNG, TIFF).</p>
+</section>
+<section id="viewing-error-logs">
+<h3>Viewing Error Logs<a class="headerlink" href="#viewing-error-logs" title="Link to this heading">#</a></h3>
+<p>Check the detailed log file:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cat<span class="w"> </span>flatfish.log
+</pre></div>
+</div>
+<p>Or increase verbosity:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>flatfish<span class="w"> </span>process<span class="w"> </span>--verbose
+</pre></div>
+</div>
+</section>
+<section id="skipping-problematic-documents">
+<h3>Skipping Problematic Documents<a class="headerlink" href="#skipping-problematic-documents" title="Link to this heading">#</a></h3>
+<p>Create a <code class="docutils literal notranslate"><span class="pre">.flatfishignore</span></code> file:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Skip these files</span>
+<span class="n">document_corrupted</span><span class="o">.</span><span class="n">jpg</span>
+<span class="n">batch_2023</span><span class="o">/*</span><span class="n">_draft</span><span class="o">.</span><span class="n">jpg</span>
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="checking-processing-status">
+<h2>Checking Processing Status<a class="headerlink" href="#checking-processing-status" title="Link to this heading">#</a></h2>
+<p>See what’s been processed:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>flatfish<span class="w"> </span>status
+</pre></div>
+</div>
+<p>Output:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Processing Status
+═══════════════════════════════════════
+
+Dataset: PULdischo/marshall-diaries
+Total documents: 500
+
+Transcriptions:  450/500 (90%)  ▓▓▓▓▓▓▓▓▓░
+Entities:        450/500 (90%)  ▓▓▓▓▓▓▓▓▓░
+Summary:         ✓ Generated
+
+Last processed: 2024-01-15 14:32:00
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="reprocessing-documents">
+<h2>Reprocessing Documents<a class="headerlink" href="#reprocessing-documents" title="Link to this heading">#</a></h2>
+<section id="reprocess-everything">
+<h3>Reprocess Everything<a class="headerlink" href="#reprocess-everything" title="Link to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Delete all outputs</span>
+rm<span class="w"> </span>-rf<span class="w"> </span>transcriptions/<span class="w"> </span>entities/<span class="w"> </span>summaries/
+
+<span class="c1"># Process again</span>
+flatfish<span class="w"> </span>process
+</pre></div>
+</div>
+</section>
+<section id="reprocess-specific-documents">
+<h3>Reprocess Specific Documents<a class="headerlink" href="#reprocess-specific-documents" title="Link to this heading">#</a></h3>
+<p>Delete the specific output files:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>rm<span class="w"> </span>transcriptions/document_123.json
+rm<span class="w"> </span>entities/document_123.json
+
+flatfish<span class="w"> </span>extract
+flatfish<span class="w"> </span>entities
+</pre></div>
+</div>
+</section>
+<section id="regenerate-summary-only">
+<h3>Regenerate Summary Only<a class="headerlink" href="#regenerate-summary-only" title="Link to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>rm<span class="w"> </span>-rf<span class="w"> </span>summaries/
+flatfish<span class="w"> </span>summarize
+</pre></div>
+</div>
+</section>
+<section id="regenerate-summary-combination-only">
+<h3>Regenerate Summary Combination Only<a class="headerlink" href="#regenerate-summary-combination-only" title="Link to this heading">#</a></h3>
+<p>If batch files exist but combining failed:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>flatfish<span class="w"> </span>combine
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="processing-different-document-types">
+<h2>Processing Different Document Types<a class="headerlink" href="#processing-different-document-types" title="Link to this heading">#</a></h2>
+<section id="handwritten-documents">
+<h3>Handwritten Documents<a class="headerlink" href="#handwritten-documents" title="Link to this heading">#</a></h3>
+<p>Default settings work well. Consider customizing the prompt for specific handwriting styles:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">prompts</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">text_extraction</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">    </span><span class="no">This is a 19th-century American handwritten letter.</span>
+<span class="w">    </span><span class="no">The writer uses common abbreviations of the period...</span>
+</pre></div>
+</div>
+</section>
+<section id="printed-historical-documents">
+<h3>Printed Historical Documents<a class="headerlink" href="#printed-historical-documents" title="Link to this heading">#</a></h3>
+<p>Printed text is usually cleaner:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">prompts</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">text_extraction</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">    </span><span class="no">This is a printed document from the early 20th century.</span>
+<span class="w">    </span><span class="no">Focus on preserving formatting and column structure...</span>
+</pre></div>
+</div>
+</section>
+<section id="mixed-collections">
+<h3>Mixed Collections<a class="headerlink" href="#mixed-collections" title="Link to this heading">#</a></h3>
+<p>For collections with different document types, consider:</p>
+<ol class="arabic simple">
+<li><p>Processing in separate batches</p></li>
+<li><p>Using different prompts for each type</p></li>
+<li><p>Creating multiple Flatfish projects</p></li>
+</ol>
+</section>
+</section>
+<hr class="docutils" />
+<section id="next-steps">
+<h2>Next Steps<a class="headerlink" href="#next-steps" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong><a class="reference internal" href="transcription.html"><span class="std std-doc">Transcription Details</span></a></strong> - Fine-tune text extraction</p></li>
+<li><p><strong><a class="reference internal" href="entities.html"><span class="std std-doc">Entity Extraction</span></a></strong> - Customize entity recognition</p></li>
+<li><p><strong><a class="reference internal" href="summarization.html"><span class="std std-doc">Summarization</span></a></strong> - Configure AI summaries</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./usage"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="configuration.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Configuration</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="transcription.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Transcription</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-processing-pipeline">The Processing Pipeline</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#running-the-full-pipeline">Running the Full Pipeline</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#running-individual-stages">Running Individual Stages</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#extract-text-only">Extract Text Only</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#extract-entities-only">Extract Entities Only</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#generate-summary-only">Generate Summary Only</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#build-website-only">Build Website Only</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#working-with-large-collections">Working with Large Collections</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#understanding-batch-processing">Understanding Batch Processing</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#resuming-interrupted-processing">Resuming Interrupted Processing</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#monitoring-progress">Monitoring Progress</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#setting-sample-size-for-testing">Setting Sample Size for Testing</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#performance-tips">Performance Tips</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#optimize-for-speed">Optimize for Speed</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#optimize-for-cost">Optimize for Cost</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#estimate-processing-time">Estimate Processing Time</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#handling-errors">Handling Errors</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#common-errors">Common Errors</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#viewing-error-logs">Viewing Error Logs</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#skipping-problematic-documents">Skipping Problematic Documents</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#checking-processing-status">Checking Processing Status</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reprocessing-documents">Reprocessing Documents</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reprocess-everything">Reprocess Everything</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reprocess-specific-documents">Reprocess Specific Documents</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#regenerate-summary-only">Regenerate Summary Only</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#regenerate-summary-combination-only">Regenerate Summary Combination Only</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#processing-different-document-types">Processing Different Document Types</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#handwritten-documents">Handwritten Documents</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#printed-historical-documents">Printed Historical Documents</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mixed-collections">Mixed Collections</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#next-steps">Next Steps</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Princeton University Library
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

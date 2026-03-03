@@ -1,0 +1,982 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Glossary &#8212; Flatfish Documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'help/glossary';</script>
+    <link rel="icon" href="../_static/logo-light.png"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Frequently Asked Questions" href="faq.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo-light.png" class="logo__image only-light" alt="Flatfish Documentation - Home"/>
+    <script>document.write(`<img src="../_static/logo-light.png" class="logo__image only-dark" alt="Flatfish Documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../getting-started/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started/quickstart.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started/first-project.html">Your First Project</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Usage Guide</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../usage/configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage/processing-documents.html">Processing Documents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage/transcription.html">Transcription</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage/entities.html">Entity Extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage/summarization.html">Summarization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage/building-sites.html">Building Sites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage/deployment.html">Deployment</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Concepts</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../concepts/pipeline.html">The Processing Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../concepts/htr-ocr.html">HTR and OCR</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../concepts/named-entities.html">Named Entity Recognition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../concepts/ai-summarization.html">AI Summarization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../concepts/track-summarization.html">Track-Based Summarization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../concepts/hierarchical-combining.html">Hierarchical Combining</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Command Reference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../commands/overview.html">Command Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/init.html">flatfish init</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/process.html">flatfish process</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/transcribe.html">flatfish transcribe</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/entities.html">flatfish entities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/summarize.html">flatfish summarize</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/combine.html">flatfish combine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/build.html">flatfish build</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/serve.html">flatfish serve</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/deploy.html">flatfish deploy</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../api/overview.html">API Reference</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Help &amp; Support</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="faq.html">Frequently Asked Questions</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Glossary</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/help/glossary.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Glossary</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a">A</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#api-application-programming-interface">API (Application Programming Interface)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#api-key">API Key</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#b">B</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#batch">Batch</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#batch-combining">Batch Combining</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#c">C</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cli-command-line-interface">CLI (Command Line Interface)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#confidence-score">Confidence Score</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#context-window">Context Window</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#d">D</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dashscope">DashScope</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dpi-dots-per-inch">DPI (Dots Per Inch)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#e">E</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#entity">Entity</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#entity-linking">Entity Linking</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#entity-normalization">Entity Normalization</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#f">F</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#finding-aid">Finding Aid</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#flatfish">Flatfish</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#g">G</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gpe-geo-political-entity">GPE (Geo-Political Entity)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#h">H</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hierarchical-combining">Hierarchical Combining</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#htr-handwritten-text-recognition">HTR (Handwritten Text Recognition)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hugging-face">Hugging Face</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#j">J</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jinja2">Jinja2</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#json-javascript-object-notation">JSON (JavaScript Object Notation)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#k">K</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#key-changes">Key Changes</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#l">L</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#loc-location">LOC (Location)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#m">M</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#markdown">Markdown</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#model">Model</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#n">N</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#named-entity-recognition-ner">Named Entity Recognition (NER)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#narrative">Narrative</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#o">O</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ocr-optical-character-recognition">OCR (Optical Character Recognition)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#p">P</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pipeline">Pipeline</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prompt">Prompt</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#q">Q</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#qwen-vl">Qwen-VL</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#r">R</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#research-questions">Research Questions</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#s">S</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#spacy">spaCy</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#static-site">Static Site</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#summary-track">Summary Track</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#t">T</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#timeline">Timeline</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#token">Token</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#track">Track</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#transcription">Transcription</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#typer">Typer</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#v">V</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#virtual-environment-venv">Virtual Environment (venv)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#vision-language-model">Vision-Language Model</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#y">Y</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#yaml">YAML</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#see-also">See Also</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="glossary">
+<h1>Glossary<a class="headerlink" href="#glossary" title="Link to this heading">#</a></h1>
+<p>Definitions of terms used in Flatfish documentation.</p>
+<hr class="docutils" />
+<section id="a">
+<h2>A<a class="headerlink" href="#a" title="Link to this heading">#</a></h2>
+<section id="api-application-programming-interface">
+<h3>API (Application Programming Interface)<a class="headerlink" href="#api-application-programming-interface" title="Link to this heading">#</a></h3>
+<p>A way for software programs to communicate. Flatfish uses APIs to send document images to AI models and receive transcriptions.</p>
+</section>
+<section id="api-key">
+<h3>API Key<a class="headerlink" href="#api-key" title="Link to this heading">#</a></h3>
+<p>A secret code that identifies you to an API service. Required for Qwen-VL and optional for Hugging Face.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="b">
+<h2>B<a class="headerlink" href="#b" title="Link to this heading">#</a></h2>
+<section id="batch">
+<h3>Batch<a class="headerlink" href="#batch" title="Link to this heading">#</a></h3>
+<p>A group of documents processed together. Default batch size is 20 documents. Batching improves efficiency and enables progress tracking.</p>
+</section>
+<section id="batch-combining">
+<h3>Batch Combining<a class="headerlink" href="#batch-combining" title="Link to this heading">#</a></h3>
+<p>The process of merging individual batch summaries into a single coherent output. Uses hierarchical combining for large collections.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="c">
+<h2>C<a class="headerlink" href="#c" title="Link to this heading">#</a></h2>
+<section id="cli-command-line-interface">
+<h3>CLI (Command Line Interface)<a class="headerlink" href="#cli-command-line-interface" title="Link to this heading">#</a></h3>
+<p>A text-based way to interact with software. Flatfish uses CLI commands like <code class="docutils literal notranslate"><span class="pre">flatfish</span> <span class="pre">process</span></code> instead of a graphical interface.</p>
+</section>
+<section id="confidence-score">
+<h3>Confidence Score<a class="headerlink" href="#confidence-score" title="Link to this heading">#</a></h3>
+<p>A number (0-1) indicating how certain the AI model is about its output. Higher is more confident.</p>
+<ul class="simple">
+<li><p>0.95+: Very confident</p></li>
+<li><p>0.85-0.95: Confident</p></li>
+<li><p>0.70-0.85: Uncertain</p></li>
+<li><p>&lt;0.70: Low confidence</p></li>
+</ul>
+</section>
+<section id="context-window">
+<h3>Context Window<a class="headerlink" href="#context-window" title="Link to this heading">#</a></h3>
+<p>The maximum amount of text an AI model can process at once. Qwen-VL has ~32K tokens. Hierarchical combining addresses this limit.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="d">
+<h2>D<a class="headerlink" href="#d" title="Link to this heading">#</a></h2>
+<section id="dashscope">
+<h3>DashScope<a class="headerlink" href="#dashscope" title="Link to this heading">#</a></h3>
+<p>Alibaba Cloud’s AI service platform. Hosts the Qwen-VL model used by Flatfish.</p>
+</section>
+<section id="dpi-dots-per-inch">
+<h3>DPI (Dots Per Inch)<a class="headerlink" href="#dpi-dots-per-inch" title="Link to this heading">#</a></h3>
+<p>A measure of image resolution. Higher DPI means more detail.</p>
+<ul class="simple">
+<li><p>200 DPI: Minimum for OCR</p></li>
+<li><p>300 DPI: Recommended</p></li>
+<li><p>600 DPI: Archival quality</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="e">
+<h2>E<a class="headerlink" href="#e" title="Link to this heading">#</a></h2>
+<section id="entity">
+<h3>Entity<a class="headerlink" href="#entity" title="Link to this heading">#</a></h3>
+<p>A named item in text, such as a person, place, date, or organization. See <a class="reference internal" href="../concepts/named-entities.html"><span class="std std-doc">Named Entities</span></a>.</p>
+</section>
+<section id="entity-linking">
+<h3>Entity Linking<a class="headerlink" href="#entity-linking" title="Link to this heading">#</a></h3>
+<p>Connecting extracted entities to external databases like Wikidata or GeoNames.</p>
+</section>
+<section id="entity-normalization">
+<h3>Entity Normalization<a class="headerlink" href="#entity-normalization" title="Link to this heading">#</a></h3>
+<p>Mapping variant forms to a standard form. Example: “Jno. Smith” → “John Smith”</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="f">
+<h2>F<a class="headerlink" href="#f" title="Link to this heading">#</a></h2>
+<section id="finding-aid">
+<h3>Finding Aid<a class="headerlink" href="#finding-aid" title="Link to this heading">#</a></h3>
+<p>A document describing an archival collection: what it contains, how it’s organized, and how to use it. Flatfish generates finding aids automatically.</p>
+</section>
+<section id="flatfish">
+<h3>Flatfish<a class="headerlink" href="#flatfish" title="Link to this heading">#</a></h3>
+<p>This tool! A CLI for processing historical documents with AI.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="g">
+<h2>G<a class="headerlink" href="#g" title="Link to this heading">#</a></h2>
+<section id="gpe-geo-political-entity">
+<h3>GPE (Geo-Political Entity)<a class="headerlink" href="#gpe-geo-political-entity" title="Link to this heading">#</a></h3>
+<p>An entity type for countries, cities, states, and other political/geographic divisions. Example: “Philadelphia”, “Virginia”</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="h">
+<h2>H<a class="headerlink" href="#h" title="Link to this heading">#</a></h2>
+<section id="hierarchical-combining">
+<h3>Hierarchical Combining<a class="headerlink" href="#hierarchical-combining" title="Link to this heading">#</a></h3>
+<p>A technique for combining many batch summaries without exceeding API context limits. Processes batches in groups, then combines the groups.</p>
+</section>
+<section id="htr-handwritten-text-recognition">
+<h3>HTR (Handwritten Text Recognition)<a class="headerlink" href="#htr-handwritten-text-recognition" title="Link to this heading">#</a></h3>
+<p>The process of converting handwritten document images to digital text. More challenging than OCR due to handwriting variation.</p>
+</section>
+<section id="hugging-face">
+<h3>Hugging Face<a class="headerlink" href="#hugging-face" title="Link to this heading">#</a></h3>
+<p>A platform for sharing datasets and AI models. Flatfish can load document images from Hugging Face repositories.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="j">
+<h2>J<a class="headerlink" href="#j" title="Link to this heading">#</a></h2>
+<section id="jinja2">
+<h3>Jinja2<a class="headerlink" href="#jinja2" title="Link to this heading">#</a></h3>
+<p>A Python templating engine. Flatfish uses Jinja2 templates to generate HTML pages.</p>
+</section>
+<section id="json-javascript-object-notation">
+<h3>JSON (JavaScript Object Notation)<a class="headerlink" href="#json-javascript-object-notation" title="Link to this heading">#</a></h3>
+<p>A data format for storing structured information. Flatfish stores transcriptions and entities as JSON files.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="k">
+<h2>K<a class="headerlink" href="#k" title="Link to this heading">#</a></h2>
+<section id="key-changes">
+<h3>Key Changes<a class="headerlink" href="#key-changes" title="Link to this heading">#</a></h3>
+<p>One of Flatfish’s summary tracks. Identifies evolving themes and tracks how they change over time.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="l">
+<h2>L<a class="headerlink" href="#l" title="Link to this heading">#</a></h2>
+<section id="loc-location">
+<h3>LOC (Location)<a class="headerlink" href="#loc-location" title="Link to this heading">#</a></h3>
+<p>An entity type for non-GPE locations like rivers, mountains, and regions. Example: “Mississippi River”, “the farm”</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="m">
+<h2>M<a class="headerlink" href="#m" title="Link to this heading">#</a></h2>
+<section id="markdown">
+<h3>Markdown<a class="headerlink" href="#markdown" title="Link to this heading">#</a></h3>
+<p>A simple text formatting language. Batch summaries are stored as Markdown files (.md).</p>
+</section>
+<section id="model">
+<h3>Model<a class="headerlink" href="#model" title="Link to this heading">#</a></h3>
+<p>An AI system trained to perform specific tasks. Flatfish uses:</p>
+<ul class="simple">
+<li><p><strong>Qwen-VL</strong>: Vision-language model for transcription</p></li>
+<li><p><strong>spaCy</strong>: NLP models for entity extraction</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="n">
+<h2>N<a class="headerlink" href="#n" title="Link to this heading">#</a></h2>
+<section id="named-entity-recognition-ner">
+<h3>Named Entity Recognition (NER)<a class="headerlink" href="#named-entity-recognition-ner" title="Link to this heading">#</a></h3>
+<p>The process of identifying and categorizing named items (entities) in text. See <a class="reference internal" href="../concepts/named-entities.html"><span class="std std-doc">Named Entities</span></a>.</p>
+</section>
+<section id="narrative">
+<h3>Narrative<a class="headerlink" href="#narrative" title="Link to this heading">#</a></h3>
+<p>One of Flatfish’s summary tracks. Generates flowing prose describing the collection.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="o">
+<h2>O<a class="headerlink" href="#o" title="Link to this heading">#</a></h2>
+<section id="ocr-optical-character-recognition">
+<h3>OCR (Optical Character Recognition)<a class="headerlink" href="#ocr-optical-character-recognition" title="Link to this heading">#</a></h3>
+<p>The process of converting printed text images to digital text. Works on typed/printed documents.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="p">
+<h2>P<a class="headerlink" href="#p" title="Link to this heading">#</a></h2>
+<section id="pipeline">
+<h3>Pipeline<a class="headerlink" href="#pipeline" title="Link to this heading">#</a></h3>
+<p>A sequence of processing steps. Flatfish’s pipeline: Transcribe → Entities → Summarize → Combine → Build.</p>
+</section>
+<section id="prompt">
+<h3>Prompt<a class="headerlink" href="#prompt" title="Link to this heading">#</a></h3>
+<p>Instructions given to an AI model. Flatfish uses prompts to guide transcription and summarization.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="q">
+<h2>Q<a class="headerlink" href="#q" title="Link to this heading">#</a></h2>
+<section id="qwen-vl">
+<h3>Qwen-VL<a class="headerlink" href="#qwen-vl" title="Link to this heading">#</a></h3>
+<p>A vision-language model from Alibaba. Can understand images and generate text descriptions. Used by Flatfish for transcription and summarization.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="r">
+<h2>R<a class="headerlink" href="#r" title="Link to this heading">#</a></h2>
+<section id="research-questions">
+<h3>Research Questions<a class="headerlink" href="#research-questions" title="Link to this heading">#</a></h3>
+<p>One of Flatfish’s summary tracks. Identifies gaps in documentation and suggests further investigation.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="s">
+<h2>S<a class="headerlink" href="#s" title="Link to this heading">#</a></h2>
+<section id="spacy">
+<h3>spaCy<a class="headerlink" href="#spacy" title="Link to this heading">#</a></h3>
+<p>A Python library for natural language processing. Flatfish uses spaCy for named entity recognition.</p>
+</section>
+<section id="static-site">
+<h3>Static Site<a class="headerlink" href="#static-site" title="Link to this heading">#</a></h3>
+<p>A website made of plain HTML files (no server-side processing). Flatfish generates static sites that can be hosted anywhere.</p>
+</section>
+<section id="summary-track">
+<h3>Summary Track<a class="headerlink" href="#summary-track" title="Link to this heading">#</a></h3>
+<p>A specialized analysis type in Flatfish. Four tracks: Timeline, Key Changes, Research Questions, Narrative.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="t">
+<h2>T<a class="headerlink" href="#t" title="Link to this heading">#</a></h2>
+<section id="timeline">
+<h3>Timeline<a class="headerlink" href="#timeline" title="Link to this heading">#</a></h3>
+<p>One of Flatfish’s summary tracks. Creates a chronological narrative of events mentioned in documents.</p>
+</section>
+<section id="token">
+<h3>Token<a class="headerlink" href="#token" title="Link to this heading">#</a></h3>
+<p>A unit of text for AI models. Roughly 4 characters or 0.75 words. API limits and pricing are often based on tokens.</p>
+</section>
+<section id="track">
+<h3>Track<a class="headerlink" href="#track" title="Link to this heading">#</a></h3>
+<p>See Summary Track.</p>
+</section>
+<section id="transcription">
+<h3>Transcription<a class="headerlink" href="#transcription" title="Link to this heading">#</a></h3>
+<p>The process of converting document images to text. Also, the resulting text itself.</p>
+</section>
+<section id="typer">
+<h3>Typer<a class="headerlink" href="#typer" title="Link to this heading">#</a></h3>
+<p>A Python library for building CLI applications. Flatfish’s CLI is built with Typer.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="v">
+<h2>V<a class="headerlink" href="#v" title="Link to this heading">#</a></h2>
+<section id="virtual-environment-venv">
+<h3>Virtual Environment (venv)<a class="headerlink" href="#virtual-environment-venv" title="Link to this heading">#</a></h3>
+<p>An isolated Python installation. Keeps Flatfish dependencies separate from other projects.</p>
+</section>
+<section id="vision-language-model">
+<h3>Vision-Language Model<a class="headerlink" href="#vision-language-model" title="Link to this heading">#</a></h3>
+<p>An AI model that can process both images and text. Qwen-VL is a vision-language model.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="y">
+<h2>Y<a class="headerlink" href="#y" title="Link to this heading">#</a></h2>
+<section id="yaml">
+<h3>YAML<a class="headerlink" href="#yaml" title="Link to this heading">#</a></h3>
+<p>A human-readable data format. Flatfish configuration uses YAML files (<code class="docutils literal notranslate"><span class="pre">flatfish.yaml</span></code>).</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="see-also">
+<h2>See Also<a class="headerlink" href="#see-also" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong><a class="reference internal" href="faq.html"><span class="std std-doc">FAQ</span></a></strong> - Frequently asked questions</p></li>
+<li><p><strong><a class="reference internal" href="troubleshooting.html"><span class="std std-doc">Troubleshooting</span></a></strong> - Problem solutions</p></li>
+<li><p><strong><a class="reference internal" href="../concepts/pipeline.html"><span class="std std-doc">Concepts</span></a></strong> - How Flatfish works</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./help"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="faq.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Frequently Asked Questions</p>
+      </div>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a">A</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#api-application-programming-interface">API (Application Programming Interface)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#api-key">API Key</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#b">B</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#batch">Batch</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#batch-combining">Batch Combining</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#c">C</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cli-command-line-interface">CLI (Command Line Interface)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#confidence-score">Confidence Score</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#context-window">Context Window</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#d">D</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dashscope">DashScope</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dpi-dots-per-inch">DPI (Dots Per Inch)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#e">E</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#entity">Entity</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#entity-linking">Entity Linking</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#entity-normalization">Entity Normalization</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#f">F</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#finding-aid">Finding Aid</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#flatfish">Flatfish</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#g">G</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gpe-geo-political-entity">GPE (Geo-Political Entity)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#h">H</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hierarchical-combining">Hierarchical Combining</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#htr-handwritten-text-recognition">HTR (Handwritten Text Recognition)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hugging-face">Hugging Face</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#j">J</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jinja2">Jinja2</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#json-javascript-object-notation">JSON (JavaScript Object Notation)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#k">K</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#key-changes">Key Changes</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#l">L</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#loc-location">LOC (Location)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#m">M</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#markdown">Markdown</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#model">Model</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#n">N</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#named-entity-recognition-ner">Named Entity Recognition (NER)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#narrative">Narrative</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#o">O</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ocr-optical-character-recognition">OCR (Optical Character Recognition)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#p">P</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pipeline">Pipeline</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prompt">Prompt</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#q">Q</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#qwen-vl">Qwen-VL</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#r">R</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#research-questions">Research Questions</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#s">S</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#spacy">spaCy</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#static-site">Static Site</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#summary-track">Summary Track</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#t">T</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#timeline">Timeline</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#token">Token</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#track">Track</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#transcription">Transcription</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#typer">Typer</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#v">V</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#virtual-environment-venv">Virtual Environment (venv)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#vision-language-model">Vision-Language Model</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#y">Y</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#yaml">YAML</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#see-also">See Also</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Princeton University Library
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

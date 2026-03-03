@@ -1,0 +1,46 @@
+# Table of contents
+format: jb-book
+root: index
+parts:
+  - caption: Getting Started
+    chapters:
+      - file: getting-started/installation
+      - file: getting-started/quickstart
+      - file: getting-started/first-project
+  - caption: Usage Guide
+    chapters:
+      - file: usage/configuration
+      - file: usage/processing-documents
+      - file: usage/transcription
+      - file: usage/entities
+      - file: usage/summarization
+      - file: usage/building-sites
+      - file: usage/deployment
+  - caption: Concepts
+    chapters:
+      - file: concepts/pipeline
+      - file: concepts/htr-ocr
+      - file: concepts/named-entities
+      - file: concepts/ai-summarization
+      - file: concepts/track-summarization
+      - file: concepts/hierarchical-combining
+  - caption: Command Reference
+    chapters:
+      - file: commands/overview
+      - file: commands/init
+      - file: commands/process
+      - file: commands/transcribe
+      - file: commands/entities
+      - file: commands/summarize
+      - file: commands/combine
+      - file: commands/build
+      - file: commands/serve
+      - file: commands/deploy
+  - caption: API Reference
+    chapters:
+      - file: api/overview
+  - caption: Help & Support
+    chapters:
+      - file: help/troubleshooting
+      - file: help/faq
+      - file: help/glossary

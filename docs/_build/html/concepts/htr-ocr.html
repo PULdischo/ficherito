@@ -1,0 +1,1003 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>HTR and OCR &#8212; Flatfish Documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'concepts/htr-ocr';</script>
+    <link rel="icon" href="../_static/logo-light.png"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Named Entity Recognition" href="named-entities.html" />
+    <link rel="prev" title="The Processing Pipeline" href="pipeline.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo-light.png" class="logo__image only-light" alt="Flatfish Documentation - Home"/>
+    <script>document.write(`<img src="../_static/logo-light.png" class="logo__image only-dark" alt="Flatfish Documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../getting-started/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started/quickstart.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started/first-project.html">Your First Project</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Usage Guide</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../usage/configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage/processing-documents.html">Processing Documents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage/transcription.html">Transcription</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage/entities.html">Entity Extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage/summarization.html">Summarization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage/building-sites.html">Building Sites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage/deployment.html">Deployment</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Concepts</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="pipeline.html">The Processing Pipeline</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">HTR and OCR</a></li>
+<li class="toctree-l1"><a class="reference internal" href="named-entities.html">Named Entity Recognition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ai-summarization.html">AI Summarization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="track-summarization.html">Track-Based Summarization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hierarchical-combining.html">Hierarchical Combining</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Command Reference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../commands/overview.html">Command Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/init.html">flatfish init</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/process.html">flatfish process</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/transcribe.html">flatfish transcribe</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/entities.html">flatfish entities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/summarize.html">flatfish summarize</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/combine.html">flatfish combine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/build.html">flatfish build</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/serve.html">flatfish serve</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/deploy.html">flatfish deploy</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../api/overview.html">API Reference</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Help &amp; Support</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../help/troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../help/faq.html">Frequently Asked Questions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../help/glossary.html">Glossary</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/concepts/htr-ocr.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>HTR and OCR</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-s-the-difference">What’s the Difference?</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ocr-optical-character-recognition">OCR (Optical Character Recognition)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#htr-handwritten-text-recognition">HTR (Handwritten Text Recognition)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-qwen-vl-works">How Qwen-VL Works</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-vision-language-models">Why Vision-Language Models?</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-transcription-process">The Transcription Process</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#factors-affecting-accuracy">Factors Affecting Accuracy</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#image-quality">Image Quality</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#document-characteristics">Document Characteristics</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-qwen-vl-handles-well">What Qwen-VL Handles Well</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#challenging-cases">Challenging Cases</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#improving-transcription-quality">Improving Transcription Quality</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#custom-prompts">Custom Prompts</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pre-processing-images">Pre-Processing Images</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#post-processing-transcriptions">Post-Processing Transcriptions</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#understanding-confidence-scores">Understanding Confidence Scores</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#finding-low-confidence-documents">Finding Low-Confidence Documents</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#comparison-with-other-tools">Comparison with Other Tools</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#vs-transkribus">vs. Transkribus</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#vs-google-vision">vs. Google Vision</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#technical-details">Technical Details</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#model-specifications">Model Specifications</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#api-usage">API Usage</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tips-for-specific-document-types">Tips for Specific Document Types</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diaries">Diaries</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#letters">Letters</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#legal-documents">Legal Documents</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#next-steps">Next Steps</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="htr-and-ocr">
+<h1>HTR and OCR<a class="headerlink" href="#htr-and-ocr" title="Link to this heading">#</a></h1>
+<p>Understand how Flatfish extracts text from handwritten and printed historical documents.</p>
+<hr class="docutils" />
+<section id="what-s-the-difference">
+<h2>What’s the Difference?<a class="headerlink" href="#what-s-the-difference" title="Link to this heading">#</a></h2>
+<section id="ocr-optical-character-recognition">
+<h3>OCR (Optical Character Recognition)<a class="headerlink" href="#ocr-optical-character-recognition" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Designed for <strong>printed text</strong></p></li>
+<li><p>Recognizes standard fonts</p></li>
+<li><p>Very accurate for typed documents</p></li>
+<li><p>Example tools: Tesseract, ABBYY</p></li>
+</ul>
+</section>
+<section id="htr-handwritten-text-recognition">
+<h3>HTR (Handwritten Text Recognition)<a class="headerlink" href="#htr-handwritten-text-recognition" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Designed for <strong>handwritten text</strong></p></li>
+<li><p>Learns to read different writing styles</p></li>
+<li><p>More challenging due to variation</p></li>
+<li><p>Example tools: Transkribus, Qwen-VL</p></li>
+</ul>
+<p>Flatfish uses <strong>Qwen-VL</strong>, which handles both printed and handwritten text.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="how-qwen-vl-works">
+<h2>How Qwen-VL Works<a class="headerlink" href="#how-qwen-vl-works" title="Link to this heading">#</a></h2>
+<p>Qwen-VL is a <strong>vision-language model</strong> from Alibaba. It can:</p>
+<ol class="arabic simple">
+<li><p><strong>See</strong> the image (vision component)</p></li>
+<li><p><strong>Understand</strong> what it sees (language component)</p></li>
+<li><p><strong>Generate</strong> text describing or transcribing the image</p></li>
+</ol>
+<section id="why-vision-language-models">
+<h3>Why Vision-Language Models?<a class="headerlink" href="#why-vision-language-models" title="Link to this heading">#</a></h3>
+<p>Traditional OCR/HTR uses pattern matching. Vision-language models understand <strong>context</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Traditional OCR:  &quot;tbe&quot; → outputs &quot;tbe&quot; (doesn&#39;t know it&#39;s wrong)
+
+Vision-Language:  &quot;tbe&quot; → outputs &quot;the&quot; (understands context)
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="the-transcription-process">
+<h2>The Transcription Process<a class="headerlink" href="#the-transcription-process" title="Link to this heading">#</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>┌─────────────────┐
+│ Document Image  │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│ 1. Vision       │  Model &quot;sees&quot; the handwriting
+│    Encoder      │  Extracts visual features
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│ 2. Language     │  Generates text from features
+│    Decoder      │  Uses context to resolve ambiguity
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│ 3. Post-Process │  Cleanup with custom prompt
+│    Cleaning     │  Preserves historical spelling
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│ Final           │
+│ Transcription   │
+└─────────────────┘
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="factors-affecting-accuracy">
+<h2>Factors Affecting Accuracy<a class="headerlink" href="#factors-affecting-accuracy" title="Link to this heading">#</a></h2>
+<section id="image-quality">
+<h3>Image Quality<a class="headerlink" href="#image-quality" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Factor</p></th>
+<th class="head"><p>Impact</p></th>
+<th class="head"><p>Recommendation</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Resolution</p></td>
+<td><p>High</p></td>
+<td><p>300+ DPI for best results</p></td>
+</tr>
+<tr class="row-odd"><td><p>Contrast</p></td>
+<td><p>High</p></td>
+<td><p>Dark ink on light paper</p></td>
+</tr>
+<tr class="row-even"><td><p>Lighting</p></td>
+<td><p>Medium</p></td>
+<td><p>Even, no shadows</p></td>
+</tr>
+<tr class="row-odd"><td><p>Focus</p></td>
+<td><p>High</p></td>
+<td><p>Sharp, not blurry</p></td>
+</tr>
+<tr class="row-even"><td><p>Color</p></td>
+<td><p>Low</p></td>
+<td><p>Grayscale usually fine</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="document-characteristics">
+<h3>Document Characteristics<a class="headerlink" href="#document-characteristics" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Factor</p></th>
+<th class="head"><p>Impact</p></th>
+<th class="head"><p>Notes</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Handwriting clarity</p></td>
+<td><p>Very High</p></td>
+<td><p>Neat writing &gt; messy</p></td>
+</tr>
+<tr class="row-odd"><td><p>Language</p></td>
+<td><p>High</p></td>
+<td><p>English best, others vary</p></td>
+</tr>
+<tr class="row-even"><td><p>Time period</p></td>
+<td><p>Medium</p></td>
+<td><p>Older scripts harder</p></td>
+</tr>
+<tr class="row-odd"><td><p>Ink condition</p></td>
+<td><p>Medium</p></td>
+<td><p>Faded ink harder</p></td>
+</tr>
+<tr class="row-even"><td><p>Paper condition</p></td>
+<td><p>Medium</p></td>
+<td><p>Damage reduces accuracy</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="what-qwen-vl-handles-well">
+<h3>What Qwen-VL Handles Well<a class="headerlink" href="#what-qwen-vl-handles-well" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>✅ Cursive handwriting</p></li>
+<li><p>✅ Mixed print and handwriting</p></li>
+<li><p>✅ Multiple columns</p></li>
+<li><p>✅ Marginalia and annotations</p></li>
+<li><p>✅ Various languages</p></li>
+</ul>
+</section>
+<section id="challenging-cases">
+<h3>Challenging Cases<a class="headerlink" href="#challenging-cases" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>⚠️ Very faded documents</p></li>
+<li><p>⚠️ Heavy damage or staining</p></li>
+<li><p>⚠️ Unusual scripts (Gothic, etc.)</p></li>
+<li><p>⚠️ Technical notation (math, music)</p></li>
+<li><p>⚠️ Cross-hatched writing</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="improving-transcription-quality">
+<h2>Improving Transcription Quality<a class="headerlink" href="#improving-transcription-quality" title="Link to this heading">#</a></h2>
+<section id="custom-prompts">
+<h3>Custom Prompts<a class="headerlink" href="#custom-prompts" title="Link to this heading">#</a></h3>
+<p>Tell the model what to expect:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">prompts</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">text_extraction</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">    </span><span class="no">This is a 19th-century American diary written in English.</span>
+<span class="w">    </span><span class="no">The writer uses common abbreviations:</span>
+<span class="w">    </span><span class="no">- &quot;thro&quot; = through</span>
+<span class="w">    </span><span class="no">- &quot;recd&quot; = received</span>
+<span class="w">    </span><span class="no">- &quot;&amp;c&quot; = etc.</span>
+<span class="w">    </span>
+<span class="w">    </span><span class="no">Preserve original spelling but expand abbreviations in [brackets].</span>
+<span class="w">    </span>
+<span class="w">    </span><span class="no">Raw OCR text:</span>
+<span class="w">    </span><span class="no">{raw_text}</span>
+</pre></div>
+</div>
+</section>
+<section id="pre-processing-images">
+<h3>Pre-Processing Images<a class="headerlink" href="#pre-processing-images" title="Link to this heading">#</a></h3>
+<p>Before uploading to Hugging Face:</p>
+<ol class="arabic simple">
+<li><p><strong>Crop</strong> to document area (remove desk/background)</p></li>
+<li><p><strong>Rotate</strong> to correct orientation</p></li>
+<li><p><strong>Adjust contrast</strong> if faded</p></li>
+<li><p><strong>Convert</strong> to standard format (JPEG or PNG)</p></li>
+</ol>
+</section>
+<section id="post-processing-transcriptions">
+<h3>Post-Processing Transcriptions<a class="headerlink" href="#post-processing-transcriptions" title="Link to this heading">#</a></h3>
+<p>After extraction, manually correct:</p>
+<ol class="arabic simple">
+<li><p><strong>Names</strong> - Proper nouns often need fixing</p></li>
+<li><p><strong>Places</strong> - Geographic names</p></li>
+<li><p><strong>Numbers</strong> - Dates and amounts</p></li>
+<li><p><strong>Technical terms</strong> - Domain-specific vocabulary</p></li>
+</ol>
+</section>
+</section>
+<hr class="docutils" />
+<section id="understanding-confidence-scores">
+<h2>Understanding Confidence Scores<a class="headerlink" href="#understanding-confidence-scores" title="Link to this heading">#</a></h2>
+<p>Each transcription includes a confidence score (0-1):</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;cleaned_text&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;confidence&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.92</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Score</p></th>
+<th class="head"><p>Meaning</p></th>
+<th class="head"><p>Action</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0.95+</p></td>
+<td><p>Very confident</p></td>
+<td><p>Probably correct</p></td>
+</tr>
+<tr class="row-odd"><td><p>0.85-0.95</p></td>
+<td><p>Confident</p></td>
+<td><p>Spot check</p></td>
+</tr>
+<tr class="row-even"><td><p>0.70-0.85</p></td>
+<td><p>Uncertain</p></td>
+<td><p>Review carefully</p></td>
+</tr>
+<tr class="row-odd"><td><p>&lt;0.70</p></td>
+<td><p>Low confidence</p></td>
+<td><p>May need manual transcription</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<section id="finding-low-confidence-documents">
+<h3>Finding Low-Confidence Documents<a class="headerlink" href="#finding-low-confidence-documents" title="Link to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># List documents with confidence below 0.8</span>
+grep<span class="w"> </span>-l<span class="w"> </span><span class="s1">&#39;&quot;confidence&quot;: 0.[0-7]&#39;</span><span class="w"> </span>transcriptions/*.json
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="comparison-with-other-tools">
+<h2>Comparison with Other Tools<a class="headerlink" href="#comparison-with-other-tools" title="Link to this heading">#</a></h2>
+<section id="vs-transkribus">
+<h3>vs. Transkribus<a class="headerlink" href="#vs-transkribus" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Feature</p></th>
+<th class="head"><p>Flatfish (Qwen-VL)</p></th>
+<th class="head"><p>Transkribus</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Training required</p></td>
+<td><p>No</p></td>
+<td><p>Yes (for custom models)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Languages</p></td>
+<td><p>Many</p></td>
+<td><p>Many (with models)</p></td>
+</tr>
+<tr class="row-even"><td><p>Historical scripts</p></td>
+<td><p>Good</p></td>
+<td><p>Excellent</p></td>
+</tr>
+<tr class="row-odd"><td><p>Cost</p></td>
+<td><p>API usage</p></td>
+<td><p>Subscription</p></td>
+</tr>
+<tr class="row-even"><td><p>Integration</p></td>
+<td><p>Built-in</p></td>
+<td><p>External tool</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="vs-google-vision">
+<h3>vs. Google Vision<a class="headerlink" href="#vs-google-vision" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Feature</p></th>
+<th class="head"><p>Flatfish (Qwen-VL)</p></th>
+<th class="head"><p>Google Vision</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Handwriting</p></td>
+<td><p>Excellent</p></td>
+<td><p>Good</p></td>
+</tr>
+<tr class="row-odd"><td><p>Context understanding</p></td>
+<td><p>Excellent</p></td>
+<td><p>Limited</p></td>
+</tr>
+<tr class="row-even"><td><p>Historical documents</p></td>
+<td><p>Good</p></td>
+<td><p>Fair</p></td>
+</tr>
+<tr class="row-odd"><td><p>Privacy</p></td>
+<td><p>You control data</p></td>
+<td><p>Google processes</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="technical-details">
+<h2>Technical Details<a class="headerlink" href="#technical-details" title="Link to this heading">#</a></h2>
+<section id="model-specifications">
+<h3>Model Specifications<a class="headerlink" href="#model-specifications" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Model</strong>: Qwen-VL-Max</p></li>
+<li><p><strong>Input</strong>: Images up to 4096x4096 pixels</p></li>
+<li><p><strong>Batch size</strong>: 20 images per request</p></li>
+<li><p><strong>Languages</strong>: English, Chinese, and many others</p></li>
+<li><p><strong>Context window</strong>: ~32K tokens</p></li>
+</ul>
+</section>
+<section id="api-usage">
+<h3>API Usage<a class="headerlink" href="#api-usage" title="Link to this heading">#</a></h3>
+<p>Flatfish uses DashScope (Alibaba Cloud) API:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Under the hood</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">completions</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen-vl-max&quot;</span><span class="p">,</span>
+    <span class="n">messages</span><span class="o">=</span><span class="p">[{</span>
+        <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;image_url&quot;</span><span class="p">,</span> <span class="s2">&quot;image_url&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="n">image_base64</span><span class="p">}},</span>
+            <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Transcribe this document...&quot;</span><span class="p">}</span>
+        <span class="p">]</span>
+    <span class="p">}]</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="tips-for-specific-document-types">
+<h2>Tips for Specific Document Types<a class="headerlink" href="#tips-for-specific-document-types" title="Link to this heading">#</a></h2>
+<section id="diaries">
+<h3>Diaries<a class="headerlink" href="#diaries" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Usually single-hand writing</p></li>
+<li><p>May have abbreviations</p></li>
+<li><p>Often include dates in margins</p></li>
+</ul>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">prompts</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">text_extraction</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">    </span><span class="no">This is a handwritten diary entry.</span>
+<span class="w">    </span><span class="no">Look for: date at top, margin notes, abbreviations.</span>
+<span class="w">    </span><span class="no">Preserve line breaks where they indicate new thoughts.</span>
+</pre></div>
+</div>
+</section>
+<section id="letters">
+<h3>Letters<a class="headerlink" href="#letters" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>May have multiple hands (letter + envelope)</p></li>
+<li><p>Formal opening/closing conventions</p></li>
+<li><p>Often include dates and places</p></li>
+</ul>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">prompts</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">text_extraction</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">    </span><span class="no">This is a handwritten letter.</span>
+<span class="w">    </span><span class="no">Look for: date, salutation, closing, signature.</span>
+<span class="w">    </span><span class="no">Note any postscripts or margin additions.</span>
+</pre></div>
+</div>
+</section>
+<section id="legal-documents">
+<h3>Legal Documents<a class="headerlink" href="#legal-documents" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Formal language and formatting</p></li>
+<li><p>Names and places are critical</p></li>
+<li><p>May include printed forms with handwriting</p></li>
+</ul>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">prompts</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">text_extraction</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">    </span><span class="no">This is a legal document (deed, will, or court record).</span>
+<span class="w">    </span><span class="no">Pay special attention to proper names, dates, and amounts.</span>
+<span class="w">    </span><span class="no">Preserve exact wording of legal phrases.</span>
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="next-steps">
+<h2>Next Steps<a class="headerlink" href="#next-steps" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong><a class="reference internal" href="named-entities.html"><span class="std std-doc">Named Entities</span></a></strong> - Extracting people, places, dates</p></li>
+<li><p><strong><a class="reference internal" href="ai-summarization.html"><span class="std std-doc">AI Summarization</span></a></strong> - Generating collection summaries</p></li>
+<li><p><strong><a class="reference internal" href="../usage/transcription.html"><span class="std std-doc">Transcription Guide</span></a></strong> - Practical tips</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./concepts"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="pipeline.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">The Processing Pipeline</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="named-entities.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Named Entity Recognition</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-s-the-difference">What’s the Difference?</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ocr-optical-character-recognition">OCR (Optical Character Recognition)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#htr-handwritten-text-recognition">HTR (Handwritten Text Recognition)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-qwen-vl-works">How Qwen-VL Works</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-vision-language-models">Why Vision-Language Models?</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-transcription-process">The Transcription Process</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#factors-affecting-accuracy">Factors Affecting Accuracy</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#image-quality">Image Quality</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#document-characteristics">Document Characteristics</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-qwen-vl-handles-well">What Qwen-VL Handles Well</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#challenging-cases">Challenging Cases</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#improving-transcription-quality">Improving Transcription Quality</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#custom-prompts">Custom Prompts</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pre-processing-images">Pre-Processing Images</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#post-processing-transcriptions">Post-Processing Transcriptions</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#understanding-confidence-scores">Understanding Confidence Scores</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#finding-low-confidence-documents">Finding Low-Confidence Documents</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#comparison-with-other-tools">Comparison with Other Tools</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#vs-transkribus">vs. Transkribus</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#vs-google-vision">vs. Google Vision</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#technical-details">Technical Details</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#model-specifications">Model Specifications</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#api-usage">API Usage</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tips-for-specific-document-types">Tips for Specific Document Types</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diaries">Diaries</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#letters">Letters</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#legal-documents">Legal Documents</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#next-steps">Next Steps</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Princeton University Library
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

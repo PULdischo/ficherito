@@ -1,0 +1,1025 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Track-Based Summarization &#8212; Flatfish Documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'concepts/track-summarization';</script>
+    <link rel="icon" href="../_static/logo-light.png"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Hierarchical Combining" href="hierarchical-combining.html" />
+    <link rel="prev" title="AI Summarization" href="ai-summarization.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo-light.png" class="logo__image only-light" alt="Flatfish Documentation - Home"/>
+    <script>document.write(`<img src="../_static/logo-light.png" class="logo__image only-dark" alt="Flatfish Documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../getting-started/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started/quickstart.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started/first-project.html">Your First Project</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Usage Guide</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../usage/configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage/processing-documents.html">Processing Documents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage/transcription.html">Transcription</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage/entities.html">Entity Extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage/summarization.html">Summarization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage/building-sites.html">Building Sites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage/deployment.html">Deployment</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Concepts</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="pipeline.html">The Processing Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="htr-ocr.html">HTR and OCR</a></li>
+<li class="toctree-l1"><a class="reference internal" href="named-entities.html">Named Entity Recognition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ai-summarization.html">AI Summarization</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Track-Based Summarization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hierarchical-combining.html">Hierarchical Combining</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Command Reference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../commands/overview.html">Command Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/init.html">flatfish init</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/process.html">flatfish process</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/transcribe.html">flatfish transcribe</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/entities.html">flatfish entities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/summarize.html">flatfish summarize</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/combine.html">flatfish combine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/build.html">flatfish build</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/serve.html">flatfish serve</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/deploy.html">flatfish deploy</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../api/overview.html">API Reference</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Help &amp; Support</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../help/troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../help/faq.html">Frequently Asked Questions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../help/glossary.html">Glossary</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/concepts/track-summarization.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Track-Based Summarization</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-tracks">Why Tracks?</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#single-prompt-problems">Single-Prompt Problems</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#track-based-solution">Track-Based Solution</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#track-specifications">Track Specifications</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#timeline-track">Timeline Track</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#key-changes-track">Key Changes Track</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#research-questions-track">Research Questions Track</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#narrative-track">Narrative Track</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#directory-structure">Directory Structure</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parallel-processing">Parallel Processing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#performance-impact">Performance Impact</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#combining-tracks">Combining Tracks</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#combining-prompts">Combining Prompts</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#customizing-tracks">Customizing Tracks</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#custom-track-prompts">Custom Track Prompts</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#adding-custom-tracks">Adding Custom Tracks</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#track-interaction">Track Interaction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#best-practices">Best Practices</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#review-track-outputs-separately">1. Review Track Outputs Separately</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#use-tracks-for-quality-control">2. Use Tracks for Quality Control</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#version-control-track-files">3. Version Control Track Files</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#iterative-improvement">4. Iterative Improvement</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#troubleshooting">Troubleshooting</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#track-outputs-inconsistent">Track outputs inconsistent?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#some-tracks-empty">Some tracks empty?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#duplicate-information-across-tracks">Duplicate information across tracks?</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#next-steps">Next Steps</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="track-based-summarization">
+<h1>Track-Based Summarization<a class="headerlink" href="#track-based-summarization" title="Link to this heading">#</a></h1>
+<p>A deep dive into Flatfish’s specialized track system for generating comprehensive summaries.</p>
+<hr class="docutils" />
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h2>
+<p>Track-based summarization processes documents through <strong>four parallel specialized tracks</strong>, each optimized for a specific type of analysis:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                    ┌─────────────────┐
+                    │ Document Batch  │
+                    └────────┬────────┘
+                             │
+        ┌────────────────────┼────────────────────┐
+        │                    │                    │
+        ▼                    ▼                    ▼
+┌───────────────┐  ┌───────────────┐  ┌───────────────┐
+│   Timeline    │  │  Key Changes  │  │   Research    │
+│    Track      │  │    Track      │  │   Questions   │
+└───────┬───────┘  └───────┬───────┘  └───────┬───────┘
+        │                  │                  │
+        ▼                  ▼                  ▼
+┌───────────────┐  ┌───────────────┐  ┌───────────────┐
+│ timeline/     │  │ key_changes/  │  │ research_     │
+│ batch_001.md  │  │ batch_001.md  │  │ questions/    │
+│ batch_002.md  │  │ batch_002.md  │  │ batch_001.md  │
+│ ...           │  │ ...           │  │ ...           │
+└───────────────┘  └───────────────┘  └───────────────┘
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="why-tracks">
+<h2>Why Tracks?<a class="headerlink" href="#why-tracks" title="Link to this heading">#</a></h2>
+<section id="single-prompt-problems">
+<h3>Single-Prompt Problems<a class="headerlink" href="#single-prompt-problems" title="Link to this heading">#</a></h3>
+<p>A single prompt trying to do everything:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;Analyze this document. Extract dates, identify themes, </span>
+<span class="n">track</span> <span class="n">changes</span> <span class="n">over</span> <span class="n">time</span><span class="p">,</span> <span class="n">note</span> <span class="n">research</span> <span class="n">questions</span><span class="p">,</span> <span class="ow">and</span> 
+<span class="n">write</span> <span class="n">a</span> <span class="n">narrative</span> <span class="n">summary</span><span class="o">.</span><span class="s2">&quot;</span>
+</pre></div>
+</div>
+<p><strong>Issues</strong>:</p>
+<ul class="simple">
+<li><p>Prompt too complex</p></li>
+<li><p>Model may focus on one aspect</p></li>
+<li><p>Inconsistent outputs</p></li>
+<li><p>Hard to debug or improve</p></li>
+</ul>
+</section>
+<section id="track-based-solution">
+<h3>Track-Based Solution<a class="headerlink" href="#track-based-solution" title="Link to this heading">#</a></h3>
+<p>Each track has a <strong>focused prompt</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Timeline</span><span class="p">:</span> <span class="s2">&quot;Create a chronological list of dated events...&quot;</span>
+<span class="n">Key</span> <span class="n">Changes</span><span class="p">:</span> <span class="s2">&quot;Identify themes and track how they evolve...&quot;</span>
+<span class="n">Research</span> <span class="n">Questions</span><span class="p">:</span> <span class="s2">&quot;What questions does this raise...&quot;</span>
+</pre></div>
+</div>
+<p><strong>Benefits</strong>:</p>
+<ul class="simple">
+<li><p>Clear, focused instructions</p></li>
+<li><p>Consistent output formats</p></li>
+<li><p>Parallel processing (4x throughput)</p></li>
+<li><p>Independent editing</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="track-specifications">
+<h2>Track Specifications<a class="headerlink" href="#track-specifications" title="Link to this heading">#</a></h2>
+<section id="timeline-track">
+<h3>Timeline Track<a class="headerlink" href="#timeline-track" title="Link to this heading">#</a></h3>
+<p><strong>Purpose</strong>: Build a chronological narrative of events</p>
+<p><strong>Prompt</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Analyze</span> <span class="n">the</span> <span class="n">following</span> <span class="n">document</span> <span class="n">batch</span> <span class="ow">and</span> <span class="n">create</span> <span class="n">a</span> <span class="n">detailed</span> 
+<span class="n">chronological</span> <span class="n">timeline</span> <span class="n">of</span> <span class="n">events</span><span class="o">.</span> 
+
+<span class="n">For</span> <span class="n">each</span> <span class="n">event</span><span class="p">:</span>
+<span class="o">-</span> <span class="n">Extract</span> <span class="n">the</span> <span class="n">specific</span> <span class="n">date</span> <span class="k">if</span> <span class="n">mentioned</span>
+<span class="o">-</span> <span class="n">Describe</span> <span class="n">what</span> <span class="n">happened</span>
+<span class="o">-</span> <span class="n">Note</span> <span class="nb">any</span> <span class="n">participants</span>
+<span class="o">-</span> <span class="n">Identify</span> <span class="n">cause</span><span class="o">/</span><span class="n">effect</span> <span class="n">relationships</span>
+
+<span class="n">Format</span> <span class="k">as</span><span class="p">:</span>
+<span class="n">YYYY</span><span class="o">-</span><span class="n">MM</span><span class="o">-</span><span class="n">DD</span><span class="p">:</span> <span class="n">Event</span> <span class="n">description</span>
+</pre></div>
+</div>
+<p><strong>Output Example</strong>:</p>
+<div class="highlight-markdown notranslate"><div class="highlight"><pre><span></span><span class="gu">## Timeline: Batch 015</span>
+
+1865-03-15: John Smith departed for Philadelphia on business
+1865-03-18: Met with First National Bank regarding mill loan
+1865-03-20: Loan of $500 approved at 6% interest
+1865-03-22: Returned home via Reading Railroad
+1865-03-25: Began planning mill expansion with brother William
+</pre></div>
+</div>
+</section>
+<section id="key-changes-track">
+<h3>Key Changes Track<a class="headerlink" href="#key-changes-track" title="Link to this heading">#</a></h3>
+<p><strong>Purpose</strong>: Track evolving themes and shifts</p>
+<p><strong>Prompt</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Analyze</span> <span class="n">the</span> <span class="n">following</span> <span class="n">document</span> <span class="n">batch</span> <span class="ow">and</span> <span class="n">identify</span> <span class="n">key</span> 
+<span class="n">changes</span> <span class="ow">in</span> <span class="n">themes</span><span class="p">,</span> <span class="n">relationships</span><span class="p">,</span> <span class="ow">or</span> <span class="n">circumstances</span><span class="o">.</span>
+
+<span class="n">For</span> <span class="n">each</span> <span class="n">theme</span><span class="p">:</span>
+<span class="o">-</span> <span class="n">Name</span> <span class="n">the</span> <span class="n">theme</span> <span class="ow">or</span> <span class="n">topic</span>
+<span class="o">-</span> <span class="n">Describe</span> <span class="n">how</span> <span class="n">it</span> <span class="n">appears</span> <span class="ow">in</span> <span class="n">this</span> <span class="n">batch</span>
+<span class="o">-</span> <span class="n">Note</span> <span class="nb">any</span> <span class="n">shifts</span> <span class="kn">from</span><span class="w"> </span><span class="nn">previous</span> <span class="n">state</span>
+<span class="o">-</span> <span class="n">Identify</span> <span class="n">trajectory</span> <span class="p">(</span><span class="n">improving</span><span class="p">,</span> <span class="n">worsening</span><span class="p">,</span> <span class="n">stable</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Output Example</strong>:</p>
+<div class="highlight-markdown notranslate"><div class="highlight"><pre><span></span><span class="gu">## Key Changes: Batch 015</span>
+
+<span class="gu">### Financial Situation</span>
+<span class="k">-</span><span class="w"> </span>Status: IMPROVING
+<span class="k">-</span><span class="w"> </span>Evidence: Loan approved, expansion planned
+<span class="k">-</span><span class="w"> </span>Shift: From uncertainty to optimism
+
+<span class="gu">### Family Health</span>
+<span class="k">-</span><span class="w"> </span>Status: CONCERNING
+<span class="k">-</span><span class="w"> </span>Evidence: Wife&#39;s illness mentioned twice
+<span class="k">-</span><span class="w"> </span>Shift: New development, not previously noted
+
+<span class="gu">### Business Relationships</span>
+<span class="k">-</span><span class="w"> </span>Status: STABLE
+<span class="k">-</span><span class="w"> </span>Evidence: Continued work with brother
+<span class="k">-</span><span class="w"> </span>Shift: Bank relationship now established
+</pre></div>
+</div>
+</section>
+<section id="research-questions-track">
+<h3>Research Questions Track<a class="headerlink" href="#research-questions-track" title="Link to this heading">#</a></h3>
+<p><strong>Purpose</strong>: Identify gaps and suggest investigations</p>
+<p><strong>Prompt</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Analyze</span> <span class="n">the</span> <span class="n">following</span> <span class="n">document</span> <span class="n">batch</span> <span class="ow">and</span> <span class="n">identify</span> <span class="n">questions</span> 
+<span class="n">that</span> <span class="n">a</span> <span class="n">researcher</span> <span class="n">might</span> <span class="n">want</span> <span class="n">to</span> <span class="n">investigate</span> <span class="n">further</span><span class="o">.</span>
+
+<span class="n">For</span> <span class="n">each</span> <span class="n">question</span><span class="p">:</span>
+<span class="o">-</span> <span class="n">State</span> <span class="n">the</span> <span class="n">question</span> <span class="n">clearly</span>
+<span class="o">-</span> <span class="n">Provide</span> <span class="n">context</span> <span class="kn">from</span><span class="w"> </span><span class="nn">documents</span>
+<span class="o">-</span> <span class="n">Suggest</span> <span class="n">possible</span> <span class="n">sources</span> <span class="n">to</span> <span class="n">consult</span>
+<span class="o">-</span> <span class="n">Note</span> <span class="n">importance</span> <span class="p">(</span><span class="n">high</span><span class="o">/</span><span class="n">medium</span><span class="o">/</span><span class="n">low</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Output Example</strong>:</p>
+<div class="highlight-markdown notranslate"><div class="highlight"><pre><span></span><span class="gu">## Research Questions: Batch 015</span>
+
+<span class="gu">### Who was the bank officer mentioned as &quot;Mr. Davidson&quot;?</span>
+<span class="k">-</span><span class="w"> </span>Context: Approved the loan, seems to have prior relationship
+<span class="k">-</span><span class="w"> </span>Sources: Bank records, local directories
+<span class="k">-</span><span class="w"> </span>Importance: MEDIUM
+
+<span class="gu">### What was the &quot;matter in Lancaster&quot; that delayed return?</span>
+<span class="k">-</span><span class="w"> </span>Context: Mentioned but not explained
+<span class="k">-</span><span class="w"> </span>Sources: Lancaster newspapers, court records
+<span class="k">-</span><span class="w"> </span>Importance: LOW
+
+<span class="gu">### What was wife&#39;s illness?</span>
+<span class="k">-</span><span class="w"> </span>Context: Symptoms not described, treatment not mentioned
+<span class="k">-</span><span class="w"> </span>Sources: Medical records if available, family history
+<span class="k">-</span><span class="w"> </span>Importance: HIGH (affects family narrative)
+</pre></div>
+</div>
+</section>
+<section id="narrative-track">
+<h3>Narrative Track<a class="headerlink" href="#narrative-track" title="Link to this heading">#</a></h3>
+<p><strong>Purpose</strong>: Generate flowing prose description</p>
+<p><strong>Prompt</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Based</span> <span class="n">on</span> <span class="n">the</span> <span class="n">timeline</span><span class="p">,</span> <span class="n">key</span> <span class="n">changes</span><span class="p">,</span> <span class="ow">and</span> <span class="n">research</span> <span class="n">questions</span><span class="p">,</span>
+<span class="n">write</span> <span class="n">a</span> <span class="n">narrative</span> <span class="n">paragraph</span> <span class="n">summarizing</span> <span class="n">this</span> <span class="n">batch</span> <span class="n">of</span> 
+<span class="n">documents</span><span class="o">.</span>
+
+<span class="n">Guidelines</span><span class="p">:</span>
+<span class="o">-</span> <span class="n">Write</span> <span class="ow">in</span> <span class="n">past</span> <span class="n">tense</span>
+<span class="o">-</span> <span class="n">Use</span> <span class="n">specific</span> <span class="n">details</span>
+<span class="o">-</span> <span class="n">Maintain</span> <span class="n">scholarly</span> <span class="n">tone</span>
+<span class="o">-</span> <span class="n">Balance</span> <span class="n">detail</span> <span class="k">with</span> <span class="n">readability</span>
+</pre></div>
+</div>
+<p><strong>Output Example</strong>:</p>
+<div class="highlight-markdown notranslate"><div class="highlight"><pre><span></span><span class="gu">## Narrative: Batch 015</span>
+
+In mid-March 1865, John Smith undertook a consequential 
+journey to Philadelphia that would shape his family&#39;s 
+future. Meeting with representatives of the First National 
+Bank, he secured a $500 loan at favorable terms, enabling 
+the long-planned expansion of the family mill. His brother 
+William&#39;s involvement in the planning suggests the business 
+remained a family enterprise. However, the correspondence 
+also reveals concerns about his wife&#39;s health, a new 
+development that would recur in later documents.
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="directory-structure">
+<h2>Directory Structure<a class="headerlink" href="#directory-structure" title="Link to this heading">#</a></h2>
+<p>Track outputs are organized in subdirectories:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>batches/
+├── timeline/
+│   ├── batch_001.md
+│   ├── batch_002.md
+│   └── ... 
+├── key_changes/
+│   ├── batch_001.md
+│   ├── batch_002.md
+│   └── ...
+├── research_questions/
+│   ├── batch_001.md
+│   ├── batch_002.md
+│   └── ...
+└── narrative/
+    ├── batch_001.md
+    ├── batch_002.md
+    └── ...
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="parallel-processing">
+<h2>Parallel Processing<a class="headerlink" href="#parallel-processing" title="Link to this heading">#</a></h2>
+<p>Tracks run simultaneously:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Simplified: How Flatfish processes a batch</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">process_batch</span><span class="p">(</span><span class="n">batch_text</span><span class="p">):</span>
+    <span class="c1"># Run all 4 tracks in parallel</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span>
+        <span class="n">call_api</span><span class="p">(</span><span class="n">TIMELINE_PROMPT</span><span class="p">,</span> <span class="n">batch_text</span><span class="p">),</span>
+        <span class="n">call_api</span><span class="p">(</span><span class="n">KEY_CHANGES_PROMPT</span><span class="p">,</span> <span class="n">batch_text</span><span class="p">),</span>
+        <span class="n">call_api</span><span class="p">(</span><span class="n">RESEARCH_QUESTIONS_PROMPT</span><span class="p">,</span> <span class="n">batch_text</span><span class="p">),</span>
+        <span class="n">call_api</span><span class="p">(</span><span class="n">NARRATIVE_PROMPT</span><span class="p">,</span> <span class="n">batch_text</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">results</span>
+</pre></div>
+</div>
+<section id="performance-impact">
+<h3>Performance Impact<a class="headerlink" href="#performance-impact" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Approach</p></th>
+<th class="head"><p>API Calls</p></th>
+<th class="head"><p>Time (est.)</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Sequential</p></td>
+<td><p>4n</p></td>
+<td><p>4x</p></td>
+</tr>
+<tr class="row-odd"><td><p>Parallel tracks</p></td>
+<td><p>4n</p></td>
+<td><p>1x</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Where n = number of batches. Parallel processing gives 4x speedup.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="combining-tracks">
+<h2>Combining Tracks<a class="headerlink" href="#combining-tracks" title="Link to this heading">#</a></h2>
+<p>After all batches are processed, each track is combined separately:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>timeline/batch_001.md  ─┐
+timeline/batch_002.md  ─┼─→ timeline.txt
+timeline/batch_003.md  ─┤
+...                    ─┘
+
+key_changes/batch_001.md  ─┐
+key_changes/batch_002.md  ─┼─→ key_changes.txt
+key_changes/batch_003.md  ─┤
+...                       ─┘
+</pre></div>
+</div>
+<section id="combining-prompts">
+<h3>Combining Prompts<a class="headerlink" href="#combining-prompts" title="Link to this heading">#</a></h3>
+<p>Each track has a specialized combining prompt:</p>
+<p><strong>Timeline combining</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Merge</span> <span class="n">these</span> <span class="n">timeline</span> <span class="n">segments</span> <span class="n">into</span> <span class="n">a</span> <span class="n">single</span> <span class="n">coherent</span> 
+<span class="n">chronological</span> <span class="n">narrative</span><span class="o">.</span> <span class="n">Remove</span> <span class="n">duplicates</span><span class="p">,</span> <span class="n">resolve</span> 
+<span class="n">conflicts</span><span class="p">,</span> <span class="n">maintain</span> <span class="n">chronological</span> <span class="n">order</span><span class="o">.</span>
+</pre></div>
+</div>
+<p><strong>Key Changes combining</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Synthesize</span> <span class="n">these</span> <span class="n">theme</span> <span class="n">analyses</span> <span class="n">into</span> <span class="n">a</span> <span class="n">comprehensive</span> 
+<span class="n">overview</span><span class="o">.</span> <span class="n">Track</span> <span class="n">how</span> <span class="n">each</span> <span class="n">theme</span> <span class="n">evolves</span> <span class="n">across</span> <span class="n">the</span> <span class="n">full</span> 
+<span class="n">collection</span><span class="o">.</span> <span class="n">Note</span> <span class="n">major</span> <span class="n">turning</span> <span class="n">points</span><span class="o">.</span>
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="customizing-tracks">
+<h2>Customizing Tracks<a class="headerlink" href="#customizing-tracks" title="Link to this heading">#</a></h2>
+<section id="custom-track-prompts">
+<h3>Custom Track Prompts<a class="headerlink" href="#custom-track-prompts" title="Link to this heading">#</a></h3>
+<p>Override default prompts in configuration:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># flatfish.yaml</span>
+<span class="nt">prompts</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">timeline</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">    </span><span class="no">Create a timeline focusing on:</span>
+<span class="w">    </span><span class="no">- Agricultural activities (planting, harvest, weather)</span>
+<span class="w">    </span><span class="no">- Market activities (buying, selling, prices)</span>
+<span class="w">    </span><span class="no">- Travel and transportation</span>
+<span class="w">    </span>
+<span class="w">    </span><span class="no">This is a farming family in Ohio, 1850-1860.</span>
+<span class="w">    </span>
+<span class="w">  </span><span class="nt">key_changes</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">    </span><span class="no">Track these specific themes:</span>
+<span class="w">    </span><span class="no">- Land ownership and expansion</span>
+<span class="w">    </span><span class="no">- Crop choices and yields</span>
+<span class="w">    </span><span class="no">- Labor (family vs. hired)</span>
+<span class="w">    </span><span class="no">- Equipment and technology</span>
+<span class="w">    </span><span class="no">- Debt and financial status</span>
+</pre></div>
+</div>
+</section>
+<section id="adding-custom-tracks">
+<h3>Adding Custom Tracks<a class="headerlink" href="#adding-custom-tracks" title="Link to this heading">#</a></h3>
+<p>For specialized needs, extend the track system:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># flatfish.yaml</span>
+<span class="nt">custom_tracks</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">agricultural</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">prompt</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">      </span><span class="no">Extract all agricultural information:</span>
+<span class="w">      </span><span class="no">- Crops mentioned (type, quantity, condition)</span>
+<span class="w">      </span><span class="no">- Livestock (type, count, health)</span>
+<span class="w">      </span><span class="no">- Weather impacts</span>
+<span class="w">      </span><span class="no">- Market prices</span>
+<span class="w">    </span><span class="nt">output_dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">agricultural</span>
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="track-interaction">
+<h2>Track Interaction<a class="headerlink" href="#track-interaction" title="Link to this heading">#</a></h2>
+<p>Tracks are processed independently but complement each other:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>┌──────────────────────────────────────────────────────────┐
+│                    FINDING AID                            │
+│                                                          │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐      │
+│  │  Timeline   │→ │ Key Changes │→ │  Research   │      │
+│  │  provides   │  │  provides   │  │  Questions  │      │
+│  │  WHEN       │  │  WHAT/WHY   │  │  provide    │      │
+│  │             │  │             │  │  NEXT STEPS │      │
+│  └─────────────┘  └─────────────┘  └─────────────┘      │
+│                                                          │
+│                    ↓ ↓ ↓ ↓ ↓                             │
+│                                                          │
+│  ┌──────────────────────────────────────────────────┐   │
+│  │              Narrative Summary                    │   │
+│  │        (synthesizes all tracks)                   │   │
+│  └──────────────────────────────────────────────────┘   │
+│                                                          │
+└──────────────────────────────────────────────────────────┘
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="best-practices">
+<h2>Best Practices<a class="headerlink" href="#best-practices" title="Link to this heading">#</a></h2>
+<section id="review-track-outputs-separately">
+<h3>1. Review Track Outputs Separately<a class="headerlink" href="#review-track-outputs-separately" title="Link to this heading">#</a></h3>
+<p>Each track may need different corrections:</p>
+<ul class="simple">
+<li><p>Timeline: Check dates and sequences</p></li>
+<li><p>Key Changes: Verify themes are accurate</p></li>
+<li><p>Research Questions: Assess relevance</p></li>
+</ul>
+</section>
+<section id="use-tracks-for-quality-control">
+<h3>2. Use Tracks for Quality Control<a class="headerlink" href="#use-tracks-for-quality-control" title="Link to this heading">#</a></h3>
+<p>If one track is poor, investigate:</p>
+<ul class="simple">
+<li><p>Is the source material unclear?</p></li>
+<li><p>Does the prompt need adjustment?</p></li>
+<li><p>Are there transcription errors?</p></li>
+</ul>
+</section>
+<section id="version-control-track-files">
+<h3>3. Version Control Track Files<a class="headerlink" href="#version-control-track-files" title="Link to this heading">#</a></h3>
+<p>Track files are plain text—use git:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>add<span class="w"> </span>batches/
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Initial track outputs&quot;</span>
+<span class="c1"># ... make edits ...</span>
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Corrected timeline dates in batch 15&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="iterative-improvement">
+<h3>4. Iterative Improvement<a class="headerlink" href="#iterative-improvement" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p>Run initial summarization</p></li>
+<li><p>Review track outputs</p></li>
+<li><p>Adjust prompts based on issues</p></li>
+<li><p>Re-run affected batches</p></li>
+</ol>
+</section>
+</section>
+<hr class="docutils" />
+<section id="troubleshooting">
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Link to this heading">#</a></h2>
+<section id="track-outputs-inconsistent">
+<h3>Track outputs inconsistent?<a class="headerlink" href="#track-outputs-inconsistent" title="Link to this heading">#</a></h3>
+<p>Ensure prompts are specific about format:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">prompts</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">timeline</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">    </span><span class="no">FORMAT STRICTLY AS:</span>
+<span class="w">    </span><span class="no">YYYY-MM-DD: Event description</span>
+<span class="w">    </span>
+<span class="w">    </span><span class="no">If date uncertain, use:</span>
+<span class="w">    </span><span class="no">YYYY-MM-??: Event description</span>
+<span class="w">    </span><span class="no">YYYY-??-??: Event description</span>
+</pre></div>
+</div>
+</section>
+<section id="some-tracks-empty">
+<h3>Some tracks empty?<a class="headerlink" href="#some-tracks-empty" title="Link to this heading">#</a></h3>
+<p>Check if source documents contain relevant content:</p>
+<ul class="simple">
+<li><p>No dates → empty timeline</p></li>
+<li><p>No themes → empty key changes</p></li>
+<li><p>Clear documents → few research questions</p></li>
+</ul>
+</section>
+<section id="duplicate-information-across-tracks">
+<h3>Duplicate information across tracks?<a class="headerlink" href="#duplicate-information-across-tracks" title="Link to this heading">#</a></h3>
+<p>This is expected—tracks overlap intentionally. The narrative track synthesizes them.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="next-steps">
+<h2>Next Steps<a class="headerlink" href="#next-steps" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong><a class="reference internal" href="hierarchical-combining.html"><span class="std std-doc">Hierarchical Combining</span></a></strong> - How tracks are combined</p></li>
+<li><p><strong><a class="reference internal" href="ai-summarization.html"><span class="std std-doc">AI Summarization</span></a></strong> - Overview of the summarization system</p></li>
+<li><p><strong><a class="reference internal" href="../usage/summarization.html"><span class="std std-doc">Summarization Guide</span></a></strong> - Practical instructions</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./concepts"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="ai-summarization.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">AI Summarization</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="hierarchical-combining.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Hierarchical Combining</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-tracks">Why Tracks?</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#single-prompt-problems">Single-Prompt Problems</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#track-based-solution">Track-Based Solution</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#track-specifications">Track Specifications</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#timeline-track">Timeline Track</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#key-changes-track">Key Changes Track</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#research-questions-track">Research Questions Track</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#narrative-track">Narrative Track</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#directory-structure">Directory Structure</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parallel-processing">Parallel Processing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#performance-impact">Performance Impact</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#combining-tracks">Combining Tracks</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#combining-prompts">Combining Prompts</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#customizing-tracks">Customizing Tracks</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#custom-track-prompts">Custom Track Prompts</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#adding-custom-tracks">Adding Custom Tracks</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#track-interaction">Track Interaction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#best-practices">Best Practices</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#review-track-outputs-separately">1. Review Track Outputs Separately</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#use-tracks-for-quality-control">2. Use Tracks for Quality Control</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#version-control-track-files">3. Version Control Track Files</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#iterative-improvement">4. Iterative Improvement</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#troubleshooting">Troubleshooting</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#track-outputs-inconsistent">Track outputs inconsistent?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#some-tracks-empty">Some tracks empty?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#duplicate-information-across-tracks">Duplicate information across tracks?</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#next-steps">Next Steps</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Princeton University Library
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

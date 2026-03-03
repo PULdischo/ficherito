@@ -1,0 +1,977 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>AI Summarization &#8212; Flatfish Documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'concepts/ai-summarization';</script>
+    <link rel="icon" href="../_static/logo-light.png"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Track-Based Summarization" href="track-summarization.html" />
+    <link rel="prev" title="Named Entity Recognition" href="named-entities.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo-light.png" class="logo__image only-light" alt="Flatfish Documentation - Home"/>
+    <script>document.write(`<img src="../_static/logo-light.png" class="logo__image only-dark" alt="Flatfish Documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../getting-started/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started/quickstart.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started/first-project.html">Your First Project</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Usage Guide</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../usage/configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage/processing-documents.html">Processing Documents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage/transcription.html">Transcription</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage/entities.html">Entity Extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage/summarization.html">Summarization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage/building-sites.html">Building Sites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage/deployment.html">Deployment</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Concepts</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="pipeline.html">The Processing Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="htr-ocr.html">HTR and OCR</a></li>
+<li class="toctree-l1"><a class="reference internal" href="named-entities.html">Named Entity Recognition</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">AI Summarization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="track-summarization.html">Track-Based Summarization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hierarchical-combining.html">Hierarchical Combining</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Command Reference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../commands/overview.html">Command Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/init.html">flatfish init</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/process.html">flatfish process</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/transcribe.html">flatfish transcribe</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/entities.html">flatfish entities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/summarize.html">flatfish summarize</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/combine.html">flatfish combine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/build.html">flatfish build</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/serve.html">flatfish serve</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/deploy.html">flatfish deploy</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../api/overview.html">API Reference</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Help &amp; Support</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../help/troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../help/faq.html">Frequently Asked Questions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../help/glossary.html">Glossary</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/concepts/ai-summarization.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>AI Summarization</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-challenge">The Challenge</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summarization-goals">Summarization Goals</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-track-based-approach">The Track-Based Approach</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-tracks">Why Tracks?</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#track-details">Track Details</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#timeline-track">Timeline Track</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#key-changes-track">Key Changes Track</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#research-questions-track">Research Questions Track</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#narrative-track">Narrative Track</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-batching-process">The Batching Process</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-batching">Why Batching?</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hierarchical-combining">Hierarchical Combining</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#editable-outputs">Editable Outputs</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-text-files">Why Text Files?</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quality-factors">Quality Factors</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-affects-summary-quality">What Affects Summary Quality?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#signs-of-good-summaries">Signs of Good Summaries</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#signs-of-problems">Signs of Problems</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#customizing-summarization">Customizing Summarization</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#custom-prompts">Custom Prompts</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#adjusting-batch-size">Adjusting Batch Size</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#comparison-with-manual-summarization">Comparison with Manual Summarization</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#technical-details">Technical Details</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#model-used">Model Used</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#combining-parameters">Combining Parameters</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#output-formats">Output Formats</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#next-steps">Next Steps</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="ai-summarization">
+<h1>AI Summarization<a class="headerlink" href="#ai-summarization" title="Link to this heading">#</a></h1>
+<p>Understand how Flatfish uses AI to generate comprehensive summaries of document collections.</p>
+<hr class="docutils" />
+<section id="the-challenge">
+<h2>The Challenge<a class="headerlink" href="#the-challenge" title="Link to this heading">#</a></h2>
+<p>Imagine you have:</p>
+<ul class="simple">
+<li><p>500 pages of handwritten letters</p></li>
+<li><p>200 diary entries</p></li>
+<li><p>100 legal documents</p></li>
+</ul>
+<p>How do you create a useful summary for researchers?</p>
+<p><strong>Manual approach</strong>: Months of reading and writing<br />
+<strong>Flatfish approach</strong>: Automated AI summarization in hours</p>
+</section>
+<hr class="docutils" />
+<section id="summarization-goals">
+<h2>Summarization Goals<a class="headerlink" href="#summarization-goals" title="Link to this heading">#</a></h2>
+<p>Flatfish generates four types of outputs:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Output</p></th>
+<th class="head"><p>Purpose</p></th>
+<th class="head"><p>Example Use</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Timeline</strong></p></td>
+<td><p>Chronological narrative</p></td>
+<td><p>Understanding sequence of events</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Key Changes</strong></p></td>
+<td><p>Track evolving themes</p></td>
+<td><p>Seeing how topics develop</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Research Questions</strong></p></td>
+<td><p>Suggest investigations</p></td>
+<td><p>Inspiring new research</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Narrative</strong></p></td>
+<td><p>Flowing description</p></td>
+<td><p>Collection overviews</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<hr class="docutils" />
+<section id="the-track-based-approach">
+<h2>The Track-Based Approach<a class="headerlink" href="#the-track-based-approach" title="Link to this heading">#</a></h2>
+<p>Instead of asking one prompt to do everything, Flatfish uses <strong>specialized tracks</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>┌─────────────────────────────────────────────────────────┐
+│                    Document Batch                        │
+│  (20 pages of transcribed text)                         │
+└─────────────────────────────────────────────────────────┘
+                          │
+          ┌───────────────┼───────────────┐
+          │               │               │
+          ▼               ▼               ▼
+    ┌──────────┐   ┌──────────┐   ┌──────────┐
+    │ Timeline │   │   Key    │   │ Research │
+    │  Track   │   │ Changes  │   │Questions │
+    └──────────┘   └──────────┘   └──────────┘
+          │               │               │
+          ▼               ▼               ▼
+    ┌──────────┐   ┌──────────┐   ┌──────────┐
+    │ Date-    │   │ Theme    │   │ Open     │
+    │ ordered  │   │ tracking │   │ questions│
+    │ events   │   │ over time│   │ to       │
+    │          │   │          │   │ explore  │
+    └──────────┘   └──────────┘   └──────────┘
+</pre></div>
+</div>
+<section id="why-tracks">
+<h3>Why Tracks?<a class="headerlink" href="#why-tracks" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Focused prompts</strong> - Each track has a specific job</p></li>
+<li><p><strong>Better quality</strong> - Specialized analysis beats general</p></li>
+<li><p><strong>Parallel processing</strong> - Run all tracks simultaneously</p></li>
+<li><p><strong>User editing</strong> - Edit one track without affecting others</p></li>
+</ol>
+</section>
+</section>
+<hr class="docutils" />
+<section id="track-details">
+<h2>Track Details<a class="headerlink" href="#track-details" title="Link to this heading">#</a></h2>
+<section id="timeline-track">
+<h3>Timeline Track<a class="headerlink" href="#timeline-track" title="Link to this heading">#</a></h3>
+<p><strong>Goal</strong>: Build a chronological narrative</p>
+<p><strong>Prompt focus</strong>:</p>
+<ul class="simple">
+<li><p>Extract all dates and events</p></li>
+<li><p>Identify sequences and causation</p></li>
+<li><p>Note temporal uncertainty</p></li>
+</ul>
+<p><strong>Output format</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>1865-03-15: John Smith traveled to Philadelphia to meet with bankers.
+1865-03-18: Meeting concluded; loan approved for $500.
+1865-03-20: Smith returned home, began planning mill expansion.
+</pre></div>
+</div>
+</section>
+<section id="key-changes-track">
+<h3>Key Changes Track<a class="headerlink" href="#key-changes-track" title="Link to this heading">#</a></h3>
+<p><strong>Goal</strong>: Track evolving themes</p>
+<p><strong>Prompt focus</strong>:</p>
+<ul class="simple">
+<li><p>Identify recurring topics</p></li>
+<li><p>Note shifts in sentiment or focus</p></li>
+<li><p>Track relationships over time</p></li>
+</ul>
+<p><strong>Output format</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">TOPIC</span><span class="p">:</span> <span class="n">Mill</span> <span class="n">Operations</span>
+<span class="o">-</span> <span class="n">Early</span> <span class="n">letters</span><span class="p">:</span> <span class="n">Optimistic</span> <span class="n">planning</span>
+<span class="o">-</span> <span class="n">Middle</span> <span class="n">period</span><span class="p">:</span> <span class="n">Financial</span> <span class="n">concerns</span> <span class="n">emerge</span>
+<span class="o">-</span> <span class="n">Later</span> <span class="n">period</span><span class="p">:</span> <span class="n">Successful</span> <span class="n">expansion</span>
+
+<span class="n">TOPIC</span><span class="p">:</span> <span class="n">Family</span> <span class="n">Health</span>
+<span class="o">-</span> <span class="mi">1865</span><span class="o">-</span><span class="mi">01</span><span class="p">:</span> <span class="n">Wife</span><span class="s1">&#39;s illness first mentioned</span>
+<span class="o">-</span> <span class="mi">1865</span><span class="o">-</span><span class="mi">06</span><span class="p">:</span> <span class="n">Recovery</span> <span class="n">documented</span>
+<span class="o">-</span> <span class="mi">1865</span><span class="o">-</span><span class="mi">12</span><span class="p">:</span> <span class="n">Family</span> <span class="n">health</span> <span class="n">stabilized</span>
+</pre></div>
+</div>
+</section>
+<section id="research-questions-track">
+<h3>Research Questions Track<a class="headerlink" href="#research-questions-track" title="Link to this heading">#</a></h3>
+<p><strong>Goal</strong>: Suggest new investigations</p>
+<p><strong>Prompt focus</strong>:</p>
+<ul class="simple">
+<li><p>Identify gaps in documentation</p></li>
+<li><p>Note unexplained references</p></li>
+<li><p>Suggest contextual research</p></li>
+</ul>
+<p><strong>Output format</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>QUESTION: Who was &quot;Mr. B&quot; mentioned in March letters?
+- Context: Apparently a business partner
+- Evidence needed: Other correspondence, business records
+
+QUESTION: What was the &quot;trouble at the mill&quot; in June?
+- Context: Referenced but not explained
+- Evidence needed: Local newspapers, court records
+</pre></div>
+</div>
+</section>
+<section id="narrative-track">
+<h3>Narrative Track<a class="headerlink" href="#narrative-track" title="Link to this heading">#</a></h3>
+<p><strong>Goal</strong>: Create flowing description</p>
+<p><strong>Prompt focus</strong>:</p>
+<ul class="simple">
+<li><p>Synthesize findings from other tracks</p></li>
+<li><p>Write accessible prose</p></li>
+<li><p>Balance detail with readability</p></li>
+</ul>
+<p><strong>Output format</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">The</span> <span class="n">Smith</span> <span class="n">Family</span> <span class="n">Papers</span> <span class="n">document</span> <span class="n">a</span> <span class="n">pivotal</span> <span class="n">period</span> <span class="ow">in</span> <span class="n">the</span>
+<span class="n">family</span><span class="s1">&#39;s history, spanning from 1865 to 1870. The collection</span>
+<span class="n">reveals</span> <span class="n">John</span> <span class="n">Smith</span><span class="s1">&#39;s transformation from struggling farmer</span>
+<span class="n">to</span> <span class="n">successful</span> <span class="n">mill</span> <span class="n">owner</span><span class="o">...</span>
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="the-batching-process">
+<h2>The Batching Process<a class="headerlink" href="#the-batching-process" title="Link to this heading">#</a></h2>
+<p>Documents are processed in batches:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>┌─────────────────────────────────────────────┐
+│ Collection: 500 documents                    │
+└─────────────────────────────────────────────┘
+                    │
+                    ▼
+┌─────────────────────────────────────────────┐
+│ Batch 1: Documents 1-20                      │
+│ Batch 2: Documents 21-40                     │
+│ Batch 3: Documents 41-60                     │
+│ ...                                          │
+│ Batch 25: Documents 481-500                  │
+└─────────────────────────────────────────────┘
+                    │
+                    ▼
+┌─────────────────────────────────────────────┐
+│ Each batch processed by 4 tracks            │
+│ = 100 API calls total                       │
+│ (25 batches × 4 tracks)                     │
+└─────────────────────────────────────────────┘
+</pre></div>
+</div>
+<section id="why-batching">
+<h3>Why Batching?<a class="headerlink" href="#why-batching" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p><strong>API limits</strong> - Most APIs have size limits</p></li>
+<li><p><strong>Memory</strong> - Process large collections without memory issues</p></li>
+<li><p><strong>Fault tolerance</strong> - If one batch fails, others succeed</p></li>
+<li><p><strong>Progress tracking</strong> - Monitor completion</p></li>
+</ol>
+</section>
+</section>
+<hr class="docutils" />
+<section id="hierarchical-combining">
+<h2>Hierarchical Combining<a class="headerlink" href="#hierarchical-combining" title="Link to this heading">#</a></h2>
+<p>With many batches, combining is done hierarchically:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Level 0: 337 batch summaries
+         │
+         ▼ (combine groups of 50)
+Level 1: 7 intermediate summaries
+         │
+         ▼ (combine again)
+Level 2: 1 final summary
+</pre></div>
+</div>
+<p>This prevents exceeding API context limits while preserving information.</p>
+</section>
+<hr class="docutils" />
+<section id="editable-outputs">
+<h2>Editable Outputs<a class="headerlink" href="#editable-outputs" title="Link to this heading">#</a></h2>
+<p>Final summaries are saved as plain text files:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>output/
+├── finding_aid.txt      # Overall collection guide
+├── timeline.txt         # Chronological narrative
+├── key_changes.txt      # Theme tracking
+└── research_questions.txt # Investigation suggestions
+</pre></div>
+</div>
+<section id="why-text-files">
+<h3>Why Text Files?<a class="headerlink" href="#why-text-files" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Easy editing</strong> - Use any text editor</p></li>
+<li><p><strong>Version control</strong> - Track changes with git</p></li>
+<li><p><strong>Accessibility</strong> - No special software needed</p></li>
+<li><p><strong>Human-AI collaboration</strong> - AI drafts, humans refine</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="quality-factors">
+<h2>Quality Factors<a class="headerlink" href="#quality-factors" title="Link to this heading">#</a></h2>
+<section id="what-affects-summary-quality">
+<h3>What Affects Summary Quality?<a class="headerlink" href="#what-affects-summary-quality" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Factor</p></th>
+<th class="head"><p>Impact</p></th>
+<th class="head"><p>Control</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Transcription quality</p></td>
+<td><p>High</p></td>
+<td><p>Good images, verify transcriptions</p></td>
+</tr>
+<tr class="row-odd"><td><p>Document organization</p></td>
+<td><p>Medium</p></td>
+<td><p>Chronological ordering helps</p></td>
+</tr>
+<tr class="row-even"><td><p>Collection coherence</p></td>
+<td><p>Medium</p></td>
+<td><p>Related documents summarize better</p></td>
+</tr>
+<tr class="row-odd"><td><p>Custom prompts</p></td>
+<td><p>High</p></td>
+<td><p>Tailor to your content</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="signs-of-good-summaries">
+<h3>Signs of Good Summaries<a class="headerlink" href="#signs-of-good-summaries" title="Link to this heading">#</a></h3>
+<p>✅ Accurate dates and names<br />
+✅ Coherent narrative flow<br />
+✅ Balanced coverage of collection<br />
+✅ Specific, not vague<br />
+✅ Suggests research directions</p>
+</section>
+<section id="signs-of-problems">
+<h3>Signs of Problems<a class="headerlink" href="#signs-of-problems" title="Link to this heading">#</a></h3>
+<p>⚠️ Hallucinated facts<br />
+⚠️ Missing major themes<br />
+⚠️ Repetitive content<br />
+⚠️ Vague generalities<br />
+⚠️ Chronological confusion</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="customizing-summarization">
+<h2>Customizing Summarization<a class="headerlink" href="#customizing-summarization" title="Link to this heading">#</a></h2>
+<section id="custom-prompts">
+<h3>Custom Prompts<a class="headerlink" href="#custom-prompts" title="Link to this heading">#</a></h3>
+<p>Tailor the AI to your content:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># flatfish.yaml</span>
+<span class="nt">prompts</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">timeline</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">    </span><span class="no">Focus on:</span>
+<span class="w">    </span><span class="no">- Agricultural activities (planting, harvest)</span>
+<span class="w">    </span><span class="no">- Weather events</span>
+<span class="w">    </span><span class="no">- Market prices mentioned</span>
+<span class="w">    </span>
+<span class="w">    </span><span class="no">This is a farming family in the Midwest.</span>
+<span class="w">    </span>
+<span class="w">  </span><span class="nt">key_changes</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">    </span><span class="no">Track these themes specifically:</span>
+<span class="w">    </span><span class="no">- Land ownership</span>
+<span class="w">    </span><span class="no">- Crop choices</span>
+<span class="w">    </span><span class="no">- Family labor vs hired help</span>
+</pre></div>
+</div>
+</section>
+<section id="adjusting-batch-size">
+<h3>Adjusting Batch Size<a class="headerlink" href="#adjusting-batch-size" title="Link to this heading">#</a></h3>
+<p>Balance between context and API limits:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">summary</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">batch_size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">15</span><span class="w">  </span><span class="c1"># Smaller batches for detailed analysis</span>
+<span class="w">  </span><span class="c1"># batch_size: 30  # Larger batches for efficiency</span>
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="comparison-with-manual-summarization">
+<h2>Comparison with Manual Summarization<a class="headerlink" href="#comparison-with-manual-summarization" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Aspect</p></th>
+<th class="head"><p>Manual</p></th>
+<th class="head"><p>AI-Assisted</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Time</p></td>
+<td><p>Weeks/months</p></td>
+<td><p>Hours</p></td>
+</tr>
+<tr class="row-odd"><td><p>Consistency</p></td>
+<td><p>Variable</p></td>
+<td><p>Uniform</p></td>
+</tr>
+<tr class="row-even"><td><p>Coverage</p></td>
+<td><p>May miss items</p></td>
+<td><p>Processes everything</p></td>
+</tr>
+<tr class="row-odd"><td><p>Depth</p></td>
+<td><p>Can be very deep</p></td>
+<td><p>Good overview</p></td>
+</tr>
+<tr class="row-even"><td><p>Accuracy</p></td>
+<td><p>High (with expertise)</p></td>
+<td><p>Good (needs verification)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Cost</p></td>
+<td><p>Labor intensive</p></td>
+<td><p>API costs</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Best approach</strong>: AI generates draft, human expert reviews and refines.</p>
+</section>
+<hr class="docutils" />
+<section id="technical-details">
+<h2>Technical Details<a class="headerlink" href="#technical-details" title="Link to this heading">#</a></h2>
+<section id="model-used">
+<h3>Model Used<a class="headerlink" href="#model-used" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Qwen-VL-Max</strong> via DashScope API</p></li>
+<li><p>Context window: ~32K tokens</p></li>
+<li><p>Processes text and images</p></li>
+</ul>
+</section>
+<section id="combining-parameters">
+<h3>Combining Parameters<a class="headerlink" href="#combining-parameters" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">MAX_COMBINE_CHARS</span> <span class="o">=</span> <span class="mi">80000</span>  <span class="c1"># Context limit</span>
+<span class="n">BATCH_GROUP_SIZE</span> <span class="o">=</span> <span class="mi">50</span>      <span class="c1"># Batches per combine step</span>
+</pre></div>
+</div>
+</section>
+<section id="output-formats">
+<h3>Output Formats<a class="headerlink" href="#output-formats" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Batch files</strong>: Markdown (<code class="docutils literal notranslate"><span class="pre">.md</span></code>)</p></li>
+<li><p><strong>Final summaries</strong>: Plain text (<code class="docutils literal notranslate"><span class="pre">.txt</span></code>)</p></li>
+<li><p><strong>Metadata</strong>: JSON</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="next-steps">
+<h2>Next Steps<a class="headerlink" href="#next-steps" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong><a class="reference internal" href="track-summarization.html"><span class="std std-doc">Track Summarization</span></a></strong> - Deep dive into tracks</p></li>
+<li><p><strong><a class="reference internal" href="hierarchical-combining.html"><span class="std std-doc">Hierarchical Combining</span></a></strong> - Technical details</p></li>
+<li><p><strong><a class="reference internal" href="../usage/summarization.html"><span class="std std-doc">Summarization Guide</span></a></strong> - How-to instructions</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./concepts"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="named-entities.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Named Entity Recognition</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="track-summarization.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Track-Based Summarization</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-challenge">The Challenge</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summarization-goals">Summarization Goals</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-track-based-approach">The Track-Based Approach</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-tracks">Why Tracks?</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#track-details">Track Details</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#timeline-track">Timeline Track</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#key-changes-track">Key Changes Track</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#research-questions-track">Research Questions Track</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#narrative-track">Narrative Track</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-batching-process">The Batching Process</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-batching">Why Batching?</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hierarchical-combining">Hierarchical Combining</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#editable-outputs">Editable Outputs</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-text-files">Why Text Files?</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quality-factors">Quality Factors</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-affects-summary-quality">What Affects Summary Quality?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#signs-of-good-summaries">Signs of Good Summaries</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#signs-of-problems">Signs of Problems</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#customizing-summarization">Customizing Summarization</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#custom-prompts">Custom Prompts</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#adjusting-batch-size">Adjusting Batch Size</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#comparison-with-manual-summarization">Comparison with Manual Summarization</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#technical-details">Technical Details</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#model-used">Model Used</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#combining-parameters">Combining Parameters</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#output-formats">Output Formats</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#next-steps">Next Steps</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Princeton University Library
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

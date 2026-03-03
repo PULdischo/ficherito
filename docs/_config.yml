@@ -1,0 +1,41 @@
+# Book settings
+title: Flatfish Documentation
+author: Princeton University Library
+logo: images/logo-light.png
+description: Historical document analysis CLI - Extract, analyze, and present handwritten text from document images
+
+# Force re-execution of notebooks on each build
+execute:
+  execute_notebooks: 'off'
+
+# Parse and render settings
+parse:
+  myst_enable_extensions:
+    - colon_fence
+    - deflist
+    - dollarmath
+    - linkify
+    - substitution
+
+# HTML settings
+html:
+  favicon: images/logo-light.png
+  use_issues_button: true
+  use_repository_button: true
+  use_edit_page_button: true
+  extra_navbar: ""
+  home_page_in_navbar: true
+
+# Repository settings
+repository:
+  url: https://github.com/PULdischo/flatfish
+  path_to_book: docs
+  branch: main
+
+# Sphinx settings
+sphinx:
+  extra_extensions:
+    - sphinx_design
+  config:
+    html_theme_options:
+      navigation_with_keys: false

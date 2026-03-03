@@ -4,9 +4,6 @@ on:
   push:
     branches:
       - main
-    paths:
-      - 'docs/**'
-      - '.github/workflows/docs.yml'
   workflow_dispatch:
 
 permissions:
@@ -32,12 +29,12 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install "jupyter-book>=2.0.0" myst-nb sphinx-design
+          pip install "jupyter-book<2.0.0" sphinx-design
 
       - name: Build documentation
         working-directory: docs
         run: |
-          jupyter-book build . --html
+          jupyter-book build .
 
       - name: Setup Pages
         uses: actions/configure-pages@v4

@@ -1,0 +1,967 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Building Sites &#8212; Flatfish Documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'usage/building-sites';</script>
+    <link rel="icon" href="../_static/logo-light.png"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Deployment" href="deployment.html" />
+    <link rel="prev" title="Summarization" href="summarization.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo-light.png" class="logo__image only-light" alt="Flatfish Documentation - Home"/>
+    <script>document.write(`<img src="../_static/logo-light.png" class="logo__image only-dark" alt="Flatfish Documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../getting-started/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started/quickstart.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started/first-project.html">Your First Project</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Usage Guide</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="processing-documents.html">Processing Documents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transcription.html">Transcription</a></li>
+<li class="toctree-l1"><a class="reference internal" href="entities.html">Entity Extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="summarization.html">Summarization</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Building Sites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="deployment.html">Deployment</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Concepts</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../concepts/pipeline.html">The Processing Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../concepts/htr-ocr.html">HTR and OCR</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../concepts/named-entities.html">Named Entity Recognition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../concepts/ai-summarization.html">AI Summarization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../concepts/track-summarization.html">Track-Based Summarization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../concepts/hierarchical-combining.html">Hierarchical Combining</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Command Reference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../commands/overview.html">Command Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/init.html">flatfish init</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/process.html">flatfish process</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/transcribe.html">flatfish transcribe</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/entities.html">flatfish entities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/summarize.html">flatfish summarize</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/combine.html">flatfish combine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/build.html">flatfish build</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/serve.html">flatfish serve</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/deploy.html">flatfish deploy</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../api/overview.html">API Reference</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Help &amp; Support</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../help/troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../help/faq.html">Frequently Asked Questions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../help/glossary.html">Glossary</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/usage/building-sites.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Building Sites</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#building-your-site">Building Your Site</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-gets-built">What Gets Built</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#site-features">Site Features</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#document-browser">Document Browser</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#full-text-search">Full-Text Search</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#entity-index">Entity Index</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#overview-pages">Overview Pages</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#previewing-your-site">Previewing Your Site</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#preview-options">Preview Options</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#customizing-the-site">Customizing the Site</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#site-title-and-description">Site Title and Description</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#password-protection">Password Protection</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#custom-css">Custom CSS</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#show-hide-sections">Show/Hide Sections</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rebuilding-after-changes">Rebuilding After Changes</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#after-editing-transcriptions">After Editing Transcriptions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#after-editing-summaries">After Editing Summaries</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#after-changing-configuration">After Changing Configuration</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#full-rebuild">Full Rebuild</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#build-output-options">Build Output Options</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#custom-output-directory">Custom Output Directory</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#base-url-for-subdirectories">Base URL for Subdirectories</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#understanding-the-search-index">Understanding the Search Index</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-s-indexed">What’s Indexed</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#search-features">Search Features</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rebuilding-the-index">Rebuilding the Index</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#site-performance">Site Performance</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#image-optimization">Image Optimization</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#for-very-large-collections">For Very Large Collections</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hosting-considerations">Hosting Considerations</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#accessibility">Accessibility</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#improving-accessibility">Improving Accessibility</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#troubleshooting">Troubleshooting</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#site-won-t-build">Site Won’t Build</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#search-not-working">Search Not Working</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#images-not-showing">Images Not Showing</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#css-not-loading">CSS Not Loading</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#next-steps">Next Steps</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="building-sites">
+<h1>Building Sites<a class="headerlink" href="#building-sites" title="Link to this heading">#</a></h1>
+<p>Learn how to build and customize your document collection website.</p>
+<hr class="docutils" />
+<section id="building-your-site">
+<h2>Building Your Site<a class="headerlink" href="#building-your-site" title="Link to this heading">#</a></h2>
+<p>After processing documents, build the static website:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>flatfish<span class="w"> </span>build
+</pre></div>
+</div>
+<p>This creates a complete website in the <code class="docutils literal notranslate"><span class="pre">_site/</span></code> directory.</p>
+</section>
+<hr class="docutils" />
+<section id="what-gets-built">
+<h2>What Gets Built<a class="headerlink" href="#what-gets-built" title="Link to this heading">#</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>_site/
+├── index.html              # Home page with collection overview
+├── main.html               # Main document browser
+├── overview/
+│   ├── summary.html        # Finding aid
+│   ├── timeline.html       # Interactive timeline
+│   ├── changes.html        # Key changes
+│   └── questions.html      # Research questions
+├── entities/
+│   └── index.html          # Entity browser
+├── css/
+│   └── style.css           # Styles
+├── js/
+│   └── app.js              # Interactive features
+├── pagefind/               # Search index
+└── images/                 # Document images
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="site-features">
+<h2>Site Features<a class="headerlink" href="#site-features" title="Link to this heading">#</a></h2>
+<section id="document-browser">
+<h3>Document Browser<a class="headerlink" href="#document-browser" title="Link to this heading">#</a></h3>
+<p>Browse all documents with:</p>
+<ul class="simple">
+<li><p><strong>Image viewer</strong> - See the original document</p></li>
+<li><p><strong>Transcription</strong> - Read the extracted text</p></li>
+<li><p><strong>Entities</strong> - See highlighted people, places, dates</p></li>
+<li><p><strong>Navigation</strong> - Previous/next buttons</p></li>
+</ul>
+</section>
+<section id="full-text-search">
+<h3>Full-Text Search<a class="headerlink" href="#full-text-search" title="Link to this heading">#</a></h3>
+<p>Search across all transcriptions:</p>
+<ul class="simple">
+<li><p>Powered by <a class="reference external" href="https://pagefind.app/">Pagefind</a></p></li>
+<li><p>Instant results as you type</p></li>
+<li><p>Highlights matching text</p></li>
+<li><p>Works completely offline</p></li>
+</ul>
+</section>
+<section id="entity-index">
+<h3>Entity Index<a class="headerlink" href="#entity-index" title="Link to this heading">#</a></h3>
+<p>Browse entities by type:</p>
+<ul class="simple">
+<li><p>Click any entity to see all documents mentioning it</p></li>
+<li><p>Filter by entity type</p></li>
+<li><p>See context descriptions</p></li>
+</ul>
+</section>
+<section id="overview-pages">
+<h3>Overview Pages<a class="headerlink" href="#overview-pages" title="Link to this heading">#</a></h3>
+<p>Dropdown menu with:</p>
+<ul class="simple">
+<li><p><strong>Finding Aid</strong> - Archival collection description</p></li>
+<li><p><strong>Timeline</strong> - Chronological events</p></li>
+<li><p><strong>Key Changes</strong> - Transformations over time</p></li>
+<li><p><strong>Research Questions</strong> - Scholarly questions</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="previewing-your-site">
+<h2>Previewing Your Site<a class="headerlink" href="#previewing-your-site" title="Link to this heading">#</a></h2>
+<p>Start a local preview server:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>flatfish<span class="w"> </span>serve
+</pre></div>
+</div>
+<p>Open <a class="reference external" href="http://localhost:8000">http://localhost:8000</a> in your browser.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>The server automatically reloads when you rebuild. Keep it running in one terminal while you make changes in another.</p>
+</div>
+<section id="preview-options">
+<h3>Preview Options<a class="headerlink" href="#preview-options" title="Link to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Use a different port</span>
+flatfish<span class="w"> </span>serve<span class="w"> </span>--port<span class="w"> </span><span class="m">3000</span>
+
+<span class="c1"># Open browser automatically</span>
+flatfish<span class="w"> </span>serve<span class="w"> </span>--open
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="customizing-the-site">
+<h2>Customizing the Site<a class="headerlink" href="#customizing-the-site" title="Link to this heading">#</a></h2>
+<section id="site-title-and-description">
+<h3>Site Title and Description<a class="headerlink" href="#site-title-and-description" title="Link to this heading">#</a></h3>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># flatfish.yaml</span>
+<span class="nt">website</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Smith</span><span class="nv"> </span><span class="s">Family</span><span class="nv"> </span><span class="s">Papers&quot;</span>
+<span class="w">  </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Letters</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">documents</span><span class="nv"> </span><span class="s">from</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">Smith</span><span class="nv"> </span><span class="s">family,</span><span class="nv"> </span><span class="s">1850-1920&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="password-protection">
+<h3>Password Protection<a class="headerlink" href="#password-protection" title="Link to this heading">#</a></h3>
+<p>Protect your site with a simple password:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">website</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;research2024&quot;</span>
+</pre></div>
+</div>
+<p>Users will see a login page before accessing the site.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This is basic protection suitable for sharing with collaborators. For sensitive materials, use additional access controls on your hosting platform.</p>
+</div>
+</section>
+<section id="custom-css">
+<h3>Custom CSS<a class="headerlink" href="#custom-css" title="Link to this heading">#</a></h3>
+<p>Add your own styles:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">website</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">custom_css</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;custom.css&quot;</span>
+</pre></div>
+</div>
+<p>Create <code class="docutils literal notranslate"><span class="pre">custom.css</span></code> in your project directory:</p>
+<div class="highlight-css notranslate"><div class="highlight"><pre><span></span><span class="c">/* custom.css */</span>
+
+<span class="c">/* Change header color */</span>
+<span class="p">.</span><span class="nc">site-header</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">background-color</span><span class="p">:</span><span class="w"> </span><span class="mh">#2c5282</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c">/* Customize fonts */</span>
+<span class="nt">body</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">font-family</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Georgia&quot;</span><span class="p">,</span><span class="w"> </span><span class="kc">serif</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c">/* Style entity highlights */</span>
+<span class="p">.</span><span class="nc">entity-person</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">background-color</span><span class="p">:</span><span class="w"> </span><span class="mh">#fef3c7</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="p">.</span><span class="nc">entity-location</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">background-color</span><span class="p">:</span><span class="w"> </span><span class="mh">#dbeafe</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="show-hide-sections">
+<h3>Show/Hide Sections<a class="headerlink" href="#show-hide-sections" title="Link to this heading">#</a></h3>
+<p>Control which sections appear:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">website</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">show_timeline</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">show_entities</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">show_summary</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">show_key_changes</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">  </span><span class="c1"># Hide this section</span>
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="rebuilding-after-changes">
+<h2>Rebuilding After Changes<a class="headerlink" href="#rebuilding-after-changes" title="Link to this heading">#</a></h2>
+<section id="after-editing-transcriptions">
+<h3>After Editing Transcriptions<a class="headerlink" href="#after-editing-transcriptions" title="Link to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>flatfish<span class="w"> </span>build
+</pre></div>
+</div>
+</section>
+<section id="after-editing-summaries">
+<h3>After Editing Summaries<a class="headerlink" href="#after-editing-summaries" title="Link to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>flatfish<span class="w"> </span>build
+</pre></div>
+</div>
+</section>
+<section id="after-changing-configuration">
+<h3>After Changing Configuration<a class="headerlink" href="#after-changing-configuration" title="Link to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>flatfish<span class="w"> </span>build
+</pre></div>
+</div>
+</section>
+<section id="full-rebuild">
+<h3>Full Rebuild<a class="headerlink" href="#full-rebuild" title="Link to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>rm<span class="w"> </span>-rf<span class="w"> </span>_site/
+flatfish<span class="w"> </span>build
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="build-output-options">
+<h2>Build Output Options<a class="headerlink" href="#build-output-options" title="Link to this heading">#</a></h2>
+<section id="custom-output-directory">
+<h3>Custom Output Directory<a class="headerlink" href="#custom-output-directory" title="Link to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>flatfish<span class="w"> </span>build<span class="w"> </span>--output<span class="w"> </span>./my-site
+</pre></div>
+</div>
+<p>Or in configuration:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">output</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">site_dir</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;public&quot;</span><span class="w">  </span><span class="c1"># Build to ./public instead of ./_site</span>
+</pre></div>
+</div>
+</section>
+<section id="base-url-for-subdirectories">
+<h3>Base URL for Subdirectories<a class="headerlink" href="#base-url-for-subdirectories" title="Link to this heading">#</a></h3>
+<p>If hosting at a subdirectory (e.g., <code class="docutils literal notranslate"><span class="pre">example.com/documents/</span></code>):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>flatfish<span class="w"> </span>build<span class="w"> </span>--base-url<span class="w"> </span>/documents/
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="understanding-the-search-index">
+<h2>Understanding the Search Index<a class="headerlink" href="#understanding-the-search-index" title="Link to this heading">#</a></h2>
+<p>Flatfish uses <a class="reference external" href="https://pagefind.app/">Pagefind</a> for search:</p>
+<section id="what-s-indexed">
+<h3>What’s Indexed<a class="headerlink" href="#what-s-indexed" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>All transcription text</p></li>
+<li><p>Entity names and contexts</p></li>
+<li><p>Document metadata (dates, IDs)</p></li>
+</ul>
+</section>
+<section id="search-features">
+<h3>Search Features<a class="headerlink" href="#search-features" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Instant results</p></li>
+<li><p>Highlighted matches</p></li>
+<li><p>Relevance ranking</p></li>
+<li><p>Works offline (no server needed)</p></li>
+</ul>
+</section>
+<section id="rebuilding-the-index">
+<h3>Rebuilding the Index<a class="headerlink" href="#rebuilding-the-index" title="Link to this heading">#</a></h3>
+<p>The search index is rebuilt automatically with <code class="docutils literal notranslate"><span class="pre">flatfish</span> <span class="pre">build</span></code>. If search seems broken:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>rm<span class="w"> </span>-rf<span class="w"> </span>_site/pagefind/
+flatfish<span class="w"> </span>build
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="site-performance">
+<h2>Site Performance<a class="headerlink" href="#site-performance" title="Link to this heading">#</a></h2>
+<section id="image-optimization">
+<h3>Image Optimization<a class="headerlink" href="#image-optimization" title="Link to this heading">#</a></h3>
+<p>Flatfish automatically:</p>
+<ul class="simple">
+<li><p>Resizes images for web display</p></li>
+<li><p>Creates thumbnails for navigation</p></li>
+<li><p>Lazy loads images to improve performance</p></li>
+</ul>
+</section>
+<section id="for-very-large-collections">
+<h3>For Very Large Collections<a class="headerlink" href="#for-very-large-collections" title="Link to this heading">#</a></h3>
+<p>Sites with thousands of documents may need optimization:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">website</span><span class="p">:</span>
+<span class="w">  </span><span class="c1"># Paginate document list</span>
+<span class="w">  </span><span class="nt">documents_per_page</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100</span>
+<span class="w">  </span>
+<span class="w">  </span><span class="c1"># Don&#39;t include full images in build</span>
+<span class="w">  </span><span class="nt">inline_images</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="hosting-considerations">
+<h2>Hosting Considerations<a class="headerlink" href="#hosting-considerations" title="Link to this heading">#</a></h2>
+<p>The built site is completely static:</p>
+<ul class="simple">
+<li><p><strong>No server-side code</strong> - Just HTML, CSS, and JavaScript</p></li>
+<li><p><strong>No database</strong> - Everything is in files</p></li>
+<li><p><strong>Works offline</strong> - Can be viewed from local files</p></li>
+</ul>
+<p>This means you can host it anywhere:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="deployment.html#deploying-to-netlify"><span class="std std-ref">Netlify</span></a> (recommended)</p></li>
+<li><p>GitHub Pages</p></li>
+<li><p>Amazon S3</p></li>
+<li><p>Any web server</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="accessibility">
+<h2>Accessibility<a class="headerlink" href="#accessibility" title="Link to this heading">#</a></h2>
+<p>Flatfish sites are designed with accessibility in mind:</p>
+<ul class="simple">
+<li><p>Semantic HTML structure</p></li>
+<li><p>ARIA labels for interactive elements</p></li>
+<li><p>Keyboard navigation</p></li>
+<li><p>High contrast text</p></li>
+<li><p>Alt text for images</p></li>
+</ul>
+<section id="improving-accessibility">
+<h3>Improving Accessibility<a class="headerlink" href="#improving-accessibility" title="Link to this heading">#</a></h3>
+<p>Add alt text to your transcriptions:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;cleaned_text&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;alt_text&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Handwritten letter dated April 15, 1863, two pages, cursive script&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="troubleshooting">
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Link to this heading">#</a></h2>
+<section id="site-won-t-build">
+<h3>Site Won’t Build<a class="headerlink" href="#site-won-t-build" title="Link to this heading">#</a></h3>
+<p><strong>Error:</strong> <code class="docutils literal notranslate"><span class="pre">Transcriptions</span> <span class="pre">not</span> <span class="pre">found</span></code></p>
+<p>Make sure you’ve run <code class="docutils literal notranslate"><span class="pre">flatfish</span> <span class="pre">extract</span></code> first.</p>
+</section>
+<section id="search-not-working">
+<h3>Search Not Working<a class="headerlink" href="#search-not-working" title="Link to this heading">#</a></h3>
+<p>Check that the Pagefind files exist:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ls<span class="w"> </span>_site/pagefind/
+</pre></div>
+</div>
+<p>If missing, rebuild:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>flatfish<span class="w"> </span>build
+</pre></div>
+</div>
+</section>
+<section id="images-not-showing">
+<h3>Images Not Showing<a class="headerlink" href="#images-not-showing" title="Link to this heading">#</a></h3>
+<p>Check that images are in the right location:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ls<span class="w"> </span>_site/images/
+</pre></div>
+</div>
+<p>If missing, make sure <code class="docutils literal notranslate"><span class="pre">output.images_dir</span></code> in config matches where images were saved.</p>
+</section>
+<section id="css-not-loading">
+<h3>CSS Not Loading<a class="headerlink" href="#css-not-loading" title="Link to this heading">#</a></h3>
+<p>Clear browser cache and reload. Or check browser developer tools for 404 errors.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="next-steps">
+<h2>Next Steps<a class="headerlink" href="#next-steps" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong><a class="reference internal" href="deployment.html"><span class="std std-doc">Deployment</span></a></strong> - Put your site on the web</p></li>
+<li><p><strong><a class="reference internal" href="../help/troubleshooting.html"><span class="std std-doc">Troubleshooting</span></a></strong> - Solve common problems</p></li>
+<li><p><strong><a class="reference internal" href="../commands/build.html"><span class="std std-doc">Command Reference</span></a></strong> - Full build options</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./usage"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="summarization.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Summarization</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="deployment.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Deployment</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#building-your-site">Building Your Site</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-gets-built">What Gets Built</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#site-features">Site Features</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#document-browser">Document Browser</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#full-text-search">Full-Text Search</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#entity-index">Entity Index</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#overview-pages">Overview Pages</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#previewing-your-site">Previewing Your Site</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#preview-options">Preview Options</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#customizing-the-site">Customizing the Site</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#site-title-and-description">Site Title and Description</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#password-protection">Password Protection</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#custom-css">Custom CSS</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#show-hide-sections">Show/Hide Sections</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rebuilding-after-changes">Rebuilding After Changes</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#after-editing-transcriptions">After Editing Transcriptions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#after-editing-summaries">After Editing Summaries</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#after-changing-configuration">After Changing Configuration</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#full-rebuild">Full Rebuild</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#build-output-options">Build Output Options</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#custom-output-directory">Custom Output Directory</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#base-url-for-subdirectories">Base URL for Subdirectories</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#understanding-the-search-index">Understanding the Search Index</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-s-indexed">What’s Indexed</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#search-features">Search Features</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rebuilding-the-index">Rebuilding the Index</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#site-performance">Site Performance</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#image-optimization">Image Optimization</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#for-very-large-collections">For Very Large Collections</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hosting-considerations">Hosting Considerations</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#accessibility">Accessibility</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#improving-accessibility">Improving Accessibility</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#troubleshooting">Troubleshooting</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#site-won-t-build">Site Won’t Build</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#search-not-working">Search Not Working</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#images-not-showing">Images Not Showing</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#css-not-loading">CSS Not Loading</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#next-steps">Next Steps</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Princeton University Library
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

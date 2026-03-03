@@ -1,0 +1,847 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Configuration &#8212; Flatfish Documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'usage/configuration';</script>
+    <link rel="icon" href="../_static/logo-light.png"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Processing Documents" href="processing-documents.html" />
+    <link rel="prev" title="Your First Project" href="../getting-started/first-project.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo-light.png" class="logo__image only-light" alt="Flatfish Documentation - Home"/>
+    <script>document.write(`<img src="../_static/logo-light.png" class="logo__image only-dark" alt="Flatfish Documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../getting-started/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started/quickstart.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started/first-project.html">Your First Project</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Usage Guide</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="processing-documents.html">Processing Documents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transcription.html">Transcription</a></li>
+<li class="toctree-l1"><a class="reference internal" href="entities.html">Entity Extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="summarization.html">Summarization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="building-sites.html">Building Sites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="deployment.html">Deployment</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Concepts</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../concepts/pipeline.html">The Processing Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../concepts/htr-ocr.html">HTR and OCR</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../concepts/named-entities.html">Named Entity Recognition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../concepts/ai-summarization.html">AI Summarization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../concepts/track-summarization.html">Track-Based Summarization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../concepts/hierarchical-combining.html">Hierarchical Combining</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Command Reference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../commands/overview.html">Command Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/init.html">flatfish init</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/process.html">flatfish process</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/transcribe.html">flatfish transcribe</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/entities.html">flatfish entities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/summarize.html">flatfish summarize</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/combine.html">flatfish combine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/build.html">flatfish build</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/serve.html">flatfish serve</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/deploy.html">flatfish deploy</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../api/overview.html">API Reference</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Help &amp; Support</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../help/troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../help/faq.html">Frequently Asked Questions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../help/glossary.html">Glossary</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/usage/configuration.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Configuration</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#configuration-files">Configuration Files</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#flatfish-yaml-reference">flatfish.yaml Reference</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#environment-variables-env">Environment Variables (.env)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#configuration-precedence">Configuration Precedence</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#validating-configuration">Validating Configuration</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#per-document-configuration">Per-Document Configuration</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#examples">Examples</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minimal-configuration">Minimal Configuration</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#academic-research-project">Academic Research Project</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#public-digital-collection">Public Digital Collection</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#next-steps">Next Steps</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="configuration">
+<h1>Configuration<a class="headerlink" href="#configuration" title="Link to this heading">#</a></h1>
+<p>This guide covers all configuration options for Flatfish projects.</p>
+<hr class="docutils" />
+<section id="configuration-files">
+<h2>Configuration Files<a class="headerlink" href="#configuration-files" title="Link to this heading">#</a></h2>
+<p>Flatfish uses two configuration files:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>File</p></th>
+<th class="head"><p>Purpose</p></th>
+<th class="head"><p>Version Control</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">flatfish.yaml</span></code></p></td>
+<td><p>Project settings</p></td>
+<td><p>✅ Commit to Git</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">.env</span></code></p></td>
+<td><p>API keys and secrets</p></td>
+<td><p>❌ Never commit</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<hr class="docutils" />
+<section id="flatfish-yaml-reference">
+<h2>flatfish.yaml Reference<a class="headerlink" href="#flatfish-yaml-reference" title="Link to this heading">#</a></h2>
+<p>Here’s a complete configuration file with all options:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># =============================================================================</span>
+<span class="c1"># DATASET CONFIGURATION</span>
+<span class="c1"># =============================================================================</span>
+<span class="nt">dataset</span><span class="p">:</span>
+<span class="w">  </span><span class="c1"># Hugging Face dataset identifier (required)</span>
+<span class="w">  </span><span class="c1"># Format: &quot;username/dataset-name&quot; or &quot;organization/dataset-name&quot;</span>
+<span class="w">  </span><span class="nt">source</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;PULdischo/marshall-diaries&quot;</span>
+<span class="w">  </span>
+<span class="w">  </span><span class="c1"># Which splits to process (default: [&quot;train&quot;])</span>
+<span class="w">  </span><span class="c1"># Common splits: train, test, validation</span>
+<span class="w">  </span><span class="nt">splits</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;train&quot;</span>
+<span class="w">  </span>
+<span class="w">  </span><span class="c1"># Column containing document images (required)</span>
+<span class="w">  </span><span class="nt">image_column</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;image&quot;</span>
+<span class="w">  </span>
+<span class="w">  </span><span class="c1"># Column containing document dates (optional)</span>
+<span class="w">  </span><span class="c1"># If provided, documents will be sorted chronologically</span>
+<span class="w">  </span><span class="nt">date_column</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;date&quot;</span>
+<span class="w">  </span>
+<span class="w">  </span><span class="c1"># Column containing document IDs (optional)</span>
+<span class="w">  </span><span class="c1"># If not provided, filenames or indices will be used</span>
+<span class="w">  </span><span class="nt">id_column</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;id&quot;</span>
+
+<span class="c1"># =============================================================================</span>
+<span class="c1"># PROCESSING OPTIONS</span>
+<span class="c1"># =============================================================================</span>
+<span class="nt">processing</span><span class="p">:</span>
+<span class="w">  </span><span class="c1"># Whether to extract named entities after transcription</span>
+<span class="w">  </span><span class="nt">extract_entities</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span>
+<span class="w">  </span><span class="c1"># Include contextual descriptions for entities</span>
+<span class="w">  </span><span class="c1"># e.g., &quot;Person; the plaintiff in the legal case&quot; instead of just &quot;Person&quot;</span>
+<span class="w">  </span><span class="nt">entity_context</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span>
+<span class="w">  </span><span class="c1"># Save intermediate results (useful for debugging)</span>
+<span class="w">  </span><span class="nt">save_intermediate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span>
+<span class="w">  </span><span class="c1"># Number of concurrent API requests (be careful with rate limits)</span>
+<span class="w">  </span><span class="nt">concurrency</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
+
+<span class="c1"># =============================================================================</span>
+<span class="c1"># CUSTOM PROMPTS</span>
+<span class="c1"># =============================================================================</span>
+<span class="nt">prompts</span><span class="p">:</span>
+<span class="w">  </span><span class="c1"># Prompt for cleaning up raw OCR text</span>
+<span class="w">  </span><span class="c1"># Available variable: {raw_text}</span>
+<span class="w">  </span><span class="nt">text_extraction</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">    </span><span class="no">You are a historical document transcription assistant. Given the raw OCR/HTR </span>
+<span class="w">    </span><span class="no">output from a handwritten document, clean up and correct the text while:</span>
+<span class="w">    </span>
+<span class="w">    </span><span class="no">1. Preserving the original spelling, including archaic forms</span>
+<span class="w">    </span><span class="no">2. Fixing obvious OCR errors (e.g., &#39;tbe&#39; → &#39;the&#39;)</span>
+<span class="w">    </span><span class="no">3. Maintaining original line breaks where meaningful</span>
+<span class="w">    </span><span class="no">4. Preserving original punctuation style</span>
+<span class="w">    </span><span class="no">5. Marking unclear or illegible portions with [?] or [illegible]</span>
+<span class="w">    </span><span class="no">6. Expanding common abbreviations only if unambiguous</span>
+<span class="w">    </span>
+<span class="w">    </span><span class="no">Raw OCR text:</span>
+<span class="w">    </span><span class="no">{raw_text}</span>
+<span class="w">    </span>
+<span class="w">    </span><span class="no">Cleaned transcription:</span>
+
+<span class="w">  </span><span class="c1"># Prompt for extracting named entities</span>
+<span class="w">  </span><span class="c1"># Available variable: {document_text}</span>
+<span class="w">  </span><span class="nt">ner_extraction</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">    </span><span class="no">You are a historical document analyst specializing in named entity recognition.</span>
+<span class="w">    </span><span class="no">Extract all named entities from the following transcribed document text.</span>
+<span class="w">    </span>
+<span class="w">    </span><span class="no">For each entity, provide:</span>
+<span class="w">    </span><span class="no">1. The exact text as it appears</span>
+<span class="w">    </span><span class="no">2. The entity type (PERSON, ORGANIZATION, LOCATION, DATE, MONEY, </span>
+<span class="w">       </span><span class="no">LEGAL_TERM, EVENT, DOCUMENT, OCCUPATION, RELATIONSHIP)</span>
+<span class="w">    </span><span class="no">3. A contextual description explaining the entity&#39;s role in THIS document</span>
+<span class="w">    </span>
+<span class="w">    </span><span class="no">Document text:</span>
+<span class="w">    </span><span class="no">{document_text}</span>
+<span class="w">    </span>
+<span class="w">    </span><span class="no">Return entities as a JSON array:</span>
+<span class="w">    </span><span class="no">[</span>
+<span class="w">      </span><span class="no">{</span>
+<span class="w">        </span><span class="no">&quot;text&quot;: &quot;John Smith&quot;,</span>
+<span class="w">        </span><span class="no">&quot;type&quot;: &quot;PERSON&quot;, </span>
+<span class="w">        </span><span class="no">&quot;context&quot;: &quot;Person; the plaintiff filing the complaint&quot;</span>
+<span class="w">      </span><span class="no">}</span>
+<span class="w">    </span><span class="no">]</span>
+
+<span class="w">  </span><span class="c1"># Prompt for document summarization</span>
+<span class="w">  </span><span class="c1"># Available variable: {documents}</span>
+<span class="w">  </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">    </span><span class="no">You are a historian analyzing a sequence of related documents...</span>
+
+<span class="c1"># =============================================================================</span>
+<span class="c1"># SUMMARY OPTIONS</span>
+<span class="c1"># =============================================================================</span>
+<span class="nt">summary</span><span class="p">:</span>
+<span class="w">  </span><span class="c1"># Enable/disable summary generation</span>
+<span class="w">  </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span>
+<span class="w">  </span><span class="c1"># Model to use for summarization</span>
+<span class="w">  </span><span class="c1"># Options: qwen-vl-max, qwen-vl-plus</span>
+<span class="w">  </span><span class="nt">model</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;qwen-vl-max&quot;</span>
+<span class="w">  </span>
+<span class="w">  </span><span class="c1"># Maximum documents to include in summary</span>
+<span class="w">  </span><span class="c1"># For large collections, this samples evenly across the date range</span>
+<span class="w">  </span><span class="nt">sample_size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100</span>
+
+<span class="c1"># =============================================================================</span>
+<span class="c1"># WEBSITE OPTIONS</span>
+<span class="c1"># =============================================================================</span>
+<span class="nt">website</span><span class="p">:</span>
+<span class="w">  </span><span class="c1"># Site title (appears in header and browser tab)</span>
+<span class="w">  </span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Document</span><span class="nv"> </span><span class="s">Collection&quot;</span>
+<span class="w">  </span>
+<span class="w">  </span><span class="c1"># Site description (for SEO and overview page)</span>
+<span class="w">  </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;A</span><span class="nv"> </span><span class="s">collection</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">historical</span><span class="nv"> </span><span class="s">documents&quot;</span>
+<span class="w">  </span>
+<span class="w">  </span><span class="c1"># Password protection (leave empty for public access)</span>
+<span class="w">  </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&quot;</span>
+<span class="w">  </span>
+<span class="w">  </span><span class="c1"># Custom CSS file (optional)</span>
+<span class="w">  </span><span class="nt">custom_css</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&quot;</span>
+<span class="w">  </span>
+<span class="w">  </span><span class="c1"># Google Analytics ID (optional)</span>
+<span class="w">  </span><span class="nt">analytics_id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&quot;</span>
+<span class="w">  </span>
+<span class="w">  </span><span class="c1"># Show/hide specific sections</span>
+<span class="w">  </span><span class="nt">show_timeline</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">show_entities</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">show_summary</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+
+<span class="c1"># =============================================================================</span>
+<span class="c1"># OUTPUT DIRECTORIES</span>
+<span class="c1"># =============================================================================</span>
+<span class="nt">output</span><span class="p">:</span>
+<span class="w">  </span><span class="c1"># Where to save transcriptions</span>
+<span class="w">  </span><span class="nt">transcriptions_dir</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;transcriptions&quot;</span>
+<span class="w">  </span>
+<span class="w">  </span><span class="c1"># Where to save entity extractions</span>
+<span class="w">  </span><span class="nt">entities_dir</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;entities&quot;</span>
+<span class="w">  </span>
+<span class="w">  </span><span class="c1"># Where to save summaries</span>
+<span class="w">  </span><span class="nt">summaries_dir</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;summaries&quot;</span>
+<span class="w">  </span>
+<span class="w">  </span><span class="c1"># Where to build the static site</span>
+<span class="w">  </span><span class="nt">site_dir</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;_site&quot;</span>
+<span class="w">  </span>
+<span class="w">  </span><span class="c1"># Where to save downloaded images (optional)</span>
+<span class="w">  </span><span class="nt">images_dir</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;images&quot;</span>
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="environment-variables-env">
+<h2>Environment Variables (.env)<a class="headerlink" href="#environment-variables-env" title="Link to this heading">#</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">.env</span></code> file contains sensitive API keys:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Hugging Face token for dataset access</span>
+<span class="c1"># Get yours at: https://huggingface.co/settings/tokens</span>
+<span class="nv">HUGGINGFACE_TOKEN</span><span class="o">=</span>hf_xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+<span class="c1"># DashScope API key for Qwen models</span>
+<span class="c1"># Get yours at: https://dashscope.aliyun.com/</span>
+<span class="nv">DASHSCOPE_API_KEY</span><span class="o">=</span>sk_xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+<span class="c1"># Netlify token for deployment (optional)</span>
+<span class="c1"># Get yours at: https://app.netlify.com/user/applications</span>
+<span class="nv">NETLIFY_TOKEN</span><span class="o">=</span>xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+<span class="c1"># Netlify site ID for deployment (optional)</span>
+<span class="nv">NETLIFY_SITE_ID</span><span class="o">=</span>xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p><strong>Never commit <code class="docutils literal notranslate"><span class="pre">.env</span></code> to version control!</strong> It contains secrets that could be misused if exposed.</p>
+</div>
+</section>
+<hr class="docutils" />
+<section id="configuration-precedence">
+<h2>Configuration Precedence<a class="headerlink" href="#configuration-precedence" title="Link to this heading">#</a></h2>
+<p>Settings are loaded in this order (later overrides earlier):</p>
+<ol class="arabic simple">
+<li><p>Default values (built into Flatfish)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">flatfish.yaml</span></code> in current directory</p></li>
+<li><p>Environment variables</p></li>
+<li><p>Command-line options</p></li>
+</ol>
+<p>For example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># This overrides the config file&#39;s output directory</span>
+flatfish<span class="w"> </span>build<span class="w"> </span>--output<span class="w"> </span>./my-custom-site
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="validating-configuration">
+<h2>Validating Configuration<a class="headerlink" href="#validating-configuration" title="Link to this heading">#</a></h2>
+<p>Always validate your configuration before processing:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>flatfish<span class="w"> </span>validate
+</pre></div>
+</div>
+<p>This checks:</p>
+<ul class="simple">
+<li><p>✅ Configuration file syntax</p></li>
+<li><p>✅ Required fields present</p></li>
+<li><p>✅ API keys configured</p></li>
+<li><p>✅ Dataset accessible</p></li>
+<li><p>✅ Output directories writable</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="per-document-configuration">
+<h2>Per-Document Configuration<a class="headerlink" href="#per-document-configuration" title="Link to this heading">#</a></h2>
+<p>For documents that need special handling, you can create per-document override files:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>transcriptions/
+├── document_001.json
+├── document_001.override.yaml  # Override settings for this document
+├── document_002.json
+└── ...
+</pre></div>
+</div>
+<p>Override file example:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># document_001.override.yaml</span>
+<span class="nt">skip_entity_extraction</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="nt">custom_prompt</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">  </span><span class="no">This document is in French. Transcribe it...</span>
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Link to this heading">#</a></h2>
+<section id="minimal-configuration">
+<h3>Minimal Configuration<a class="headerlink" href="#minimal-configuration" title="Link to this heading">#</a></h3>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">dataset</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">source</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;my-username/my-dataset&quot;</span>
+<span class="w">  </span><span class="nt">image_column</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;image&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="academic-research-project">
+<h3>Academic Research Project<a class="headerlink" href="#academic-research-project" title="Link to this heading">#</a></h3>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">dataset</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">source</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;university-archive/civil-war-letters&quot;</span>
+<span class="w">  </span><span class="nt">splits</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;train&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;test&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">image_column</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;scan&quot;</span>
+<span class="w">  </span><span class="nt">date_column</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;letter_date&quot;</span>
+
+<span class="nt">processing</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">extract_entities</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">entity_context</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+
+<span class="nt">summary</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">sample_size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">200</span>
+
+<span class="nt">website</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Smith</span><span class="nv"> </span><span class="s">Family</span><span class="nv"> </span><span class="s">Civil</span><span class="nv"> </span><span class="s">War</span><span class="nv"> </span><span class="s">Correspondence&quot;</span>
+<span class="w">  </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Letters</span><span class="nv"> </span><span class="s">from</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">Smith</span><span class="nv"> </span><span class="s">family,</span><span class="nv"> </span><span class="s">1861-1865&quot;</span>
+<span class="w">  </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;research2024&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="public-digital-collection">
+<h3>Public Digital Collection<a class="headerlink" href="#public-digital-collection" title="Link to this heading">#</a></h3>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">dataset</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">source</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;library/historic-newspapers&quot;</span>
+<span class="w">  </span><span class="nt">image_column</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;page_image&quot;</span>
+
+<span class="nt">processing</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">extract_entities</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+
+<span class="nt">website</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Historic</span><span class="nv"> </span><span class="s">Newspaper</span><span class="nv"> </span><span class="s">Archive&quot;</span>
+<span class="w">  </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Digitized</span><span class="nv"> </span><span class="s">newspapers</span><span class="nv"> </span><span class="s">from</span><span class="nv"> </span><span class="s">1850-1920&quot;</span>
+<span class="w">  </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="w">  </span><span class="c1"># Public access</span>
+<span class="w">  </span><span class="nt">analytics_id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;G-XXXXXXXXXX&quot;</span>
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="next-steps">
+<h2>Next Steps<a class="headerlink" href="#next-steps" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong><a class="reference internal" href="processing-documents.html"><span class="std std-doc">Processing Documents</span></a></strong> - Learn about the processing pipeline</p></li>
+<li><p><strong><a class="reference internal" href="transcription.html"><span class="std std-doc">Custom Prompts</span></a></strong> - Fine-tune text extraction</p></li>
+<li><p><strong><a class="reference internal" href="../help/troubleshooting.html"><span class="std std-doc">Troubleshooting</span></a></strong> - Solve common issues</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./usage"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../getting-started/first-project.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Your First Project</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="processing-documents.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Processing Documents</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#configuration-files">Configuration Files</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#flatfish-yaml-reference">flatfish.yaml Reference</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#environment-variables-env">Environment Variables (.env)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#configuration-precedence">Configuration Precedence</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#validating-configuration">Validating Configuration</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#per-document-configuration">Per-Document Configuration</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#examples">Examples</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minimal-configuration">Minimal Configuration</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#academic-research-project">Academic Research Project</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#public-digital-collection">Public Digital Collection</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#next-steps">Next Steps</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Princeton University Library
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
