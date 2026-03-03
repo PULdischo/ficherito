@@ -1154,25 +1154,32 @@ Include:
         for line in section.split("\n"):
             line = line.strip()
             
+            # Skip empty lines
+            if not line:
+                continue
+            
             # Check for subheading (#### **1. Shift in Role**)
             heading_match = re.match(r"#{1,4}\s*\*?\*?\d*\.?\s*(.+?)\*?\*?\s*$", line)
             if heading_match:
                 current_type = heading_match.group(1).strip("* ")
                 continue
             
-            # Check for **[Category]**: format inline
-            category_match = re.match(r"-\s*\*\*\[?([^\]:\*]+)\]?\*\*:\s*(.+)", line)
+            # Check for **[Category]**: format (category header with optional description)
+            category_match = re.match(r"-\s*\*\*\[?([^\]:\*]+)\]?\*\*:?\s*(.*)", line)
             if category_match:
-                changes.append({
-                    "type": category_match.group(1).strip(),
-                    "description": category_match.group(2).strip()
-                })
+                current_type = category_match.group(1).strip()
+                desc = category_match.group(2).strip()
+                if desc and len(desc) > 5:
+                    changes.append({
+                        "type": current_type,
+                        "description": desc
+                    })
                 continue
             
-            # Parse bullet points
+            # Parse bullet points (including indented ones)
             if line.startswith(("-", "*", "•")) and not line.startswith("**"):
                 text = line.lstrip("-*• ").strip()
-                if text:
+                if text and len(text) > 5:
                     changes.append({
                         "type": current_type,
                         "description": text
@@ -1186,6 +1193,7 @@ Include:
         Handles both:
         - Content with ## Research Questions section header
         - Raw numbered list or bullet points without headers
+        - Bold formatted questions (1. **Question**)
         """
         questions = []
 
@@ -1200,13 +1208,31 @@ Include:
         else:
             # No header found - use the whole content (for track-specific batches)
             section = content
-            
-        for line in section.split("\n"):
-            line = line.strip()
-            if line.startswith(("-", "*", "•", "1", "2", "3", "4", "5", "6", "7", "8", "9")):
-                text = line.lstrip("-*•0123456789.) ").strip()
-                if text and len(text) > 10:
-                    questions.append(text)
+        
+        # Try to extract bold questions first (e.g., "1. **Question text**")
+        bold_questions = re.findall(
+            r'^\d+\.\s*\*\*(.+?)\*\*',
+            section,
+            re.MULTILINE
+        )
+        
+        if bold_questions:
+            for q in bold_questions:
+                q = q.strip()
+                if q and len(q) > 10:
+                    questions.append(q)
+        else:
+            # Fallback to line-by-line parsing
+            for line in section.split("\n"):
+                line = line.strip()
+                if line.startswith(("-", "*", "•", "1", "2", "3", "4", "5", "6", "7", "8", "9")):
+                    # Strip leading markers and bold formatting
+                    text = line.lstrip("-*•0123456789.) ").strip()
+                    text = text.strip("*").strip()  # Remove bold markers
+                    if text and len(text) > 10:
+                        questions.append(text)
+
+        return questions
 
         return questions
 

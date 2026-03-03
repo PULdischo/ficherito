@@ -9,6 +9,7 @@ from typing import Optional
 
 import markdown
 from jinja2 import Environment, PackageLoader, select_autoescape
+from PIL import Image
 
 from flatfish.config import FlatfishConfig
 from flatfish.entities.extractor import load_entities, consolidate_entities, EntityExtractionResult
@@ -18,6 +19,11 @@ from flatfish.utils.dates import sort_by_date, format_date_display, extract_date
 from flatfish.utils.logging import get_logger
 
 logger = get_logger("site.builder")
+
+# Image compression settings
+MAX_IMAGE_WIDTH = 1200  # Max width in pixels
+MAX_IMAGE_HEIGHT = 1500  # Max height in pixels
+JPEG_QUALITY = 65  # JPEG quality (1-100)
 
 
 @dataclass
@@ -394,7 +400,7 @@ class SiteBuilder:
             f.write(js_content)
 
     def _copy_images(self, output_dir: Path, documents: list[dict]) -> None:
-        """Copy document images to output directory."""
+        """Copy and compress document images to output directory."""
         images_dir = output_dir / "images"
         images_dir.mkdir(exist_ok=True)
 
@@ -405,14 +411,56 @@ class SiteBuilder:
             Path(self.config.output.transcriptions_dir).parent / "images",
         ]
 
+        compressed_count = 0
+        total_saved = 0
+
         for doc in documents:
             for src_dir in possible_dirs:
                 for ext in [".jpg", ".jpeg", ".png", ".tiff", ".webp"]:
                     src_path = src_dir / f"{doc['id']}{ext}"
                     if src_path.exists():
-                        dst_path = images_dir / f"{doc['id']}{ext}"
-                        shutil.copy2(src_path, dst_path)
+                        # Always output as JPEG for better compression
+                        dst_path = images_dir / f"{doc['id']}.jpg"
+                        original_size = src_path.stat().st_size
+                        
+                        try:
+                            self._compress_image(src_path, dst_path)
+                            new_size = dst_path.stat().st_size
+                            total_saved += original_size - new_size
+                            compressed_count += 1
+                        except Exception as e:
+                            logger.warning(f"Failed to compress {src_path}: {e}, copying original")
+                            shutil.copy2(src_path, images_dir / f"{doc['id']}{ext}")
                         break
+
+        if compressed_count > 0:
+            saved_mb = total_saved / (1024 * 1024)
+            logger.info(f"Compressed {compressed_count} images, saved {saved_mb:.1f}MB")
+
+    def _compress_image(self, src_path: Path, dst_path: Path) -> None:
+        """Compress an image, resize if needed, and save as JPEG."""
+        with Image.open(src_path) as img:
+            # Convert to RGB if necessary (for PNG with alpha, etc.)
+            if img.mode in ("RGBA", "P", "LA"):
+                # Create white background for transparency
+                background = Image.new("RGB", img.size, (255, 255, 255))
+                if img.mode == "P":
+                    img = img.convert("RGBA")
+                background.paste(img, mask=img.split()[-1] if img.mode in ("RGBA", "LA") else None)
+                img = background
+            elif img.mode != "RGB":
+                img = img.convert("RGB")
+
+            # Resize if too large
+            width, height = img.size
+            if width > MAX_IMAGE_WIDTH or height > MAX_IMAGE_HEIGHT:
+                # Calculate new size maintaining aspect ratio
+                ratio = min(MAX_IMAGE_WIDTH / width, MAX_IMAGE_HEIGHT / height)
+                new_size = (int(width * ratio), int(height * ratio))
+                img = img.resize(new_size, Image.Resampling.LANCZOS)
+
+            # Save as JPEG with compression
+            img.save(dst_path, "JPEG", quality=JPEG_QUALITY, optimize=True)
 
     def _run_pagefind(self, output_dir: Path) -> None:
         """Run Pagefind to index the site."""
