@@ -19,11 +19,67 @@
 
 .slider-container {
     padding: 0 10px;
+    margin-top: 1rem;
 }
 
-.date-range-slider {
+.range-slider {
+    position: relative;
+    height: 40px;
+}
+
+.range-slider input[type="range"] {
+    position: absolute;
     width: 100%;
-    margin: 1rem 0;
+    height: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    pointer-events: none;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.range-slider input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: #2563eb;
+    border-radius: 50%;
+    cursor: pointer;
+    pointer-events: auto;
+    border: 2px solid white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.range-slider input[type="range"]::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background: #2563eb;
+    border-radius: 50%;
+    cursor: pointer;
+    pointer-events: auto;
+    border: 2px solid white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.range-track {
+    position: absolute;
+    width: 100%;
+    height: 5px;
+    background: #e2e8f0;
+    border-radius: 3px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.range-highlight {
+    position: absolute;
+    height: 5px;
+    background: #2563eb;
+    border-radius: 3px;
+    top: 50%;
+    transform: translateY(-50%);
 }
 
 .date-range-labels {
@@ -31,6 +87,7 @@
     justify-content: space-between;
     font-size: 0.875rem;
     color: #64748b;
+    margin-top: 0.5rem;
 }
 
 .selected-range {
@@ -104,8 +161,12 @@
             
             <div class="slider-container">
                 <label>Date Range:</label>
-                <input type="range" id="startRange" class="date-range-slider" min="0" max="100" value="0">
-                <input type="range" id="endRange" class="date-range-slider" min="0" max="100" value="100">
+                <div class="range-slider">
+                    <div class="range-track"></div>
+                    <div class="range-highlight" id="rangeHighlight"></div>
+                    <input type="range" id="startRange" min="0" max="100" value="0">
+                    <input type="range" id="endRange" min="0" max="100" value="100">
+                </div>
                 <div class="date-range-labels">
                     <span id="minDate">-</span>
                     <span id="maxDate">-</span>
@@ -159,6 +220,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     const startSlider = document.getElementById('startRange');
     const endSlider = document.getElementById('endRange');
+    const rangeHighlight = document.getElementById('rangeHighlight');
     const searchInput = document.getElementById('dateSearch');
     const noResults = document.getElementById('noResults');
     
@@ -168,6 +230,13 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('maxDate').textContent = dates[dates.length - 1];
         document.getElementById('selectedStart').textContent = dates[0];
         document.getElementById('selectedEnd').textContent = dates[dates.length - 1];
+    }
+    
+    function updateHighlight() {
+        const minVal = Math.min(parseInt(startSlider.value), parseInt(endSlider.value));
+        const maxVal = Math.max(parseInt(startSlider.value), parseInt(endSlider.value));
+        rangeHighlight.style.left = minVal + '%';
+        rangeHighlight.style.width = (maxVal - minVal) + '%';
     }
     
     function getDateAtPercent(percent) {
@@ -182,6 +251,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const endPercent = parseInt(endSlider.value);
         const startDate = getDateAtPercent(Math.min(startPercent, endPercent));
         const endDate = getDateAtPercent(Math.max(startPercent, endPercent));
+        
+        updateHighlight();
         
         document.getElementById('selectedStart').textContent = startDate || '-';
         document.getElementById('selectedEnd').textContent = endDate || '-';
@@ -212,8 +283,12 @@ document.addEventListener('DOMContentLoaded', function() {
         searchInput.value = '';
         startSlider.value = 0;
         endSlider.value = 100;
+        updateHighlight();
         filterDates();
     };
+    
+    // Initialize highlight position
+    updateHighlight();
 });
 </script>
 {% endblock %}

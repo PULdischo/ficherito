@@ -179,9 +179,9 @@
         
         <div class="changes-list" id="changes-list">
             {% for change in summary.key_changes %}
-            {% set category = change.type|lower|replace(' ', '')|replace('/', '') if change.type else 'general' %}
+            {% set category = (change.category or change.type or 'general')|lower|replace(' ', '')|replace('/', '') %}
             <div class="change-item" data-category="{{ category }}">
-                {% if change.type %}<span class="change-type">{{ change.type }}</span>{% endif %}
+                {% if change.category or change.type %}<span class="change-type">{{ change.category or change.type }}</span>{% endif %}
                 <div class="change-description">{{ change.description }}</div>
             </div>
             {% endfor %}
