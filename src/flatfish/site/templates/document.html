@@ -35,7 +35,7 @@
     </div>
 </header>
 
-<main data-pagefind-body>
+<main>
     {# Pagefind metadata for filtering - hidden from view #}
     <div class="pagefind-meta">
         <span data-pagefind-filter="date">{{ document.date or 'Unknown' }}</span>
@@ -69,7 +69,7 @@
         </div>
 
         <div class="document-content">
-            <section class="transcription-section">
+            <section class="transcription-section" data-pagefind-body>
                 <h2>Transcription</h2>
                 <div class="transcription">
                     {{ document.transcription | safe }}
