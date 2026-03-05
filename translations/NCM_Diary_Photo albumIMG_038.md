@@ -1,9 +1,0 @@
----
-source_language: en
-target_language: es
----
-
-cartagena 
-[ilegible] 
-
-cartagena
