@@ -20,6 +20,7 @@ flatfish <command> [options]
 | `process` | Run the full pipeline |
 | `transcribe` | Extract text from images |
 | `entities` | Extract named entities |
+| `translate` | Translate transcriptions |
 | `summarize` | Generate AI summaries |
 | `combine` | Combine batch summaries |
 | `build` | Build the website |
@@ -54,6 +55,7 @@ flatfish process
 # Run specific steps
 flatfish transcribe
 flatfish entities
+flatfish translate
 flatfish summarize
 
 # Build and preview
@@ -74,6 +76,7 @@ See individual command pages:
 - **[process](process.md)** - Full pipeline execution
 - **[transcribe](transcribe.md)** - Text extraction
 - **[entities](entities.md)** - Named entity recognition
+- **[translate](translate.md)** - Translation to target language
 - **[summarize](summarize.md)** - AI summarization
 - **[combine](combine.md)** - Combine batch summaries
 - **[build](build.md)** - Website generation

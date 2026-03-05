@@ -125,6 +125,7 @@ class SiteBuilder:
         """Load all processed documents."""
         documents = []
         transcriptions_dir = Path(self.config.output.transcriptions_dir)
+        translations_dir = Path(self.config.output.translations_dir)
         entities_dir = Path(self.config.output.entities_dir)
 
         if not transcriptions_dir.exists():
@@ -135,6 +136,14 @@ class SiteBuilder:
 
             # Load transcription
             text, metadata = load_transcription(txt_file)
+
+            # Load translation if available
+            translation_html = None
+            translation_file = translations_dir / f"{doc_id}.md"
+            if translation_file.exists():
+                from flatfish.translation.translator import load_translation
+                translation_text, _ = load_translation(translation_file)
+                translation_html = markdown.markdown(translation_text, extensions=['nl2br', 'sane_lists'])
 
             # Load entities if available
             entities = []
@@ -162,6 +171,7 @@ class SiteBuilder:
                 "date": date,
                 "date_display": format_date_display(date),
                 "transcription": transcription_html,
+                "translation": translation_html,
                 "entities": entities,
                 "metadata": metadata,
             })
@@ -303,6 +313,10 @@ class SiteBuilder:
         docs_dir = output_dir / "documents"
         docs_dir.mkdir(exist_ok=True)
 
+        # Get translation settings
+        default_tab = self.config.translate.default_tab if self.config.translate.enabled else "transcription"
+        target_language = self.config.translate.target_language
+
         for doc in documents:
             doc_dir = docs_dir / doc["id"]
             doc_dir.mkdir(exist_ok=True)
@@ -317,6 +331,8 @@ class SiteBuilder:
                 summary=summary,
                 enable_browse_dates=self.config.website.enable_browse_dates,
                 enable_browse_entities=self.config.website.enable_browse_entities,
+                default_tab=default_tab,
+                target_language=target_language,
             )
 
             with open(doc_dir / "index.html", "w", encoding="utf-8") as f:

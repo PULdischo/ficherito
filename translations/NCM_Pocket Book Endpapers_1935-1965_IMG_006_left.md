@@ -1,0 +1,8 @@
+---
+source_language: en
+target_language: es
+---
+
+MEMORANDA
+
+[ilegible]

@@ -1,0 +1,11 @@
+---
+source_language: en
+target_language: es
+---
+
+CUENTA DE EFECTIVO 
+JUNIO 
+
+FECHA. 
+[ilegible] 
+[ilegible

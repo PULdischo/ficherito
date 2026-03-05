@@ -32,14 +32,21 @@ Understand how Flatfish transforms document images into a searchable website.
           │
           ▼
 ┌───────────────────┐     ┌─────────────────────────────────────┐
-│  3. SUMMARIZE     │     │ • Process documents in batches      │
+│  3. TRANSLATE     │     │ • Translate to target language      │
+│                   │ ──▶ │ • Save translated text              │
+│flatfish translate │     │ • Support multiple source languages │
+└─────────┬─────────┘     └─────────────────────────────────────┘
+          │
+          ▼
+┌───────────────────┐     ┌─────────────────────────────────────┐
+│  4. SUMMARIZE     │     │ • Process documents in batches      │
 │                   │ ──▶ │ • Generate timeline & changes       │
 │flatfish summarize │     │ • Create finding aid & questions    │
 └─────────┬─────────┘     └─────────────────────────────────────┘
           │
           ▼
 ┌───────────────────┐     ┌─────────────────────────────────────┐
-│  4. BUILD         │     │ • Generate HTML pages               │
+│  5. BUILD         │     │ • Generate HTML pages               │
 │                   │ ──▶ │ • Create search index               │
 │  flatfish build   │     │ • Output static website             │
 └─────────┬─────────┘     └─────────────────────────────────────┘
@@ -122,7 +129,44 @@ Understand how Flatfish transforms document images into a searchable website.
 
 ---
 
-## Stage 3: Summarization
+## Stage 3: Translation
+
+**Purpose:** Translate transcriptions to target language.
+
+**Input:** Transcription files  
+**Output:** Markdown files in `translations/`
+
+### Process
+
+1. **Read** cleaned transcription text
+2. **Send** to Google Translate API
+3. **Translate** from source to target language
+4. **Save** translated text as markdown
+
+### Output Format
+
+```markdown
+15 de abril de 1863
+
+Querida Sarah,
+
+Esta carta viene desde el campamento cerca de Filadelfia...
+```
+
+### Configuration
+
+```yaml
+translate:
+  enabled: true
+  source_languages:
+    - "en"
+  target_language: "es"
+  default_tab: "translation"
+```
+
+---
+
+## Stage 4: Summarization
 
 **Purpose:** Generate collection-level analysis.
 
@@ -159,7 +203,7 @@ Batch 2 ──┬──▶ Timeline      ──┐
 
 ---
 
-## Stage 4: Build
+## Stage 5: Build
 
 **Purpose:** Create static website.
 

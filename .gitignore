@@ -80,3 +80,5 @@ tiles/
 
 # Jupyter Notebook
 .ipynb_checkpoints
+_build/
+docs/_build/

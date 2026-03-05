@@ -14,6 +14,9 @@ Extract handwritten text from document images using state-of-the-art AI models. 
 ### 🏷️ Entity Recognition
 Automatically identify people, places, dates, organizations, and more. Each entity includes contextual descriptions explaining its role in the document.
 
+### 🌍 Translation
+Translate transcriptions to any language using Google Translate. Perfect for making multilingual archives accessible to wider audiences.
+
 ### 📊 AI Summaries
 Generate timelines, track changes across documents, and discover research questions you might not have considered.
 

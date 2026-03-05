@@ -44,8 +44,15 @@ summary:
   include_timeline: true
   include_key_changes: true
   include_research_questions: true
+translate:
+  enabled: true
+  source_languages:
+    - en
+  target_language: es
+  default_tab: transcription #translation
 output:
   transcriptions_dir: transcriptions
+  translations_dir: translations
   entities_dir: entities
   summaries_dir: summaries
   site_dir: _site

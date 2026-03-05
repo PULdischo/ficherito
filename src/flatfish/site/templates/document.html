@@ -6,6 +6,53 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/openseadragon/4.1.0/openseadragon.min.js"></script>
 <style>
     .pagefind-meta { display: none !important; }
+    
+    /* Tab styles */
+    .text-tabs {
+        display: flex;
+        border-bottom: 2px solid #e2e8f0;
+        margin-bottom: 1rem;
+    }
+    
+    .text-tab {
+        padding: 0.75rem 1.5rem;
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 1rem;
+        font-weight: 500;
+        color: #64748b;
+        border-bottom: 2px solid transparent;
+        margin-bottom: -2px;
+        transition: all 0.2s;
+    }
+    
+    .text-tab:hover {
+        color: #2563eb;
+    }
+    
+    .text-tab.active {
+        color: #2563eb;
+        border-bottom-color: #2563eb;
+    }
+    
+    .tab-content {
+        display: none;
+    }
+    
+    .tab-content.active {
+        display: block;
+    }
+    
+    .translation-notice {
+        background: #f0f9ff;
+        border: 1px solid #bae6fd;
+        border-radius: 6px;
+        padding: 0.75rem 1rem;
+        margin-bottom: 1rem;
+        font-size: 0.875rem;
+        color: #0369a1;
+    }
 </style>
 {% endblock %}
 
@@ -69,12 +116,40 @@
         </div>
 
         <div class="document-content">
+            {% if document.translation %}
+            <section class="transcription-section">
+                <div class="text-tabs">
+                    <button class="text-tab {% if default_tab == 'transcription' %}active{% endif %}" data-tab="transcription">
+                        📜 Original
+                    </button>
+                    <button class="text-tab {% if default_tab == 'translation' %}active{% endif %}" data-tab="translation">
+                        🌐 Translation
+                    </button>
+                </div>
+                
+                <div id="transcription-content" class="tab-content {% if default_tab == 'transcription' %}active{% endif %}" data-pagefind-body>
+                    <div class="transcription">
+                        {{ document.transcription | safe }}
+                    </div>
+                </div>
+                
+                <div id="translation-content" class="tab-content {% if default_tab == 'translation' %}active{% endif %}">
+                    <div class="translation-notice">
+                        🌐 Machine translated to {{ target_language }}
+                    </div>
+                    <div class="transcription">
+                        {{ document.translation | safe }}
+                    </div>
+                </div>
+            </section>
+            {% else %}
             <section class="transcription-section" data-pagefind-body>
                 <h2>Transcription</h2>
                 <div class="transcription">
                     {{ document.transcription | safe }}
                 </div>
             </section>
+            {% endif %}
 
             {% if document.entities %}
             <section class="entities-list">
@@ -111,6 +186,23 @@
 
 {% block scripts %}
 <script>
+    // Tab switching
+    document.querySelectorAll('.text-tab').forEach(tab => {
+        tab.addEventListener('click', function() {
+            const tabName = this.dataset.tab;
+            
+            // Update active tab button
+            document.querySelectorAll('.text-tab').forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Update visible content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(tabName + '-content').classList.add('active');
+        });
+    });
+
     // Highlight search terms from query parameter
     (function() {
         const params = new URLSearchParams(window.location.search);

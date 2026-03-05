@@ -128,6 +128,25 @@ summary:
   sample_size: 100
 
 # =============================================================================
+# TRANSLATION OPTIONS
+# =============================================================================
+translate:
+  # Enable/disable translation
+  enabled: true
+  
+  # Source language(s) - ISO 639-1 codes
+  # Use "auto" for automatic detection
+  source_languages:
+    - "es"
+  
+  # Target language - ISO 639-1 code
+  target_language: "en"
+  
+  # Which tab to show by default on document pages
+  # Options: "transcription" or "translation"
+  default_tab: "translation"
+
+# =============================================================================
 # WEBSITE OPTIONS
 # =============================================================================
 website:
@@ -157,6 +176,9 @@ website:
 output:
   # Where to save transcriptions
   transcriptions_dir: "transcriptions"
+  
+  # Where to save translations
+  translations_dir: "translations"
   
   # Where to save entity extractions
   entities_dir: "entities"

@@ -1,0 +1,20 @@
+---
+source_language: en
+target_language: es
+---
+
+NC MARSHALL
+
+EL 
+ESTÁNDAR 
+DIARIO.
+
+[diseño circular ilegible con los signos del zodíaco y el texto: 
+"COMERCIO 
+1925 
+MARCA"] 
+
+EN VENTA POR TODAS LAS PAPELERÍAS 
+
+Publicado por 
+LA COMPAÑÍA DE DIARIO ESTÁNDAR

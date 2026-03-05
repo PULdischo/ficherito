@@ -107,7 +107,7 @@ DASHSCOPE_API_KEY=sk-xxxxxxxxxxxxx
         rprint(f"[green]✓[/green] Created {env_path}")
 
     # Create output directories
-    for dirname in ["transcriptions", "entities", "summaries"]:
+    for dirname in ["transcriptions", "translations", "entities", "summaries"]:
         dirpath = path / dirname
         dirpath.mkdir(exist_ok=True)
         rprint(f"[green]✓[/green] Created {dirpath}/")
@@ -304,6 +304,117 @@ def entities(
         env = load_env()
 
         run_entity_extraction(config=cfg, env=env, limit=limit, max_concurrent=concurrency)
+
+    except Exception as e:
+        rprint(f"[red]Error:[/red] {e}")
+        raise typer.Exit(1)
+
+
+@app.command()
+def translate(
+    config: Annotated[
+        Path,
+        typer.Option("--config", "-c", help="Path to config file."),
+    ] = Path("flatfish.yaml"),
+    limit: Annotated[
+        Optional[int],
+        typer.Option("--limit", "-l", help="Limit number of documents to translate."),
+    ] = None,
+    force: Annotated[
+        bool,
+        typer.Option("--force", "-f", help="Force re-translation even if translation exists."),
+    ] = False,
+    source_language: Annotated[
+        Optional[str],
+        typer.Option("--source", "-s", help="Override source language (default: from config or 'auto')."),
+    ] = None,
+) -> None:
+    """Translate transcriptions to target language.
+    
+    Uses Google Translate via deep_translator. Validates language codes
+    against supported languages before running.
+    """
+    from flatfish.translation import Translator, validate_languages
+    from flatfish.htr.engine import load_transcription
+
+    try:
+        cfg = load_config(config)
+        
+        if not cfg.translate.enabled:
+            rprint("[yellow]Translation is disabled in config. Enable it with translate.enabled: true[/yellow]")
+            raise typer.Exit(1)
+        
+        # Validate languages
+        source_langs = [source_language] if source_language else cfg.translate.source_languages
+        is_valid, error = validate_languages(source_langs, cfg.translate.target_language)
+        
+        if not is_valid:
+            rprint(f"[red]Error:[/red] {error}")
+            raise typer.Exit(1)
+        
+        rprint(f"[blue]Translating from {source_langs} to {cfg.translate.target_language}[/blue]")
+        
+        # Initialize translator
+        translator = Translator(config=cfg)
+        
+        # Load transcriptions
+        transcriptions_dir = Path(cfg.output.transcriptions_dir)
+        translations_dir = Path(cfg.output.translations_dir)
+        translations_dir.mkdir(parents=True, exist_ok=True)
+        
+        if not transcriptions_dir.exists():
+            rprint(f"[red]Error:[/red] Transcriptions directory not found: {transcriptions_dir}")
+            raise typer.Exit(1)
+        
+        transcription_files = sorted(transcriptions_dir.glob("*.md"))
+        if limit:
+            transcription_files = transcription_files[:limit]
+        
+        total = len(transcription_files)
+        translated = 0
+        skipped = 0
+        errors = 0
+        
+        with Progress(
+            SpinnerColumn(),
+            TextColumn("[progress.description]{task.description}"),
+            console=console,
+        ) as progress:
+            task = progress.add_task(f"Translating 0/{total}...", total=total)
+            
+            for txt_file in transcription_files:
+                doc_id = txt_file.stem
+                output_file = translations_dir / f"{doc_id}.md"
+                
+                # Skip if already translated (unless force)
+                if output_file.exists() and not force:
+                    skipped += 1
+                    progress.advance(task)
+                    progress.update(task, description=f"Translating {translated}/{total} (skipped {skipped})...")
+                    continue
+                
+                # Load transcription
+                text, _ = load_transcription(txt_file)
+                
+                # Translate
+                src_lang = source_language or cfg.translate.source_languages[0]
+                result = translator.translate_document(doc_id, text, src_lang)
+                
+                if result.success:
+                    translator.save_translation(result, translations_dir)
+                    translated += 1
+                else:
+                    errors += 1
+                    rprint(f"[red]Error translating {doc_id}: {result.error}[/red]")
+                
+                progress.advance(task)
+                progress.update(task, description=f"Translating {translated}/{total} (skipped {skipped})...")
+        
+        rprint(f"\n[green]✓[/green] Translation complete!")
+        rprint(f"  Translated: {translated}")
+        rprint(f"  Skipped: {skipped}")
+        if errors:
+            rprint(f"  [red]Errors: {errors}[/red]")
 
     except Exception as e:
         rprint(f"[red]Error:[/red] {e}")

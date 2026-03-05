@@ -13,6 +13,7 @@ parts:
       - file: usage/processing-documents
       - file: usage/transcription
       - file: usage/entities
+      - file: usage/translation
       - file: usage/summarization
       - file: usage/building-sites
       - file: usage/deployment
@@ -31,6 +32,7 @@ parts:
       - file: commands/process
       - file: commands/transcribe
       - file: commands/entities
+      - file: commands/translate
       - file: commands/summarize
       - file: commands/combine
       - file: commands/build

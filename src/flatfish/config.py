@@ -120,10 +120,29 @@ class SummaryConfig(BaseModel):
     )
 
 
+class TranslateConfig(BaseModel):
+    """Configuration for document translation."""
+
+    enabled: bool = Field(default=False, description="Enable translation")
+    source_languages: list[str] = Field(
+        default=["es"], 
+        description="Source language codes (e.g., 'es', 'fr', 'de')"
+    )
+    target_language: str = Field(
+        default="en", 
+        description="Target language code for translation"
+    )
+    default_tab: str = Field(
+        default="transcription",
+        description="Which tab to show by default: 'transcription' or 'translation'"
+    )
+
+
 class OutputConfig(BaseModel):
     """Configuration for output directories."""
 
     transcriptions_dir: str = Field(default="transcriptions", description="Directory for text files")
+    translations_dir: str = Field(default="translations", description="Directory for translation files")
     entities_dir: str = Field(default="entities", description="Directory for entity JSON files")
     summaries_dir: str = Field(default="summaries", description="Directory for summary files")
     site_dir: str = Field(default="_site", description="Directory for built static site")
@@ -151,6 +170,7 @@ class FlatfishConfig(BaseModel):
     processing: ProcessingConfig = Field(default_factory=ProcessingConfig)
     prompts: PromptsConfig = Field(default_factory=PromptsConfig)
     summary: SummaryConfig = Field(default_factory=SummaryConfig)
+    translate: TranslateConfig = Field(default_factory=TranslateConfig)
     output: OutputConfig = Field(default_factory=OutputConfig)
     website: WebsiteConfig = Field(default_factory=WebsiteConfig)
 
@@ -236,8 +256,15 @@ def get_default_config() -> dict[str, Any]:
             "include_key_changes": True,
             "include_research_questions": True,
         },
+        "translate": {
+            "enabled": False,
+            "source_languages": ["es"],
+            "target_language": "en",
+            "default_tab": "transcription",
+        },
         "output": {
             "transcriptions_dir": "transcriptions",
+            "translations_dir": "translations",
             "entities_dir": "entities",
             "summaries_dir": "summaries",
             "site_dir": "_site",
