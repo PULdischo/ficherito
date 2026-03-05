@@ -6,6 +6,7 @@ parts:
     chapters:
       - file: getting-started/installation
       - file: getting-started/quickstart
+      - file: getting-started/creating-datasets
       - file: getting-started/first-project
   - caption: Usage Guide
     chapters:

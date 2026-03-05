@@ -10,7 +10,7 @@ readme = "README.md"
 requires-python = ">=3.10"
 license = "MIT"
 authors = [
-    { name = "Your Name", email = "you@example.com" }
+    { name = "Andrew Janco", email = "apjanco@gmail.com" }
 ]
 keywords = [
     "ocr",
@@ -64,10 +64,10 @@ dev = [
 flatfish = "flatfish.cli:app"
 
 [project.urls]
-Homepage = "https://github.com/username/flatfish"
-Documentation = "https://github.com/username/flatfish#readme"
-Repository = "https://github.com/username/flatfish"
-Issues = "https://github.com/username/flatfish/issues"
+Homepage = "https://github.com/PULdischo/flatfish"
+Documentation = "https://github.com/PULdischo/flatfish#readme"
+Repository = "https://github.com/PULdischo/flatfish"
+Issues = "https://github.com/PULdischo/flatfish/issues"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/flatfish"]
