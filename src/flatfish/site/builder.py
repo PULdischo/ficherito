@@ -487,16 +487,28 @@ class SiteBuilder:
         if pagefind_cmd:
             cmd = [pagefind_cmd, "--source", str(output_dir), "--bundle-dir", "pagefind"]
         else:
-            cmd = ["npx", "pagefind", "--source", str(output_dir), "--bundle-dir", "pagefind"]
+            # Check if npx is available
+            npx_cmd = shutil.which("npx")
+            if not npx_cmd:
+                logger.warning("Pagefind not found and npx not available. Skipping search indexing.")
+                logger.warning("Install with: pip install pagefind, cargo install pagefind, or npm install -g pagefind")
+                return
+            # Use --yes to auto-confirm the npx install prompt (avoids hanging)
+            cmd = ["npx", "--yes", "pagefind", "--source", str(output_dir), "--bundle-dir", "pagefind"]
         
         try:
-            result = subprocess.run(cmd, capture_output=True, text=True)
+            result = subprocess.run(cmd, capture_output=True, text=True, timeout=120)
             if result.returncode == 0:
                 logger.info("Pagefind indexing complete")
             else:
-                logger.warning(f"Pagefind failed: {result.stderr}")
+                logger.warning(f"Pagefind indexing failed: {result.stderr}")
+                logger.warning("Search will not be available. Site is still usable without it.")
+        except subprocess.TimeoutExpired:
+            logger.warning("Pagefind timed out after 120s. Skipping search indexing.")
+            logger.warning("Search will not be available. You can install pagefind and run 'flatfish build' again.")
         except FileNotFoundError:
-            logger.warning("Pagefind not found. Install with: cargo install pagefind or npm install -g pagefind")
+            logger.warning("Pagefind not found. Search will not be available.")
+            logger.warning("Install with: pip install pagefind, cargo install pagefind, or npm install -g pagefind")
 
     def _generate_css(self) -> str:
         """Generate the main CSS file."""
