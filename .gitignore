@@ -69,7 +69,7 @@ venv.bak/
 # Project specific
 _site/
 transcriptions/
-entities/
+/entities/
 summaries/
 images/
 *.dzi
