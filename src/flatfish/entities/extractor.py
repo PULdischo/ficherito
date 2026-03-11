@@ -1,18 +1,18 @@
-"""Entity extraction from transcribed documents using DashScope Qwen API."""
+"""Entity extraction from transcribed text."""
 
 import asyncio
 import json
 import re
-from collections import defaultdict
 from dataclasses import dataclass, field, asdict
 from datetime import datetime
 from pathlib import Path
-from typing import Callable, Optional
+from typing import Optional, Callable
 
-from openai import AsyncOpenAI
+from openai import OpenAI, AsyncOpenAI
 
 from flatfish.config import FlatfishConfig, EnvSettings
 from flatfish.utils.logging import get_logger
+from flatfish.utils.text import extract_json_from_response, clean_extracted_text
 
 logger = get_logger("entities.extractor")
 
@@ -22,25 +22,26 @@ DASHSCOPE_BASE_URL = "https://dashscope-intl.aliyuncs.com/compatible-mode/v1"
 
 @dataclass
 class Entity:
-    """A single extracted entity."""
+    """Represents an extracted entity."""
 
     text: str
     type: str
-    context: str = ""
+    context: str
+    positions: list[dict] = field(default_factory=list)
+    confidence: Optional[float] = None
 
 
 @dataclass
 class EntityExtractionResult:
-    """Result of entity extraction from a single document."""
+    """Result of entity extraction from a document."""
 
     source_image: str
-    entities: list[Entity] = field(default_factory=list)
-    model: str = ""
-    extracted_at: str = ""
+    extracted_at: str
+    entities: list[Entity]
 
 
 class EntityExtractor:
-    """Extracts named entities from transcribed documents using Qwen API."""
+    """Extracts named entities from transcribed text using LLM."""
 
     def __init__(
         self,
@@ -61,7 +62,19 @@ class EntityExtractor:
         self.env = env
         self.base_url = base_url
         self.timeout = timeout
+        self._sync_client: Optional[OpenAI] = None
         self._async_client: Optional[AsyncOpenAI] = None
+
+    @property
+    def sync_client(self) -> OpenAI:
+        """Lazy-initialize the sync OpenAI client."""
+        if self._sync_client is None:
+            self._sync_client = OpenAI(
+                api_key=self.env.dashscope_api_key,
+                base_url=self.base_url,
+                timeout=self.timeout,
+            )
+        return self._sync_client
 
     @property
     def async_client(self) -> AsyncOpenAI:
@@ -70,234 +83,319 @@ class EntityExtractor:
             self._async_client = AsyncOpenAI(
                 api_key=self.env.dashscope_api_key,
                 base_url=self.base_url,
-                timeout=self.timeout,
             )
         return self._async_client
 
-    async def extract_entities_async(
+    def extract_entities(
         self,
         text: str,
-        doc_id: str,
+        image_id: str,
+        model: str = "qwen-turbo",
     ) -> EntityExtractionResult:
-        """Extract entities from a single document text.
+        """Extract entities from text (sync).
 
         Args:
-            text: The transcribed document text.
-            doc_id: Identifier for the source document.
+            text: Transcribed document text.
+            image_id: Identifier for the source image.
+            model: Model to use for extraction.
 
         Returns:
             EntityExtractionResult with extracted entities.
         """
-        prompt = self.config.prompts.ner_extraction.format(document_text=text)
-        model_name = getattr(self.config.summary, "model", "qwen-vl-plus")
+        # Clean input text before extraction
+        cleaned_text = clean_extracted_text(text)
+        
+        # Build prompt
+        prompt = self.config.prompts.ner_extraction.format(document_text=cleaned_text)
 
         try:
-            response = await self.async_client.chat.completions.create(
-                model=model_name,
+            completion = self.sync_client.chat.completions.create(
+                model=model,
                 messages=[{"role": "user", "content": prompt}],
-                temperature=0.1,
             )
 
-            raw = response.choices[0].message.content or ""
-            entities = self._parse_entities(raw)
-
-            return EntityExtractionResult(
-                source_image=doc_id,
-                entities=entities,
-                model=model_name,
-                extracted_at=datetime.now().isoformat(),
-            )
+            content = completion.choices[0].message.content or ""
+            logger.debug(f"Entity extraction response: {content[:500]}...")
+            entities = self._parse_entities(content, cleaned_text)
 
         except Exception as e:
-            logger.error(f"Entity extraction failed for {doc_id}: {e}")
-            return EntityExtractionResult(
-                source_image=doc_id,
-                entities=[],
-                model=model_name,
-                extracted_at=datetime.now().isoformat(),
-            )
+            logger.error(f"Entity extraction failed: {e}")
+            logger.debug(f"Raw response content was: {content if 'content' in dir() else 'N/A'}")
+            entities = []
 
-    def _parse_entities(self, raw_text: str) -> list[Entity]:
-        """Parse entity JSON from LLM response.
+        return EntityExtractionResult(
+            source_image=image_id,
+            extracted_at=datetime.utcnow().isoformat() + "Z",
+            entities=entities,
+        )
+
+    async def extract_entities_async(
+        self,
+        text: str,
+        image_id: str,
+        model: str = "qwen-turbo",
+    ) -> EntityExtractionResult:
+        """Extract entities from text (async).
 
         Args:
-            raw_text: Raw LLM response text.
+            text: Transcribed document text.
+            image_id: Identifier for the source image.
+            model: Model to use for extraction.
 
         Returns:
-            List of parsed Entity objects.
+            EntityExtractionResult with extracted entities.
         """
-        # Try to extract JSON array from the response
-        json_match = re.search(r"\[.*\]", raw_text, re.DOTALL)
-        if not json_match:
-            logger.warning("No JSON array found in entity response")
-            return []
+        # Clean input text before extraction
+        cleaned_text = clean_extracted_text(text)
+        
+        # Build prompt
+        prompt = self.config.prompts.ner_extraction.format(document_text=cleaned_text)
 
         try:
-            items = json.loads(json_match.group())
-        except json.JSONDecodeError as e:
-            logger.warning(f"Failed to parse entity JSON: {e}")
-            return []
+            completion = await asyncio.wait_for(
+                self.async_client.chat.completions.create(
+                    model=model,
+                    messages=[{"role": "user", "content": prompt}],
+                ),
+                timeout=self.timeout
+            )
 
-        entities = []
-        for item in items:
-            if isinstance(item, dict) and "text" in item and "type" in item:
-                entities.append(
-                    Entity(
-                        text=item["text"],
-                        type=item.get("type", "UNKNOWN"),
-                        context=item.get("context", ""),
-                    )
-                )
-        return entities
+            content = completion.choices[0].message.content or ""
+            entities = self._parse_entities(content, cleaned_text)
+
+        except asyncio.TimeoutError:
+            logger.error(f"Entity extraction timed out after {self.timeout}s")
+            entities = []
+        except Exception as e:
+            logger.error(f"Entity extraction failed: {e}")
+            entities = []
+
+        return EntityExtractionResult(
+            source_image=image_id,
+            extracted_at=datetime.utcnow().isoformat() + "Z",
+            entities=entities,
+        )
 
     async def extract_batch_async(
         self,
         documents: list[dict],
-        max_concurrent: int = 10,
-        on_complete: Optional[Callable] = None,
+        model: str = "qwen-turbo",
+        max_concurrent: int = 15,
+        on_complete: Optional[Callable[["EntityExtractionResult"], None]] = None,
     ) -> list[EntityExtractionResult]:
-        """Extract entities from multiple documents concurrently.
+        """Extract entities from multiple documents concurrently, streaming results.
+
+        Uses asyncio.as_completed to process results as they finish.
 
         Args:
             documents: List of dicts with 'id' and 'text' keys.
-            max_concurrent: Maximum concurrent API requests.
-            on_complete: Optional callback called with each result as it completes.
+            model: Model to use for extraction.
+            max_concurrent: Maximum concurrent requests.
+            on_complete: Optional callback called when each extraction completes.
 
         Returns:
             List of EntityExtractionResult objects.
         """
         semaphore = asyncio.Semaphore(max_concurrent)
-        results = []
 
-        async def process_one(doc: dict) -> EntityExtractionResult:
+        async def extract_single(doc: dict) -> EntityExtractionResult:
             async with semaphore:
-                result = await self.extract_entities_async(
+                return await self.extract_entities_async(
                     text=doc["text"],
-                    doc_id=doc["id"],
+                    image_id=doc["id"],
+                    model=model,
                 )
+
+        # Create all tasks
+        tasks = [
+            asyncio.create_task(extract_single(doc))
+            for doc in documents
+        ]
+        
+        # Process results as they complete (streaming)
+        results = []
+        for coro in asyncio.as_completed(tasks):
+            try:
+                result = await coro
+                results.append(result)
                 if on_complete:
                     on_complete(result)
-                return result
+            except Exception as e:
+                logger.error(f"Failed to extract entities: {e}")
+        
+        return results
 
-        tasks = [process_one(doc) for doc in documents]
-        results = await asyncio.gather(*tasks, return_exceptions=True)
+    def _parse_entities(self, response: str, source_text: str) -> list[Entity]:
+        """Parse entities from LLM response.
 
-        # Filter out exceptions
-        valid_results = []
-        for r in results:
-            if isinstance(r, Exception):
-                logger.error(f"Entity extraction task failed: {r}")
-            else:
-                valid_results.append(r)
+        Args:
+            response: LLM response text.
+            source_text: Original document text.
 
-        return valid_results
+        Returns:
+            List of Entity objects.
+        """
+        entities = []
+
+        # Extract JSON from response (handles code fences)
+        json_str = extract_json_from_response(response)
+        if not json_str:
+            logger.warning("No JSON found in response")
+            return entities
+
+        try:
+            data = json.loads(json_str)
+            
+            # Handle both array and object responses
+            if isinstance(data, dict):
+                # If it's an object, look for an 'entities' key or convert to list
+                data = data.get('entities', [data])
+
+            for item in data:
+                if not isinstance(item, dict):
+                    continue
+
+                text = item.get("text", "")
+                entity_type = item.get("type", "UNKNOWN")
+                context = item.get("context", "")
+
+                if not text:
+                    continue
+
+                # Find positions in source text
+                positions = []
+                start = 0
+                while True:
+                    pos = source_text.find(text, start)
+                    if pos == -1:
+                        break
+                    positions.append({"start": pos, "end": pos + len(text)})
+                    start = pos + 1
+
+                entities.append(
+                    Entity(
+                        text=text,
+                        type=entity_type,
+                        context=context,
+                        positions=positions,
+                        confidence=item.get("confidence"),
+                    )
+                )
+
+        except json.JSONDecodeError as e:
+            logger.warning(f"Failed to parse JSON: {e}")
+
+        return entities
 
     def save_entities(
         self,
         result: EntityExtractionResult,
         output_dir: Path,
     ) -> Path:
-        """Save entity extraction result to a JSON file.
+        """Save entities to a JSON file.
 
         Args:
-            result: The extraction result to save.
-            output_dir: Directory to save the file in.
+            result: EntityExtractionResult to save.
+            output_dir: Directory to save to.
 
         Returns:
-            Path to the saved file.
+            Path to saved file.
         """
-        output_dir = Path(output_dir)
         output_dir.mkdir(parents=True, exist_ok=True)
-
         output_path = output_dir / f"{result.source_image}.json"
+
+        # Convert to dict
         data = {
             "source_image": result.source_image,
-            "entities": [asdict(e) for e in result.entities],
-            "model": result.model,
             "extracted_at": result.extracted_at,
+            "entities": [asdict(e) for e in result.entities],
         }
 
         with open(output_path, "w", encoding="utf-8") as f:
             json.dump(data, f, indent=2, ensure_ascii=False)
 
+        logger.debug(f"Saved entities: {output_path}")
         return output_path
 
 
-def load_entities(entity_file: Path) -> EntityExtractionResult:
-    """Load entity extraction result from a JSON file.
+def load_entities(file_path: Path) -> EntityExtractionResult:
+    """Load entities from a JSON file.
 
     Args:
-        entity_file: Path to the JSON file.
+        file_path: Path to entities file.
 
     Returns:
-        EntityExtractionResult loaded from disk.
+        EntityExtractionResult object.
     """
-    with open(entity_file, encoding="utf-8") as f:
+    with open(file_path, encoding="utf-8") as f:
         data = json.load(f)
 
     entities = [
         Entity(
             text=e["text"],
             type=e["type"],
-            context=e.get("context", ""),
+            context=e["context"],
+            positions=e.get("positions", []),
+            confidence=e.get("confidence"),
         )
         for e in data.get("entities", [])
     ]
 
     return EntityExtractionResult(
-        source_image=data.get("source_image", entity_file.stem),
+        source_image=data["source_image"],
+        extracted_at=data["extracted_at"],
         entities=entities,
-        model=data.get("model", ""),
-        extracted_at=data.get("extracted_at", ""),
     )
 
 
-def consolidate_entities(
-    results: list[EntityExtractionResult],
-) -> dict:
-    """Consolidate entities from multiple documents into a summary.
+def consolidate_entities(results: list[EntityExtractionResult]) -> dict:
+    """Consolidate entities from multiple documents.
 
-    Groups entities by type and deduplicates.
+    Groups entities by type and text, tracking which documents they appear in.
 
     Args:
-        results: List of EntityExtractionResult from individual documents.
+        results: List of EntityExtractionResult objects.
 
     Returns:
-        Dict with 'by_type' and 'all_entities' keys.
+        Dictionary with consolidated entity data.
     """
-    by_type: dict[str, dict[str, dict]] = defaultdict(dict)
-    all_entities: list[dict] = []
+    # Group by entity text and type
+    entity_map: dict[tuple[str, str], dict] = {}
 
     for result in results:
         for entity in result.entities:
-            key = f"{entity.text}|{entity.type}"
+            key = (entity.text, entity.type)
 
-            if key not in by_type.get(entity.type, {}):
-                entry = {
+            if key not in entity_map:
+                entity_map[key] = {
                     "text": entity.text,
                     "type": entity.type,
-                    "context": entity.context,
-                    "sources": [result.source_image],
-                    "count": 1,
+                    "contexts": [],
+                    "documents": [],
+                    "count": 0,
                 }
-                by_type[entity.type][key] = entry
-                all_entities.append(entry)
-            else:
-                existing = by_type[entity.type][key]
-                if result.source_image not in existing["sources"]:
-                    existing["sources"].append(result.source_image)
-                existing["count"] += 1
 
-    # Convert by_type to serializable format
-    by_type_out = {}
-    for entity_type, entities_map in by_type.items():
-        by_type_out[entity_type] = sorted(
-            entities_map.values(),
-            key=lambda e: e["count"],
-            reverse=True,
-        )
+            entity_map[key]["contexts"].append({
+                "document": result.source_image,
+                "context": entity.context,
+            })
+            entity_map[key]["documents"].append(result.source_image)
+            entity_map[key]["count"] += 1
+
+    # Convert to list and sort by count
+    entities = sorted(entity_map.values(), key=lambda x: x["count"], reverse=True)
+
+    # Group by type
+    by_type: dict[str, list] = {}
+    for entity in entities:
+        entity_type = entity["type"]
+        if entity_type not in by_type:
+            by_type[entity_type] = []
+        by_type[entity_type].append(entity)
 
     return {
-        "by_type": by_type_out,
-        "all_entities": sorted(all_entities, key=lambda e: e["count"], reverse=True),
+        "total_entities": len(entities),
+        "unique_texts": len(entity_map),
+        "by_type": by_type,
+        "all_entities": entities,
     }
