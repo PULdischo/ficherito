@@ -5,7 +5,6 @@ import json
 from pathlib import Path
 from typing import Optional
 
-from rich.console import Console
 from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn, TaskProgressColumn, TimeElapsedColumn
 
 from flatfish.config import FlatfishConfig, EnvSettings
@@ -15,9 +14,10 @@ from flatfish.entities.extractor import EntityExtractor, consolidate_entities, l
 from flatfish.summary.qwen import QwenSummarizer
 from flatfish.site.builder import build_site
 from flatfish.htr.engine import load_transcription
+from flatfish.utils.console import get_console
 from flatfish.utils.logging import setup_logging, get_logger
 
-console = Console()
+console = get_console()
 logger = get_logger("pipeline")
 
 

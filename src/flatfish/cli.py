@@ -6,11 +6,11 @@ from typing import Annotated, Optional
 import typer
 import yaml
 from rich import print as rprint
-from rich.console import Console
 from rich.panel import Panel
 from rich.progress import Progress, SpinnerColumn, TextColumn
 
 from flatfish import __version__
+from flatfish.utils.console import get_console
 from flatfish.config import (
     FlatfishConfig,
     get_default_config,
@@ -23,7 +23,7 @@ app = typer.Typer(
     help="Historical document analysis CLI - Extract, analyze, and present handwritten text.",
     add_completion=False,
 )
-console = Console()
+console = get_console()
 
 
 def version_callback(value: bool) -> None:
