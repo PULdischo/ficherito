@@ -2,7 +2,7 @@
 
 import pytest
 
-from flatfish.utils.text import (
+from ficherito.utils.text import (
     remove_code_tags,
     remove_repeated_phrases,
     remove_repeated_lines,

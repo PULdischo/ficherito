@@ -1,4 +1,4 @@
-"""Test configuration for Flatfish."""
+"""Test configuration for Ficherito."""
 
 import pytest
 from pathlib import Path
@@ -17,23 +17,18 @@ def sample_config():
     """Sample configuration for testing."""
     return {
         "dataset": {
-            "source": "test/dataset",
-            "splits": ["train"],
-            "image_column": "image",
+            "images_dir": "images",
+            "recursive": False,
         },
         "processing": {
             "extract_entities": True,
             "entity_context": True,
         },
-        "summary": {
-            "enabled": True,
-            "model": "qwen-turbo",
-        },
         "output": {
             "transcriptions_dir": "transcriptions",
             "entities_dir": "entities",
-            "summaries_dir": "summaries",
-            "site_dir": "_site",
+            "eleventy_dir": "site",
+            "site_dir": "site/_site",
         },
         "website": {
             "title": "Test Collection",

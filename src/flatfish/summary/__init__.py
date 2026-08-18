@@ -1,1 +1,0 @@
-"""Summary generation module."""

@@ -1,0 +1,179 @@
+---
+permalink: browse/dates.html
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+{% include "partials/head-common.njk" %}
+<title>Browse by Date - {{ site.title }}</title>
+<style>
+.date-filter { background: white; border-radius: 8px; padding: 1.5rem; margin-bottom: 2rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+.date-filter h3 { margin-bottom: 1rem; color: #1e293b; }
+
+.slider-container { padding: 0 10px; margin-top: 1rem; }
+.range-slider { position: relative; height: 40px; }
+.range-slider input[type="range"] {
+    position: absolute; width: 100%; height: 5px; top: 50%;
+    transform: translateY(-50%); background: none; pointer-events: none;
+    -webkit-appearance: none; appearance: none;
+}
+.range-slider input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none; width: 20px; height: 20px;
+    background: #2563eb; border-radius: 50%; cursor: pointer; pointer-events: auto;
+    border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+.range-slider input[type="range"]::-moz-range-thumb {
+    width: 20px; height: 20px; background: #2563eb; border-radius: 50%;
+    cursor: pointer; pointer-events: auto; border: 2px solid white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+.range-track { position: absolute; width: 100%; height: 5px; background: #e2e8f0; border-radius: 3px; top: 50%; transform: translateY(-50%); }
+.range-highlight { position: absolute; height: 5px; background: #2563eb; border-radius: 3px; top: 50%; transform: translateY(-50%); }
+.date-range-labels { display: flex; justify-content: space-between; font-size: 0.875rem; color: #64748b; margin-top: 0.5rem; }
+.selected-range { text-align: center; font-weight: 600; color: #2563eb; margin-top: 0.5rem; }
+
+.date-search { width: 100%; padding: 0.75rem 1rem; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 1rem; margin-bottom: 1rem; }
+.date-search:focus { outline: none; border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
+
+.date-group.hidden { display: none; }
+.no-results { text-align: center; padding: 2rem; color: #64748b; display: none; }
+.no-results.visible { display: block; }
+</style>
+</head>
+<body>
+{% include "partials/auth-check.njk" %}
+{% include "partials/header.njk" %}
+
+<main>
+    <div class="container browse-section">
+        <h1>Browse by Date</h1>
+
+        <div class="date-filter">
+            <h3>🔍 Filter Documents</h3>
+            <input type="text" class="date-search" id="dateSearch" placeholder="Search by date (e.g., 1850, January, 1850-01)...">
+
+            <div class="slider-container">
+                <label>Date Range:</label>
+                <div class="range-slider">
+                    <div class="range-track"></div>
+                    <div class="range-highlight" id="rangeHighlight"></div>
+                    <input type="range" id="startRange" min="0" max="100" value="0">
+                    <input type="range" id="endRange" min="0" max="100" value="100">
+                </div>
+                <div class="date-range-labels">
+                    <span id="minDate">-</span>
+                    <span id="maxDate">-</span>
+                </div>
+                <div class="selected-range">
+                    Selected: <span id="selectedStart">-</span> to <span id="selectedEnd">-</span>
+                </div>
+            </div>
+
+            <button onclick="resetFilters()" style="margin-top: 1rem; padding: 0.5rem 1rem; cursor: pointer;">Reset Filters</button>
+        </div>
+
+        <div id="dateGroups">
+        {% for group in collections.documents | groupByDate %}
+        <div class="date-group" data-date="{{ group[0] }}">
+            <h3>{{ group[1][0].data.date_display or "Unknown date" }}</h3>
+            <div class="document-grid">
+                {% for doc in group[1] %}
+                <a href="{{ doc.url | url }}" class="document-card">
+                    <img src="{{ ('/assets/images/documents/' + doc.data.image) | url }}" alt="{{ doc.data.id }}" loading="lazy" onerror="this.style.display='none'">
+                    <div class="document-card-content">
+                        <h4>{{ doc.data.id }}</h4>
+                        {% if doc.data.entities %}
+                        <p class="entity-count">{{ doc.data.entities.length }} entities</p>
+                        {% endif %}
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+        </div>
+
+        <div class="no-results" id="noResults">No documents match your filter criteria.</div>
+    </div>
+</main>
+
+{% include "partials/footer.njk" %}
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const dateGroups = document.querySelectorAll('.date-group');
+    const dates = Array.from(dateGroups).map(g => g.dataset.date).filter(d => d && d !== 'Unknown').sort();
+
+    const startSlider = document.getElementById('startRange');
+    const endSlider = document.getElementById('endRange');
+    const rangeHighlight = document.getElementById('rangeHighlight');
+    const searchInput = document.getElementById('dateSearch');
+    const noResults = document.getElementById('noResults');
+
+    if (dates.length > 0) {
+        document.getElementById('minDate').textContent = dates[0];
+        document.getElementById('maxDate').textContent = dates[dates.length - 1];
+        document.getElementById('selectedStart').textContent = dates[0];
+        document.getElementById('selectedEnd').textContent = dates[dates.length - 1];
+    }
+
+    function updateHighlight() {
+        const minVal = Math.min(parseInt(startSlider.value), parseInt(endSlider.value));
+        const maxVal = Math.max(parseInt(startSlider.value), parseInt(endSlider.value));
+        rangeHighlight.style.left = minVal + '%';
+        rangeHighlight.style.width = (maxVal - minVal) + '%';
+    }
+
+    function getDateAtPercent(percent) {
+        if (dates.length === 0) return '';
+        const index = Math.floor(percent / 100 * (dates.length - 1));
+        return dates[Math.min(index, dates.length - 1)];
+    }
+
+    function filterDates() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const startPercent = parseInt(startSlider.value);
+        const endPercent = parseInt(endSlider.value);
+        const startDate = getDateAtPercent(Math.min(startPercent, endPercent));
+        const endDate = getDateAtPercent(Math.max(startPercent, endPercent));
+
+        updateHighlight();
+
+        document.getElementById('selectedStart').textContent = startDate || '-';
+        document.getElementById('selectedEnd').textContent = endDate || '-';
+
+        let visibleCount = 0;
+
+        dateGroups.forEach(group => {
+            const date = group.dataset.date;
+            const matchesSearch = !searchTerm || date.toLowerCase().includes(searchTerm);
+            const inRange = !date || date === 'Unknown' || (date >= startDate && date <= endDate);
+
+            if (matchesSearch && inRange) {
+                group.classList.remove('hidden');
+                visibleCount++;
+            } else {
+                group.classList.add('hidden');
+            }
+        });
+
+        noResults.classList.toggle('visible', visibleCount === 0);
+    }
+
+    startSlider.addEventListener('input', filterDates);
+    endSlider.addEventListener('input', filterDates);
+    searchInput.addEventListener('input', filterDates);
+
+    window.resetFilters = function () {
+        searchInput.value = '';
+        startSlider.value = 0;
+        endSlider.value = 100;
+        updateHighlight();
+        filterDates();
+    };
+
+    updateHighlight();
+});
+</script>
+</body>
+</html>

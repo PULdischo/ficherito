@@ -3,7 +3,7 @@
 import pytest
 from datetime import datetime
 
-from flatfish.utils.dates import (
+from ficherito.utils.dates import (
     extract_date_from_filename,
     parse_date,
     sort_by_date,

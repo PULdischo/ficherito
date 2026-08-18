@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "flatfish"
+name = "ficherito"
 version = "0.1.0"
 description = "Historical document analysis CLI - Extract, analyze, and present handwritten text from document images"
 readme = "README.md"
@@ -38,14 +38,14 @@ dependencies = [
     "pydantic>=2.0",
     "pydantic-settings>=2.0",
     "python-dotenv>=1.0",
-    "datasets>=2.0",
+    "undate>=0.8",
     "Pillow>=10.0",
+    "pillow-heif>=0.16",
+    "pymupdf>=1.24",
     "openai>=1.0",
-    "jinja2>=3.0",
     "rich>=13.0",
     "httpx>=0.25",
     "tqdm>=4.0",
-    "markdown>=3.0",
     "netlify-python>=0.4.0",
     "deep-translator>=1.11.0",
 ]
@@ -61,16 +61,16 @@ dev = [
 ]
 
 [project.scripts]
-flatfish = "flatfish.cli:app"
+ficherito = "ficherito.cli:app"
 
 [project.urls]
-Homepage = "https://github.com/PULdischo/flatfish"
-Documentation = "https://github.com/PULdischo/flatfish#readme"
-Repository = "https://github.com/PULdischo/flatfish"
-Issues = "https://github.com/PULdischo/flatfish/issues"
+Homepage = "https://github.com/PULdischo/ficherito"
+Documentation = "https://github.com/PULdischo/ficherito#readme"
+Repository = "https://github.com/PULdischo/ficherito"
+Issues = "https://github.com/PULdischo/ficherito/issues"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/flatfish"]
+packages = ["src/ficherito"]
 
 [tool.hatch.build.targets.sdist]
 include = [

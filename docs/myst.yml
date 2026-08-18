@@ -12,7 +12,7 @@ project:
   authors:
     - name: Princeton University Library
       affiliation: Princeton University
-  github: https://github.com/PULdischo/flatfish
+  github: https://github.com/PULdischo/ficherito
   license: MIT
   toc:
     - file: index.md
@@ -27,7 +27,6 @@ project:
         - file: usage/processing-documents.md
         - file: usage/transcription.md
         - file: usage/entities.md
-        - file: usage/summarization.md
         - file: usage/building-sites.md
         - file: usage/deployment.md
     - title: Concepts
@@ -35,9 +34,6 @@ project:
         - file: concepts/pipeline.md
         - file: concepts/htr-ocr.md
         - file: concepts/named-entities.md
-        - file: concepts/ai-summarization.md
-        - file: concepts/track-summarization.md
-        - file: concepts/hierarchical-combining.md
     - title: Command Reference
       children:
         - file: commands/overview.md
@@ -45,8 +41,6 @@ project:
         - file: commands/process.md
         - file: commands/transcribe.md
         - file: commands/entities.md
-        - file: commands/summarize.md
-        - file: commands/combine.md
         - file: commands/build.md
         - file: commands/serve.md
         - file: commands/deploy.md
@@ -67,7 +61,7 @@ site:
     hide_myst: true
   nav:
     - title: GitHub
-      url: https://github.com/PULdischo/flatfish
+      url: https://github.com/PULdischo/ficherito
   actions:
     - title: Get Started
       url: /getting-started/installation

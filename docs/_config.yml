@@ -28,7 +28,7 @@ html:
 
 # Repository settings
 repository:
-  url: https://github.com/PULdischo/flatfish
+  url: https://github.com/PULdischo/ficherito
   path_to_book: docs
   branch: main
 

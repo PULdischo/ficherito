@@ -123,90 +123,186 @@ Netlify automatically provisions an SSL certificate. This may take a few minutes
 
 ## Deploying to GitHub Pages
 
-### Step 1: Create a Repository
+Unlike the other options here, GitHub Pages deployment does **not** run the
+Ficherito Python pipeline in CI — HTR, entity extraction, and image
+compression need API keys and local images, and are meant to be run once on
+your machine with `flatfish build`. CI only takes the content that build
+already emitted into `site/src/documents/`, `site/src/assets/images/documents/`,
+and `site/src/_data/`, and re-runs Eleventy + Pagefind on it. This is also
+what makes the [Sveltia CMS](#editing-content-with-sveltia-cms) workflow
+possible: it commits Markdown edits straight to `site/src/documents/`, which
+triggers this same rebuild.
 
-1. Go to [github.com](https://github.com)
-2. Click **New repository**
-3. Name it (e.g., `document-collection`)
-4. Make it public (required for free GitHub Pages)
-
-### Step 2: Initialize Git
-
-In your Flatfish project:
+### Step 1: Build locally and commit the site
 
 ```bash
-git init
-git add .
-git commit -m "Initial commit"
+flatfish build
+git add site/
+git commit -m "Build site"
 ```
 
-### Step 3: Add Remote and Push
+`site/node_modules/` and `site/_site/` are gitignored; everything else under
+`site/` (including the emitted document content) should be tracked.
+
+### Step 2: Create a Repository and Push
 
 ```bash
+git init                                                     # if not already a repo
 git remote add origin https://github.com/yourusername/document-collection.git
 git branch -M main
 git push -u origin main
 ```
 
-### Step 4: Enable GitHub Pages
+Use a **public** repository for free GitHub Pages hosting.
 
-1. Go to repository **Settings**
-2. Click **Pages** in sidebar
-3. Under "Source", select **GitHub Actions**
+### Step 3: Enable GitHub Pages
 
-### Step 5: Create Workflow File
+1. Go to repository **Settings** → **Pages**
+2. Under "Source", select **GitHub Actions**
 
-Create `.github/workflows/deploy.yml`:
+### Step 4: Add the Workflow File
+
+`ficherito build` scaffolds `site/` but does not add a workflow file for
+you — copy this to `.github/workflows/deploy.yml`:
 
 ```yaml
-name: Deploy to GitHub Pages
+name: Deploy Site to GitHub Pages
 
 on:
   push:
     branches: [main]
+    paths: ["site/**"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
-    
+    defaults:
+      run:
+        working-directory: site
     steps:
       - uses: actions/checkout@v4
-      
-      - name: Setup Python
-        uses: actions/setup-python@v5
+
+      - uses: actions/setup-node@v4
         with:
-          python-version: '3.11'
-      
+          node-version: 20
+          cache: npm
+          cache-dependency-path: site/package-lock.json
+
       - name: Install dependencies
-        run: pip install flatfish
-      
+        run: npm ci
+
+      - name: Determine path prefix
+        id: prefix
+        run: |
+          if [[ "${{ github.event.repository.name }}" == *".github.io" ]]; then
+            echo "value=/" >> "$GITHUB_OUTPUT"
+          else
+            echo "value=/${{ github.event.repository.name }}/" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Build site
-        run: flatfish build --base-url /${{ github.event.repository.name }}/
         env:
-          HUGGINGFACE_TOKEN: ${{ secrets.HUGGINGFACE_TOKEN }}
-          DASHSCOPE_API_KEY: ${{ secrets.DASHSCOPE_API_KEY }}
-      
-      - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3
+          PATH_PREFIX: ${{ steps.prefix.outputs.value }}
+        run: npm run build
+
+      - uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./_site
+          path: site/_site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
 ```
 
-### Step 6: Add Secrets
+```{note}
+If your repository already deploys something else to GitHub Pages (like
+Sphinx/MyST docs), you can't run both — GitHub Pages serves one site per
+repository. Either deploy the document collection to its own repository, or
+deploy the other site elsewhere (e.g. Netlify).
+```
 
-1. Go to repository **Settings** → **Secrets and variables** → **Actions**
-2. Add `HUGGINGFACE_TOKEN` and `DASHSCOPE_API_KEY`
-
-### Step 7: Push and Deploy
+### Step 5: Push and Deploy
 
 ```bash
-git add .github/
+git add .github/workflows/deploy.yml
 git commit -m "Add GitHub Pages workflow"
 git push
 ```
 
 Your site will be at: `https://yourusername.github.io/document-collection/`
+
+### Step 6: Redeploying After Pipeline Changes
+
+Whenever you reprocess documents or edit `ficherito.yaml`, rebuild and push again:
+
+```bash
+flatfish build
+git add site/
+git commit -m "Rebuild site"
+git push
+```
+
+---
+
+## Editing Content with Sveltia CMS
+
+Once deployed, `https://yourusername.github.io/document-collection/admin/`
+gives collaborators a form-based editor for transcriptions, translations, and
+entities — no Markdown or git knowledge required. It's configured in
+`site/admin/config.yml`, which `flatfish build` scaffolds but does not
+overwrite on later runs, so it's safe to keep customized.
+
+### Step 1: Update the Backend Config
+
+Edit `site/admin/config.yml` and replace the placeholders:
+
+```yaml
+backend:
+  name: github
+  repo: yourusername/document-collection # your actual repo
+  branch: main
+  auth_methods: [token]
+
+site_url: https://yourusername.github.io/document-collection
+```
+
+### Step 2: Authorize GitHub Access
+
+[Sveltia CMS](https://github.com/sveltia/sveltia-cms) authenticates via
+GitHub's OAuth device flow directly against `github.com` — no separate OAuth
+proxy server to run. The first time someone opens `/admin/`, they'll be
+prompted to sign in with GitHub and authorize the app; they need at least
+**write** access to the repository.
+
+### Step 3: Edit and Publish
+
+Changes made in the CMS commit directly to `site/src/documents/*.md` on the
+`main` branch, which triggers the deploy workflow from
+[above](#deploying-to-github-pages) automatically. There's no separate
+"publish" step — a save in the CMS is a rebuild.
+
+```{note}
+The CMS edits `title`, `date`, `entities`, `translation`, and the
+transcription body. `id`, `order`, `prev`, and `next` are also editable but
+are normally left alone — they're set by `flatfish build` from your image
+filenames and dates.
+```
 
 ---
 
@@ -229,7 +325,7 @@ aws s3 website s3://my-documents-site --index-document index.html
 ### Step 3: Upload Files
 
 ```bash
-aws s3 sync _site/ s3://my-documents-site --acl public-read
+aws s3 sync site/_site/ s3://my-documents-site --acl public-read
 ```
 
 ### Step 4: Access Your Site
@@ -280,30 +376,16 @@ Require valid-user
 
 ## Continuous Deployment
 
-### Auto-Deploy on Git Push
-
-**Netlify:**
-1. Connect your Git repository
-2. Set build command: `pip install flatfish && flatfish build`
-3. Set publish directory: `_site`
-
+**Netlify:** connect your Git repository, set build command to
+`pip install ficherito && flatfish build`, and publish directory to `site/_site`.
 Every push to `main` automatically rebuilds and deploys.
 
-**GitHub Actions:**
-The workflow above already does this.
-
-### Scheduled Rebuilds
-
-To update your site regularly (e.g., if dataset changes):
-
-```yaml
-# .github/workflows/deploy.yml
-on:
-  push:
-    branches: [main]
-  schedule:
-    - cron: '0 0 * * 0'  # Every Sunday at midnight
-```
+**GitHub Actions:** the workflow in
+[Deploying to GitHub Pages](#deploying-to-github-pages) already does this —
+any push touching `site/**` (including a Sveltia CMS edit) triggers a
+rebuild. Note it only re-runs Eleventy/Pagefind, not the Python pipeline; to
+pick up newly processed documents you still need to run `flatfish build`
+locally and push the result.
 
 ---
 
@@ -355,7 +437,7 @@ flatfish build --base-url /your-subdirectory/
 
 Make sure images are included in the build:
 ```bash
-ls _site/images/
+ls site/_site/assets/images/documents/
 ```
 
 ---

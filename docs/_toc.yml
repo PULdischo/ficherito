@@ -15,7 +15,6 @@ parts:
       - file: usage/transcription
       - file: usage/entities
       - file: usage/translation
-      - file: usage/summarization
       - file: usage/building-sites
       - file: usage/deployment
   - caption: Concepts
@@ -23,9 +22,6 @@ parts:
       - file: concepts/pipeline
       - file: concepts/htr-ocr
       - file: concepts/named-entities
-      - file: concepts/ai-summarization
-      - file: concepts/track-summarization
-      - file: concepts/hierarchical-combining
   - caption: Command Reference
     chapters:
       - file: commands/overview
@@ -34,8 +30,6 @@ parts:
       - file: commands/transcribe
       - file: commands/entities
       - file: commands/translate
-      - file: commands/summarize
-      - file: commands/combine
       - file: commands/build
       - file: commands/serve
       - file: commands/deploy

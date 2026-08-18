@@ -73,5 +73,5 @@ New to Flatfish? Start here:
 ## Need Help?
 
 - 📖 Check the [FAQ](help/faq.md) for common questions
-- 🐛 Found a bug? [Report it on GitHub](https://github.com/PULdischo/flatfish/issues)
-- 💬 Questions? [Start a discussion](https://github.com/PULdischo/flatfish/discussions)
+- 🐛 Found a bug? [Report it on GitHub](https://github.com/PULdischo/ficherito/issues)
+- 💬 Questions? [Start a discussion](https://github.com/PULdischo/ficherito/discussions)

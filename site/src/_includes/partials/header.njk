@@ -1,0 +1,10 @@
+<header>
+    <div class="container">
+        <a href="{{ '/main.html' | url }}" class="logo">{{ site.emoji }} {{ site.title }}</a>
+        <nav>
+            {% if site.enable_search %}<a href="{{ '/main.html' | url }}">Search</a>{% endif %}
+            {% if site.enable_browse_dates %}<a href="{{ '/browse/dates.html' | url }}">Browse by Date</a>{% endif %}
+            {% if site.enable_browse_entities %}<a href="{{ '/browse/entities.html' | url }}">Browse by Entity</a>{% endif %}
+        </nav>
+    </div>
+</header>

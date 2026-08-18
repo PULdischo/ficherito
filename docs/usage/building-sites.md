@@ -4,318 +4,181 @@ Learn how to build and customize your document collection website.
 
 ---
 
-## Building Your Site
+## Architecture
 
-After processing documents, build the static website:
+Ficherito's website is an [Eleventy](https://www.11ty.dev/) (11ty) site with
+[Pagefind](https://pagefind.app/) search and [Sveltia CMS](https://github.com/sveltia/sveltia-cms)
+for in-browser content editing, living in a `site/` subdirectory of your project.
+
+`ficherito build` does not render HTML itself. Instead it:
+
+1. Creates `site/` from a bundled scaffold the first time it runs (if it doesn't already exist).
+2. Emits each document as a Markdown file with frontmatter into `site/src/documents/`,
+   copies compressed images into `site/src/assets/images/documents/`, and writes
+   `site/src/_data/site.json` and `site/src/_data/allEntities.json`.
+3. Runs `npm run build` inside `site/`, which runs Eleventy (rendering the pages)
+   and then Pagefind (indexing them) via an `eleventy.after` build hook.
 
 ```bash
 flatfish build
 ```
 
-This creates a complete website in the `_site/` directory.
+This creates a complete website in `site/_site/`.
 
 ---
 
 ## What Gets Built
 
 ```
-_site/
-├── index.html              # Home page with collection overview
-├── main.html               # Main document browser
-├── overview/
-│   ├── summary.html        # Finding aid
-│   ├── timeline.html       # Interactive timeline
-│   ├── changes.html        # Key changes
-│   └── questions.html      # Research questions
-├── entities/
-│   └── index.html          # Entity browser
-├── css/
-│   └── style.css           # Styles
-├── js/
-│   └── app.js              # Interactive features
-├── pagefind/               # Search index
-└── images/                 # Document images
+site/
+├── src/
+│   ├── documents/           # one .md file per document (emitted by `build`)
+│   ├── assets/
+│   │   ├── css/style.css
+│   │   └── images/documents/  # compressed document images (emitted by `build`)
+│   ├── _data/
+│   │   ├── site.json         # website config (emitted by `build`)
+│   │   └── allEntities.json  # consolidated entities (emitted by `build`)
+│   ├── index.njk              # password gate
+│   ├── search.njk             # search page (-> main.html)
+│   └── browse/
+│       ├── dates.njk
+│       └── entities.njk
+├── admin/config.yml           # Sveltia CMS config
+└── _site/                     # build output (index.html, main.html, documents/, browse/, pagefind/)
 ```
+
+`site/src/documents/*.md`, `site/src/assets/images/documents/*`, and
+`site/src/_data/*.json` are meant to be committed to git — that's how the
+[GitHub Pages deployment](deployment.md#deploying-to-github-pages) and the
+CMS work without re-running the Python pipeline in CI. `site/node_modules/`
+and `site/_site/` are gitignored.
 
 ---
 
 ## Site Features
 
-### Document Browser
+### Document Pages
 
-Browse all documents with:
-- **Image viewer** - See the original document
-- **Transcription** - Read the extracted text
-- **Entities** - See highlighted people, places, dates
-- **Navigation** - Previous/next buttons
+Each document gets its own page at `/documents/<id>/` with:
+- **Image viewer** - [OpenSeadragon](https://openseadragon.github.io/), zoomable
+- **Transcription** - the extracted text, rendered from Markdown
+- **Translation** (if enabled) - a tab alongside the original transcription
+- **Entities** - people, places, dates found in the document
+- **Previous/next navigation** - chronological, based on the document's date
 
 ### Full-Text Search
 
-Search across all transcriptions:
-- Powered by [Pagefind](https://pagefind.app/)
-- Instant results as you type
-- Highlights matching text
-- Works completely offline
+- Powered by [Pagefind](https://pagefind.app/), fully client-side
+- Loaded off the critical rendering path (see [Search Performance](#search-performance) below)
+- Highlights matching text when you click through to a document
 
-### Entity Index
+### Browse by Date / Browse by Entity
 
-Browse entities by type:
-- Click any entity to see all documents mentioning it
-- Filter by entity type
-- See context descriptions
-
-### Overview Pages
-
-Dropdown menu with:
-- **Finding Aid** - Archival collection description
-- **Timeline** - Chronological events
-- **Key Changes** - Transformations over time
-- **Research Questions** - Scholarly questions
+Both pages are built from the emitted document content directly (no separate
+data files to keep in sync) and support client-side filtering.
 
 ---
 
 ## Previewing Your Site
 
-Start a local preview server:
-
 ```bash
+flatfish build
 flatfish serve
 ```
 
 Open [http://localhost:8000](http://localhost:8000) in your browser.
 
-```{tip}
-The server automatically reloads when you rebuild. Keep it running in one terminal while you make changes in another.
-```
-
-### Preview Options
+For live-reloading while editing templates or CSS directly, use Eleventy's
+own dev server instead:
 
 ```bash
-# Use a different port
-flatfish serve --port 3000
-
-# Open browser automatically
-flatfish serve --open
+cd site
+npm start   # eleventy --serve, rebuilds on change
 ```
 
 ---
 
 ## Customizing the Site
 
-### Site Title and Description
+### Site Title, Colors, and Password
 
 ```yaml
-# flatfish.yaml
+# ficherito.yaml
 website:
   title: "Smith Family Papers"
-  description: "Letters and documents from the Smith family, 1850-1920"
-```
-
-### Password Protection
-
-Protect your site with a simple password:
-
-```yaml
-website:
+  emoji: "📜"
+  background_color: "#2d3748"
+  accent_color: "#4a5568"
   password: "research2024"
 ```
 
-Users will see a login page before accessing the site.
+These are written to `site/src/_data/site.json` on every `flatfish build` and
+read by the Nunjucks templates. Editing that file by hand will be overwritten
+on the next build — change `ficherito.yaml` instead.
 
 ```{note}
-This is basic protection suitable for sharing with collaborators. For sensitive materials, use additional access controls on your hosting platform.
+The password gate is client-side (`sessionStorage`), suitable for sharing
+with collaborators, not for protecting sensitive materials.
 ```
 
-### Custom CSS
+### Editing Templates and CSS
 
-Add your own styles:
-
-```yaml
-website:
-  custom_css: "custom.css"
-```
-
-Create `custom.css` in your project directory:
-
-```css
-/* custom.css */
-
-/* Change header color */
-.site-header {
-  background-color: #2c5282;
-}
-
-/* Customize fonts */
-body {
-  font-family: "Georgia", serif;
-}
-
-/* Style entity highlights */
-.entity-person {
-  background-color: #fef3c7;
-}
-
-.entity-location {
-  background-color: #dbeafe;
-}
-```
+Everything under `site/src/_includes/`, `site/src/assets/css/style.css`, and
+the top-level `.njk` files is yours to edit directly and commit — `ficherito
+build` never touches them (only `site/src/documents/`, `site/src/assets/images/documents/`,
+and `site/src/_data/*.json` are regenerated).
 
 ### Show/Hide Sections
 
-Control which sections appear:
-
 ```yaml
 website:
-  show_timeline: true
-  show_entities: true
-  show_summary: true
-  show_key_changes: false  # Hide this section
+  enable_search: true
+  enable_browse_dates: true
+  enable_browse_entities: false
 ```
 
 ---
 
 ## Rebuilding After Changes
 
-### After Editing Transcriptions
-
 ```bash
 flatfish build
 ```
 
-### After Editing Summaries
-
-```bash
-flatfish build
-```
-
-### After Changing Configuration
-
-```bash
-flatfish build
-```
+Re-run this after editing transcriptions, entities, or `ficherito.yaml`. It
+re-emits all document content, so it's safe to run repeatedly.
 
 ### Full Rebuild
 
 ```bash
-rm -rf _site/
+rm -rf site/_site
 flatfish build
 ```
 
 ---
 
-## Build Output Options
+## Search Performance
 
-### Custom Output Directory
+Pagefind's UI bundle is loaded off the critical path on the search page
+(`main.html`): a lightweight plain `<input>` is shown immediately, and the
+real `pagefind-ui.js` bundle is injected via `requestIdleCallback` (falling
+back to a short `setTimeout`) so the page never blocks on it. If you start
+typing before it's ready, the load happens immediately on focus/input
+instead, and your query is carried over once the real search box mounts.
 
-```bash
-flatfish build --output ./my-site
-```
-
-Or in configuration:
-
-```yaml
-output:
-  site_dir: "public"  # Build to ./public instead of ./_site
-```
-
-### Base URL for Subdirectories
-
-If hosting at a subdirectory (e.g., `example.com/documents/`):
-
-```bash
-flatfish build --base-url /documents/
-```
+If search still feels slow for a very large collection, the index itself
+(under `site/_site/pagefind/`) is the next thing to look at — Pagefind
+chunks it and only fetches what's needed per query, so size mostly affects
+first-query latency, not page load.
 
 ---
 
-## Understanding the Search Index
+## Editing Content via the CMS
 
-Flatfish uses [Pagefind](https://pagefind.app/) for search:
-
-### What's Indexed
-
-- All transcription text
-- Entity names and contexts
-- Document metadata (dates, IDs)
-
-### Search Features
-
-- Instant results
-- Highlighted matches
-- Relevance ranking
-- Works offline (no server needed)
-
-### Rebuilding the Index
-
-The search index is rebuilt automatically with `flatfish build`. If search seems broken:
-
-```bash
-rm -rf _site/pagefind/
-flatfish build
-```
-
----
-
-## Site Performance
-
-### Image Optimization
-
-Flatfish automatically:
-- Resizes images for web display
-- Creates thumbnails for navigation
-- Lazy loads images to improve performance
-
-### For Very Large Collections
-
-Sites with thousands of documents may need optimization:
-
-```yaml
-website:
-  # Paginate document list
-  documents_per_page: 100
-  
-  # Don't include full images in build
-  inline_images: false
-```
-
----
-
-## Hosting Considerations
-
-The built site is completely static:
-
-- **No server-side code** - Just HTML, CSS, and JavaScript
-- **No database** - Everything is in files
-- **Works offline** - Can be viewed from local files
-
-This means you can host it anywhere:
-- [Netlify](deployment.md#deploying-to-netlify) (recommended)
-- GitHub Pages
-- Amazon S3
-- Any web server
-
----
-
-## Accessibility
-
-Flatfish sites are designed with accessibility in mind:
-
-- Semantic HTML structure
-- ARIA labels for interactive elements
-- Keyboard navigation
-- High contrast text
-- Alt text for images
-
-### Improving Accessibility
-
-Add alt text to your transcriptions:
-
-```json
-{
-  "cleaned_text": "...",
-  "alt_text": "Handwritten letter dated April 15, 1863, two pages, cursive script"
-}
-```
+Instead of editing `site/src/documents/*.md` by hand, collaborators can use
+the Sveltia CMS at `/admin/` once the site is deployed. See
+[Deployment](deployment.md#editing-content-with-sveltia-cms).
 
 ---
 
@@ -323,16 +186,16 @@ Add alt text to your transcriptions:
 
 ### Site Won't Build
 
-**Error:** `Transcriptions not found`
+**Error:** `npm not found; skipping Eleventy/Pagefind build`
 
-Make sure you've run `flatfish extract` first.
+Install [Node.js](https://nodejs.org/) (20+ recommended), then re-run `flatfish build`.
 
 ### Search Not Working
 
-Check that the Pagefind files exist:
+Check that Pagefind's output exists:
 
 ```bash
-ls _site/pagefind/
+ls site/_site/pagefind/
 ```
 
 If missing, rebuild:
@@ -343,22 +206,17 @@ flatfish build
 
 ### Images Not Showing
 
-Check that images are in the right location:
+Check that images are being found for compression — `flatfish build` looks
+in `images/` and `data/images/` for `<document-id>.{jpg,jpeg,png,tiff,webp}`:
 
 ```bash
-ls _site/images/
+ls site/src/assets/images/documents/
 ```
-
-If missing, make sure `output.images_dir` in config matches where images were saved.
-
-### CSS Not Loading
-
-Clear browser cache and reload. Or check browser developer tools for 404 errors.
 
 ---
 
 ## Next Steps
 
-- **[Deployment](deployment.md)** - Put your site on the web
+- **[Deployment](deployment.md)** - Put your site on the web with GitHub Pages
 - **[Troubleshooting](../help/troubleshooting.md)** - Solve common problems
 - **[Command Reference](../commands/build.md)** - Full build options

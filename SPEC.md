@@ -1,8 +1,8 @@
-# Flatfish - Historical Document Analysis CLI
+# Ficherito - Historical Document Analysis CLI
 
 ## Overview
 
-Flatfish is a Python CLI application for extracting, analyzing, and presenting handwritten text from historical document images. It processes images from HuggingFace datasets, performs OCR and entity extraction, generates AI-powered summaries with temporal analysis, and builds a searchable static website for browsing the collection.
+Ficherito is a Python CLI application for extracting, analyzing, and presenting handwritten text from historical document images. It processes a local folder of images, performs OCR/HTR and named entity extraction, optionally translates transcriptions, and builds a searchable, editable static website (Eleventy + Pagefind + Sveltia CMS) for browsing the collection.
 
 ---
 
@@ -25,22 +25,22 @@ Flatfish is a Python CLI application for extracting, analyzing, and presenting h
 
 ### PyPI Publication
 
-- **Package Name**: `flatfish`
-- **Entry Point**: `flatfish` CLI command
+- **Package Name**: `ficherito`
+- **Entry Point**: `ficherito` CLI command
 - **Python Version**: 3.10+
 - **License**: MIT (or specify preferred license)
 
 ### Installation
 
 ```bash
-pip install flatfish
+pip install ficherito
 ```
 
 ### Development Installation
 
 ```bash
-git clone https://github.com/username/flatfish.git
-cd flatfish
+git clone https://github.com/username/ficherito.git
+cd ficherito
 pip install -e ".[dev]"
 ```
 
@@ -48,17 +48,14 @@ pip install -e ".[dev]"
 
 ## Configuration
 
-### Config File: `flatfish.yaml`
+### Config File: `ficherito.yaml`
 
 ```yaml
 # Dataset Configuration
 dataset:
-  source: "username/dataset-name"  # HuggingFace dataset address
-  splits:
-    - "train"
-    - "test"
-  image_column: "image"            # Column name containing images
-  
+  images_dir: "images"             # Local folder of document images
+  recursive: false                 # Search subfolders recursively
+
 # Processing Options
 processing:
   extract_entities: true           # Enable/disable entity extraction
@@ -107,67 +104,42 @@ prompts:
       ...
     ]
 
-  # Prompt for sequential document summary
-  summary: |
-    You are a historian analyzing a sequence of related documents. The documents 
-    are provided in chronological order with their dates/timestamps.
-    
-    Analyze these documents and provide:
-    
-    ## Timeline of Events
-    A chronological list of key events mentioned or implied across the documents.
-    Include dates (exact or approximate) and brief descriptions.
-    
-    ## Key Changes
-    Identify significant changes between documents:
-    - Shifts in tone, position, or claims
-    - New information introduced
-    - Contradictions or amendments to previous statements
-    - Changes in parties involved
-    
-    ## Research Questions
-    Suggest 3-5 historical research questions that emerge from these documents:
-    - Gaps in the record that warrant investigation
-    - Connections to broader historical contexts
-    - Potential related sources to consult
-    - Unanswered questions about motivations or outcomes
-    
-    Documents:
-    {documents}
-  
-# Qwen/DashScope Configuration
-summary:
-  enabled: true
-  model: "qwen-vl-max"             # or other Qwen model
-  include_timeline: true
-  include_key_changes: true
-  include_research_questions: true
+# Translation Configuration
+translate:
+  enabled: false
+  source_languages:
+    - "es"
+  target_language: "en"
+  default_tab: "transcription"     # or "translation"
 
 # Output Configuration
 output:
   transcriptions_dir: "transcriptions"
-  site_dir: "_site"
-  
+  translations_dir: "translations"
+  entities_dir: "entities"
+  eleventy_dir: "site"             # Eleventy (11ty) site project
+  site_dir: "site/_site"           # Built static site (Eleventy output)
+
 # Website Configuration
 website:
   title: "Document Collection"
-  password: "changeme"             # Simple password protection
+  emoji: "🐟"
+  background_color: "#1e3a5f"
+  accent_color: "#2563eb"
+  password: "changeme"             # Simple client-side password protection
   enable_search: true              # Pagefind search
   enable_browse_dates: true
   enable_browse_entities: true
+  default_sort: "date"
 ```
 
 ### Environment File: `.env`
 
 ```bash
-# HuggingFace Access
-HUGGINGFACE_TOKEN=hf_xxxxxxxxxxxxx
-
-# DashScope API (for Qwen)
-DASHSCOPE_API_KEY=sk-xxxxxxxxxxxxx
-
-# Optional: Custom model endpoints
-# HTR_MODEL_ENDPOINT=https://...
+# OpenAI-compatible LLM endpoint (DashScope, OpenAI, local, etc.)
+OPENAI_BASE_URL=https://dashscope-intl.aliyuncs.com/compatible-mode/v1
+OPENAI_API_KEY=sk-xxxxxxxxxxxxx
+OPENAI_MODEL=qwen-vl-max
 ```
 
 ---
@@ -176,8 +148,8 @@ DASHSCOPE_API_KEY=sk-xxxxxxxxxxxxx
 
 ### 1. Handwritten Text Recognition (HTR)
 
-- **Input**: Images from HuggingFace dataset
-- **Model**: Qwen-VL via DashScope API
+- **Input**: Images from a local folder (`dataset.images_dir`), including PDFs rendered to page images
+- **Model**: Any OpenAI-compatible vision model (DashScope/Qwen-VL by default, configurable via `.env`)
 - **Output**: Plain text transcription
 
 #### Supported Image Formats
@@ -185,10 +157,10 @@ DASHSCOPE_API_KEY=sk-xxxxxxxxxxxxx
 - Automatic format detection
 
 #### Processing Pipeline
-1. Load image from dataset
-2. Convert to base64 and send to Qwen-VL
+1. Load image from the local folder (PDFs are rendered to page images first)
+2. Convert to base64 and send to the configured vision model
 3. Post-process text (basic cleanup)
-4. Save to text file
+4. Save to a Markdown transcription file
 
 ### 2. Entity Extraction
 
@@ -210,48 +182,14 @@ DASHSCOPE_API_KEY=sk-xxxxxxxxxxxxx
 - Generates human-readable role descriptions
 - Links entities across documents when possible
 
-### 3. Sequential Document Summary (Qwen/DashScope)
+### 3. Translation
 
-- **API**: DashScope (Alibaba Cloud)
-- **Model**: Qwen-VL or Qwen-Plus
-
-#### Summary Components
-
-1. **Timeline of Events**
-   - Chronological ordering of events mentioned
-   - Date normalization and sequencing
-   - Gap identification
-
-2. **Key Changes Analysis**
-   - Document-to-document comparisons
-   - Tracking of evolving narratives
-   - Identification of contradictions or amendments
-
-3. **Research Questions**
-   - AI-generated suggestions for further research
-   - Identification of gaps in the record
-   - Cross-reference suggestions
-
-#### API Request Structure
-```python
-{
-    "model": "qwen-vl-max",
-    "messages": [
-        {
-            "role": "system",
-            "content": "You are a historical document analyst..."
-        },
-        {
-            "role": "user",
-            "content": [
-                {"type": "text", "text": "Document 1 (1892-03-15): ..."},
-                {"type": "text", "text": "Document 2 (1892-03-20): ..."},
-                # ... sequential documents with timestamps
-            ]
-        }
-    ]
-}
-```
+- **Trigger**: Enabled via `translate.enabled` in config
+- **Engine**: Google Translate (via `deep-translator`)
+- **Output**: A parallel Markdown translation file per document, shown as a tab
+  alongside the original transcription on the document page
+- Source language(s) and target language are configurable (`translate.source_languages`,
+  `translate.target_language`); `translate.default_tab` controls which text is shown first
 
 ---
 
@@ -259,14 +197,14 @@ DASHSCOPE_API_KEY=sk-xxxxxxxxxxxxx
 
 ```
 ┌─────────────────┐
-│  HuggingFace    │
-│    Dataset      │
+│  Local Folder   │
+│  of Images      │
 └────────┬────────┘
          │
          ▼
 ┌─────────────────┐
 │  Image Loader   │
-│  (by split)     │
+│  (+ PDF render) │
 └────────┬────────┘
          │
          ▼
@@ -275,29 +213,30 @@ DASHSCOPE_API_KEY=sk-xxxxxxxxxxxxx
 │  (Text Extract) │
 └────────┬────────┘
          │
-         ├──────────────────────┐
-         ▼                      ▼
-┌─────────────────┐    ┌─────────────────┐
-│  Save .txt      │    │ Entity Extract  │
-│  Transcriptions │    │ (if enabled)    │
-└────────┬────────┘    └────────┬────────┘
-         │                      │
-         └──────────┬───────────┘
+         ├──────────────────────┬──────────────────────┐
+         ▼                      ▼                       ▼
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│  Save .md       │    │ Entity Extract  │    │  Translate      │
+│  Transcriptions │    │ (if enabled)    │    │  (if enabled)   │
+└────────┬────────┘    └────────┬────────┘    └────────┬────────┘
+         │                      │                       │
+         └──────────────────────┴───────────────────────┘
                     ▼
          ┌─────────────────┐
-         │  Qwen Summary   │
-         │  (DashScope)    │
+         │  Emit Markdown  │
+         │  + Frontmatter  │
+         │  into site/     │
          └────────┬────────┘
                   │
                   ▼
          ┌─────────────────┐
-         │  Build Static   │
-         │    Website      │
+         │  Eleventy +     │
+         │  Pagefind       │
          └────────┬────────┘
                   │
                   ▼
          ┌─────────────────┐
-         │    _site/       │
+         │  site/_site/    │
          └─────────────────┘
 ```
 
@@ -307,50 +246,54 @@ DASHSCOPE_API_KEY=sk-xxxxxxxxxxxxx
 
 ```
 project/
-├── flatfish.yaml              # Configuration file
-├── .env                       # API keys (git-ignored)
-├── transcriptions/            # Extracted text files
-│   ├── img001.txt
-│   ├── img002.txt
+├── ficherito.yaml              # Configuration file
+├── .env                        # API keys (git-ignored)
+├── images/                     # Source document images (git-ignored)
+├── transcriptions/             # Extracted text files
+│   ├── img001.md
+│   ├── img002.md
 │   └── ...
-├── entities/                  # Entity data (JSON)
+├── translations/               # Translated text files (if enabled)
+│   ├── img001.md
+│   └── ...
+├── entities/                   # Entity data (JSON)
 │   ├── img001.json
 │   ├── img002.json
-│   └── consolidated.json      # All entities merged
-├── summaries/                 # Qwen-generated summaries
-│   ├── timeline.json
-│   ├── key_changes.json
-│   ├── research_questions.json
-│   └── full_summary.md
-└── _site/                     # Built static website
-    ├── index.html             # Password-protected entry
-    ├── main.html              # Search & browse interface
-    ├── documents/
-    │   ├── img001/
-    │   │   ├── index.html     # Document viewer page
-    │   │   └── tiles/         # OpenSeaDragon tiles
-    │   └── ...
-    ├── browse/
-    │   ├── dates.html
-    │   └── entities.html
-    ├── assets/
-    │   ├── css/
-    │   ├── js/
-    │   └── images/
-    └── pagefind/              # Search index
+│   └── consolidated.json       # All entities merged
+└── site/                       # Eleventy site (scaffolded on first build)
+    ├── admin/config.yml         # Sveltia CMS config
+    ├── .eleventy.js
+    ├── package.json
+    ├── src/
+    │   ├── documents/           # Emitted document content (.md, tracked in git)
+    │   │   ├── img001.md
+    │   │   ├── img002.md
+    │   │   └── documents.json   # Shared layout/permalink for the collection
+    │   ├── assets/
+    │   │   ├── css/style.css
+    │   │   └── images/documents/  # Compressed document images (tracked in git)
+    │   ├── _data/
+    │   │   ├── site.json         # Website config (emitted by `build`)
+    │   │   └── allEntities.json  # Consolidated entities (emitted by `build`)
+    │   ├── index.njk              # Password gate
+    │   ├── search.njk             # Search page (-> main.html)
+    │   └── browse/
+    │       ├── dates.njk
+    │       └── entities.njk
+    └── _site/                    # Built static website (git-ignored)
+        ├── index.html
+        ├── main.html
+        ├── documents/<id>/index.html
+        ├── browse/{dates,entities}.html
+        ├── assets/
+        └── pagefind/              # Search index
 ```
 
 ### Transcription File Format
 
-**File**: `transcriptions/img001.txt`
+**File**: `transcriptions/img001.md`
 
 ```
-[Transcription of img001.jpg]
-[Extracted: 2024-01-15T10:30:00Z]
-[Confidence: 0.94]
-
----
-
 The honorable court is hereby petitioned
 by the undersigned plaintiff, John Smith,
 residing at 123 Main Street, Springfield...
@@ -362,7 +305,7 @@ residing at 123 Main Street, Springfield...
 
 ```json
 {
-  "source_image": "img001.jpg",
+  "source_image": "img001",
   "extracted_at": "2024-01-15T10:30:00Z",
   "entities": [
     {
@@ -389,10 +332,23 @@ residing at 123 Main Street, Springfield...
 
 ### Architecture
 
-- **Generator**: Jinja2 templates
-- **Search**: Pagefind (static search)
+- **Generator**: [Eleventy](https://www.11ty.dev/) (11ty), Nunjucks templates
+- **Search**: [Pagefind](https://pagefind.app/), loaded off the critical path
+  (a plain `<input>` renders immediately; the Pagefind UI bundle loads via
+  `requestIdleCallback`, or immediately on focus/typing)
+- **Content Editing**: [Sveltia CMS](https://github.com/sveltia/sveltia-cms) at `/admin/`,
+  committing directly to `site/src/documents/*.md` via the GitHub API
 - **Image Viewer**: OpenSeaDragon
-- **Styling**: Tailwind CSS (or simple custom CSS)
+- **Styling**: Plain CSS (`site/src/assets/css/style.css`)
+- **Deployment**: GitHub Pages via GitHub Actions (`.github/workflows/deploy.yml`),
+  which only runs Eleventy + Pagefind on already-committed content — the
+  Python pipeline is never re-run in CI
+
+`ficherito build` does not render HTML itself: it emits Markdown +
+frontmatter + images into `site/src/documents/` and `site/src/assets/images/documents/`,
+writes `site/src/_data/site.json` and `allEntities.json`, then runs `npm run
+build` inside `site/`, which runs Eleventy and then Pagefind via an
+`eleventy.after` build hook.
 
 ### Pages
 
@@ -414,35 +370,28 @@ residing at 123 Main Street, Springfield...
 </script>
 ```
 
-#### 2. Main Page
+#### 2. Main Page (Search)
 
 **Features:**
-- Default sort: chronological by date (extracted from filename or metadata)
-- Date parsing supports common formats: `YYYY-MM-DD`, `YYYYMMDD`, `MM-DD-YYYY`, etc.
-- Documents without parseable dates sorted to end
+- Collection stats (document/entity counts)
+- Full-text search via Pagefind, loaded off the critical path (see [Static Website](#static-website))
+- Dates are parsed with `undate`, supporting partial precision (year-only,
+  year-month, or full day); documents without parseable dates sort to the end
 
 **Layout:**
 ```
 ┌─────────────────────────────────────────┐
-│  [Logo]  Document Collection    [About] │
+│  [Logo]  Document Collection            │
+│  Search | Browse by Date | Browse by    │
+│                            Entity       │
+├─────────────────────────────────────────┤
+│         Documents      Entities         │
+│           1,204           312           │
 ├─────────────────────────────────────────┤
 │  ┌─────────────────────────────────┐    │
 │  │  🔍 Search documents...         │    │
 │  └─────────────────────────────────┘    │
-├─────────────────────────────────────────┤
-│  Sort: [Date ▼] [Name] [Relevance]      │
-│  Browse by:  [Dates] [Entities]         │
-├─────────────────────────────────────────┤
-│  Timeline Summary                       │
-│  ─────────────────                      │
-│  • 1892-03-15: Initial petition filed   │
-│  • 1892-03-20: Response submitted       │
-│  • ...                                  │
-├─────────────────────────────────────────┤
-│  Research Questions                     │
-│  ─────────────────                      │
-│  • What prompted the sudden change...   │
-│  • ...                                  │
+│         (Pagefind results)              │
 └─────────────────────────────────────────┘
 ```
 
@@ -500,20 +449,21 @@ var viewer = OpenSeadragon({
 
 ### Pagefind Integration
 
-```bash
-# Build search index (run after site generation)
-npx pagefind --site _site --output-subdir pagefind
+Indexing is wired into the Eleventy build itself (`site/.eleventy.js`), not a
+separate manual step:
+
+```javascript
+// site/.eleventy.js
+eleventyConfig.on("eleventy.after", () => {
+    if (process.env.ENABLE_SEARCH === "false") return;
+    execSync("npx pagefind --site _site", { stdio: "inherit" });
+});
 ```
 
-```html
-<!-- In main.html -->
-<link href="/pagefind/pagefind-ui.css" rel="stylesheet">
-<script src="/pagefind/pagefind-ui.js"></script>
-<div id="search"></div>
-<script>
-    new PagefindUI({ element: "#search", showImages: true });
-</script>
-```
+The search page (`main.html`) loads the Pagefind UI bundle off the critical
+path — a plain `<input>` renders immediately, and `pagefind-ui.js` is
+injected via `requestIdleCallback` (or immediately on focus/typing) rather
+than a blocking `<script>` tag, so search never delays page load.
 
 ---
 
@@ -521,23 +471,26 @@ npx pagefind --site _site --output-subdir pagefind
 
 ### Core Dependencies
 
-| Package | Purpose | Version |
-|---------|---------|---------||
-| `typer` | CLI framework | ^0.12 |
-| `pyyaml` | Config parsing | ^6.0 |
-| `python-dotenv` | Environment variables | ^1.0 |
-| `datasets` | HuggingFace datasets | ^2.0 |
-| `Pillow` | Image processing | ^10.0 |
-| `dashscope` | Qwen VL/NLP API | ^1.0 |
-| `jinja2` | Template engine | ^3.0 |
-| `rich` | CLI output formatting | ^13.0 |
+| Package | Purpose |
+|---------|---------|
+| `typer` | CLI framework |
+| `pyyaml` | Config parsing |
+| `pydantic` / `pydantic-settings` | Config validation |
+| `python-dotenv` | Environment variables |
+| `undate` | Partial/uncertain date modeling |
+| `Pillow` / `pillow-heif` | Image processing |
+| `pymupdf` | PDF-to-image rendering |
+| `openai` | OpenAI-compatible LLM client (HTR, entities) |
+| `deep-translator` | Translation |
+| `rich` | CLI output formatting |
+| `httpx`, `tqdm`, `markdown` | Supporting utilities |
+| `netlify-python` | Optional Netlify deployment |
 
 ### Development Dependencies
 
 | Package | Purpose |
 |---------|---------|
 | `pytest` | Testing |
-| `black` | Code formatting |
 | `ruff` | Linting |
 | `mypy` | Type checking |
 | `pre-commit` | Git hooks |
@@ -546,7 +499,10 @@ npx pagefind --site _site --output-subdir pagefind
 
 | Tool | Purpose |
 |------|---------|
+| Node.js 20+ | Runs the Eleventy site build |
+| Eleventy (11ty) | Static site generator |
 | Pagefind | Static search indexing |
+| Sveltia CMS | Browser-based content editing |
 | OpenSeaDragon | Image viewer (JS library) |
 
 ---
@@ -557,78 +513,75 @@ npx pagefind --site _site --output-subdir pagefind
 
 ```bash
 # Initialize a new project
-flatfish init
+ficherito init
 
 # Process dataset (full pipeline)
-flatfish process
+ficherito process
 
 # Individual steps
-flatfish extract          # Run HTR only
-flatfish entities         # Extract entities only
-flatfish summarize        # Generate Qwen summary only
-flatfish build            # Build static site only
+ficherito extract          # Run HTR only
+ficherito entities         # Extract entities only
+ficherito translate        # Translate transcriptions
+ficherito build            # Emit content and build the 11ty + Pagefind site
 
 # Utility commands
-flatfish validate         # Validate config and connections
-flatfish status           # Show processing status
-flatfish publish           # Local preview server
+ficherito validate         # Validate config and connections
+ficherito status           # Show processing status
+ficherito serve            # Local preview server
+ficherito deploy           # Deploy site to Netlify
 ```
 
 ### Command Options
 
 ```bash
 # Process with options
-flatfish process \
+ficherito process \
   --config custom-config.yaml \
-  --split train \
   --limit 100 \
   --skip-entities \
-  --skip-summary \
   --verbose
 
 # Build with options
-flatfish build \
+ficherito build \
   --output ./custom_site \
-  --no-search \
   --base-url "/docs/"
 
 # Serve locally
-flatfish publish --port 8080
+ficherito serve --port 8080
 ```
 
 ### Example Session
 
 ```bash
 # 1. Initialize project
-$ flatfish init
-Created flatfish.yaml
+$ ficherito init
+Created ficherito.yaml
 Created .env.example
 Copy .env.example to .env and add your API keys.
 
 # 2. Configure (edit files)
-$ nano flatfish.yaml
+$ nano ficherito.yaml
 $ cp .env.example .env && nano .env
+# Add images to images/
 
 # 3. Validate setup
-$ flatfish validate
+$ ficherito validate
 ✓ Config file valid
-✓ HuggingFace token valid
-✓ Dataset accessible: username/my-documents
-✓ DashScope API key valid
+✓ LLM base URL: https://dashscope-intl.aliyuncs.com/compatible-mode/v1
+✓ API key found
+✓ Images folder: images
 Ready to process!
 
 # 4. Run full pipeline
-$ flatfish process
-Loading dataset... ━━━━━━━━━━━━━━━━━━━━ 100%
+$ ficherito process
 Extracting text... ━━━━━━━━━━━━━━━━━━━━ 100%
 Extracting entities... ━━━━━━━━━━━━━━━━ 100%
-Generating summary... ━━━━━━━━━━━━━━━━━ 100%
-Building site... ━━━━━━━━━━━━━━━━━━━━━━ 100%
+Building website... ━━━━━━━━━━━━━━━━━━━ 100%
 
-Complete! Site built to _site/
+Complete! Site built to site/_site/
 
 # 5. Preview
-$ flatfish publish
+$ ficherito serve
 Serving at http://localhost:8000
 ```
 
@@ -640,17 +593,17 @@ Serving at http://localhost:8000
 
 | Error | Message | Resolution |
 |-------|---------|------------|
-| Missing config | `flatfish.yaml not found` | Run `flatfish init` |
+| Missing config | `ficherito.yaml not found` | Run `ficherito init` |
 | Invalid YAML | `Config parse error at line X` | Fix YAML syntax |
-| Missing required field | `dataset.source is required` | Add missing field |
+| Missing required field | `dataset.images_dir is required` | Add missing field |
 
 ### API Errors
 
 | Error | Message | Resolution |
 |-------|---------|------------|
-| Invalid HF token | `HuggingFace authentication failed` | Check HUGGINGFACE_TOKEN |
-| Dataset not found | `Dataset 'x' not found or private` | Verify dataset name/access |
-| DashScope error | `DashScope API error: {details}` | Check API key/quota |
+| Missing API key | `OPENAI_API_KEY not set` | Add it to `.env` |
+| LLM request failure | `API error: {details}` | Check API key/quota/base URL |
+| Images folder missing | `Images directory not found` | Check `dataset.images_dir` |
 
 ### Processing Errors
 
@@ -704,50 +657,51 @@ Serving at http://localhost:8000
 ## Project Structure
 
 ```
-flatfish/
+ficherito/
 ├── pyproject.toml
 ├── README.md
 ├── LICENSE
 ├── src/
-│   └── flatfish/
+│   └── ficherito/
 │       ├── __init__.py
 │       ├── __main__.py
 │       ├── cli.py                 # Typer CLI definitions
 │       ├── config.py              # Config loading/validation
-│       ├── dataset.py             # HuggingFace dataset handling
+│       ├── dataset.py             # Local image folder handling (+ PDF render)
+│       ├── pipeline.py            # Pipeline orchestration
 │       ├── htr/
 │       │   ├── __init__.py
 │       │   ├── engine.py          # HTR processing
 │       │   └── models.py          # Model loading
 │       ├── entities/
 │       │   ├── __init__.py
-│       │   ├── extractor.py       # Entity extraction
-│       │   └── context.py         # Context generation
-│       ├── summary/
+│       │   └── extractor.py       # Entity extraction + consolidation
+│       ├── translation/
 │       │   ├── __init__.py
-│       │   └── qwen.py            # DashScope/Qwen integration
+│       │   └── translator.py      # Translation
 │       ├── site/
 │       │   ├── __init__.py
-│       │   ├── builder.py         # Site generator
-│       │   ├── search.py          # Pagefind integration
-│       │   └── templates/
-│       │       ├── base.html
-│       │       ├── index.html
-│       │       ├── main.html
-│       │       ├── document.html
-│       │       ├── browse_dates.html
-│       │       └── browse_entities.html
+│       │   ├── builder.py         # Emits content, runs Eleventy + Pagefind
+│       │   └── scaffold/          # Bundled Eleventy/Pagefind/Sveltia project
+│       │       ├── .eleventy.js
+│       │       ├── package.json
+│       │       ├── admin/config.yml
+│       │       └── src/
+│       │           ├── documents/documents.json
+│       │           ├── _includes/{layouts,partials}/
+│       │           ├── index.njk
+│       │           ├── search.njk
+│       │           └── browse/{dates,entities}.njk
 │       └── utils/
 │           ├── __init__.py
+│           ├── dates.py           # undate-based date parsing
 │           ├── images.py          # Image utilities
 │           └── logging.py         # Logging setup
 └── tests/
     ├── conftest.py
     ├── test_config.py
-    ├── test_htr.py
-    ├── test_entities.py
-    ├── test_summary.py
-    └── test_site.py
+    ├── test_dates.py
+    └── test_text.py
 ```
 
 ---
@@ -762,7 +716,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "flatfish"
+name = "ficherito"
 version = "0.1.0"
 description = "Historical document analysis CLI"
 readme = "README.md"
@@ -774,33 +728,39 @@ authors = [
 dependencies = [
     "typer[all]>=0.12",
     "pyyaml>=6.0",
+    "pydantic>=2.0",
+    "pydantic-settings>=2.0",
     "python-dotenv>=1.0",
-    "datasets>=2.0",
+    "undate>=0.8",
     "Pillow>=10.0",
-    "transformers>=4.30",
-    "torch>=2.0",
-    "dashscope>=1.0",
-    "jinja2>=3.0",
+    "pillow-heif>=0.16",
+    "pymupdf>=1.24",
+    "openai>=1.0",
     "rich>=13.0",
+    "httpx>=0.25",
+    "deep-translator>=1.11.0",
 ]
 
 [project.optional-dependencies]
 dev = [
     "pytest>=7.0",
-    "black>=23.0",
+    "pytest-cov>=4.0",
     "ruff>=0.1",
     "mypy>=1.0",
     "pre-commit>=3.0",
 ]
 
 [project.scripts]
-flatfish = "flatfish.cli:main"
+ficherito = "ficherito.cli:app"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/flatfish"]
+packages = ["src/ficherito"]
 ```
 
 ### B. Qwen-VL Model Options
+
+Ficherito talks to any OpenAI-compatible vision endpoint (configured via
+`.env`); DashScope's Qwen-VL models are the default:
 
 | Model | Best For | Notes |
 |-------|----------|-------|
@@ -828,5 +788,5 @@ Context:
 
 ---
 
-*Last Updated: February 2026*
+*Last Updated: August 2026*
 *Version: 0.1.0-spec*

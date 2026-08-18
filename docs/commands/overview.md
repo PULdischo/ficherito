@@ -21,9 +21,7 @@ flatfish <command> [options]
 | `transcribe` | Extract text from images |
 | `entities` | Extract named entities |
 | `translate` | Translate transcriptions |
-| `summarize` | Generate AI summaries |
-| `combine` | Combine batch summaries |
-| `build` | Build the website |
+| `build` | Build the website (emits content and runs Eleventy + Pagefind) |
 | `serve` | Preview site locally |
 | `deploy` | Deploy to hosting |
 
@@ -56,7 +54,6 @@ flatfish process
 flatfish transcribe
 flatfish entities
 flatfish translate
-flatfish summarize
 
 # Build and preview
 flatfish build
@@ -77,8 +74,6 @@ See individual command pages:
 - **[transcribe](transcribe.md)** - Text extraction
 - **[entities](entities.md)** - Named entity recognition
 - **[translate](translate.md)** - Translation to target language
-- **[summarize](summarize.md)** - AI summarization
-- **[combine](combine.md)** - Combine batch summaries
 - **[build](build.md)** - Website generation
 - **[serve](serve.md)** - Local preview server
 - **[deploy](deploy.md)** - Deployment to hosting
@@ -108,9 +103,6 @@ flatfish process --resume
 ```bash
 # Only redo entities (keep transcriptions)
 flatfish entities --force
-
-# Only rebuild summaries
-flatfish summarize --force
 ```
 
 ### Development Preview
@@ -157,5 +149,5 @@ flatfish --help
 
 # Command-specific help
 flatfish process --help
-flatfish summarize --help
+flatfish build --help
 ```

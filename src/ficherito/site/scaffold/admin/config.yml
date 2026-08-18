@@ -1,0 +1,52 @@
+backend:
+  name: github
+  repo: your-username/your-repo # TODO: update to your GitHub owner/repo
+  branch: main
+  auth_methods: [token]
+
+site_url: https://your-username.github.io/your-repo # TODO: match src/_data/site.json
+media_folder: "site/src/assets/images/documents"
+public_folder: "/assets/images/documents"
+
+collections:
+  - name: "documents"
+    label: "Documents"
+    folder: "site/src/documents"
+    create: false
+    delete: false
+    identifier_field: "id"
+    slug: "{{id}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Document ID", name: "id", widget: "string" }
+      - { label: "Date", name: "date", widget: "string", required: false, hint: "ISO date: YYYY, YYYY-MM, or YYYY-MM-DD" }
+      - { label: "Date (display)", name: "date_display", widget: "string", required: false }
+      - { label: "Image filename", name: "image", widget: "string" }
+      - { label: "Order", name: "order", widget: "number", required: false, hint: "Chronological sort position, set by the Ficherito build" }
+      - { label: "Previous document ID", name: "prev", widget: "string", required: false }
+      - { label: "Next document ID", name: "next", widget: "string", required: false }
+      - label: "Entities"
+        name: "entities"
+        widget: "list"
+        required: false
+        fields:
+          - { label: "Text", name: "text", widget: "string" }
+          - label: "Type"
+            name: "type"
+            widget: "select"
+            options:
+              [
+                "PERSON",
+                "ORGANIZATION",
+                "LOCATION",
+                "DATE",
+                "MONEY",
+                "LEGAL_TERM",
+                "EVENT",
+                "DOCUMENT",
+                "OCCUPATION",
+                "RELATIONSHIP",
+              ]
+          - { label: "Context", name: "context", widget: "string" }
+      - { label: "Translation", name: "translation", widget: "markdown", required: false }
+      - { label: "Transcription", name: "body", widget: "markdown" }

@@ -1,0 +1,166 @@
+---
+permalink: main.html
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+{% include "partials/head-common.njk" %}
+<title>{{ site.title }}</title>
+<link rel="preload" href="{{ '/pagefind/pagefind-ui.css' | url }}" as="style">
+<link href="{{ '/pagefind/pagefind-ui.css' | url }}" rel="stylesheet" media="print" onload="this.media='all'">
+<style>
+:root {
+    --hero-bg: {{ site.background_color }};
+    --accent: {{ site.accent_color }};
+}
+
+.pagefind-ui {
+    --pagefind-ui-scale: 1;
+    --pagefind-ui-primary: var(--accent);
+    --pagefind-ui-text: #1e293b;
+    --pagefind-ui-background: #ffffff;
+    --pagefind-ui-border: #e2e8f0;
+    --pagefind-ui-tag: #f1f5f9;
+    --pagefind-ui-border-width: 1px;
+    --pagefind-ui-border-radius: 8px;
+    --pagefind-ui-image-border-radius: 6px;
+    --pagefind-ui-image-box-ratio: 3 / 2;
+    --pagefind-ui-font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.pagefind-ui__filter-panel { display: none !important; }
+.pagefind-ui__search-input { font-size: 1.25rem !important; padding: 1rem 1.5rem !important; }
+.pagefind-ui__result {
+    padding: 1.5rem !important;
+    margin-bottom: 1rem !important;
+    border-radius: 8px !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important;
+    background: white !important;
+}
+.pagefind-ui__result:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important; }
+.pagefind-ui__result-title { font-size: 1.1rem !important; font-weight: 600 !important; color: var(--accent) !important; }
+.pagefind-ui__result-excerpt { font-family: Georgia, serif !important; line-height: 1.6 !important; }
+.pagefind-ui__result-image { border-radius: 6px !important; object-fit: cover !important; }
+
+.search-header { background: var(--hero-bg); padding: 2rem 0; }
+.search-header h1 { color: white; text-align: center; margin-bottom: 0.5rem; font-size: 2rem; }
+.search-header .stats { display: flex; justify-content: center; gap: 2rem; margin-bottom: 1rem; }
+.search-header .stat { text-align: center; color: white; }
+.search-header .stat-value { font-size: 1.75rem; font-weight: bold; }
+.search-header .stat-label { font-size: 0.875rem; opacity: 0.8; }
+
+.search-main { max-width: 1400px; margin: 0 auto; padding: 2rem 1rem; }
+.search-box-wrapper { max-width: 1000px; margin: 0 auto 1rem; }
+.pagefind-ui__drawer { max-width: 100% !important; margin: 0 auto !important; }
+
+.search-placeholder-input {
+    width: 100%;
+    max-width: 1000px;
+    display: block;
+    margin: 0 auto;
+    font-size: 1.25rem;
+    padding: 1rem 1.5rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+}
+.search-placeholder-input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+</style>
+</head>
+<body>
+{% include "partials/auth-check.njk" %}
+{% include "partials/header.njk" %}
+
+<section class="search-header">
+    <div class="stats">
+        <div class="stat">
+            <div class="stat-value">{{ collections.documents.length }}</div>
+            <div class="stat-label">Documents</div>
+        </div>
+        {% if allEntities.all_entities %}
+        <div class="stat">
+            <div class="stat-value">{{ allEntities.all_entities.length }}</div>
+            <div class="stat-label">Entities</div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<main class="search-main">
+    <div id="search">
+        <input type="search" id="search-placeholder" class="search-placeholder-input" placeholder="Search documents..." autocomplete="off">
+    </div>
+</main>
+
+{% include "partials/footer.njk" %}
+
+<script>
+// Phase 8: keep the page interactive immediately and load the (much larger)
+// Pagefind UI bundle off the critical path instead of blocking on it, so the
+// page never appears to "hang" while the index downloads.
+(function () {
+    var loading = false;
+
+    function mountPagefind(prefill) {
+        new PagefindUI({
+            element: "#search",
+            showImages: true,
+            showSubResults: true,
+            showEmptyFilters: false,
+            resetStyles: false,
+            sort: { date: "asc" }
+        });
+
+        var realInput = document.querySelector(".pagefind-ui__search-input");
+        if (realInput) {
+            if (prefill) {
+                realInput.value = prefill;
+                realInput.dispatchEvent(new Event("input", { bubbles: true }));
+            }
+            realInput.focus();
+        }
+
+        document.getElementById("search").addEventListener("click", function (e) {
+            var link = e.target.closest("a");
+            if (!link || !link.href) return;
+            var input = document.querySelector(".pagefind-ui__search-input");
+            if (input && input.value.trim()) {
+                e.preventDefault();
+                var url = new URL(link.href);
+                url.searchParams.set("q", input.value.trim());
+                window.location.href = url.toString();
+            }
+        });
+    }
+
+    function loadPagefind() {
+        if (loading) return;
+        loading = true;
+
+        var placeholder = document.getElementById("search-placeholder");
+        var prefill = placeholder ? placeholder.value : "";
+
+        var script = document.createElement("script");
+        script.src = "{{ '/pagefind/pagefind-ui.js' | url }}";
+        script.onload = function () {
+            document.getElementById("search").innerHTML = "";
+            mountPagefind(prefill);
+        };
+        document.head.appendChild(script);
+    }
+
+    var idle = window.requestIdleCallback || function (cb) { setTimeout(cb, 200); };
+    idle(loadPagefind, { timeout: 2000 });
+
+    var placeholder = document.getElementById("search-placeholder");
+    if (placeholder) {
+        placeholder.addEventListener("focus", loadPagefind, { once: true });
+        placeholder.addEventListener("input", loadPagefind, { once: true });
+    }
+})();
+</script>
+</body>
+</html>

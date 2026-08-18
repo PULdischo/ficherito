@@ -1,10 +1,10 @@
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="logo-dark.png">
   <source media="(prefers-color-scheme: light)" srcset="logo-light.png">
-  <img width="100" src="logo-light.png" alt="Flatfish Logo">
+  <img width="100" src="logo-light.png" alt="Ficherito Logo">
 </picture>
 
-# Flatfish
+# Ficherito
 
 Historical document analysis CLI - Extract, analyze, and present handwritten text from document images.
 
@@ -12,53 +12,47 @@ Historical document analysis CLI - Extract, analyze, and present handwritten tex
 
 - 📜 **Handwritten Text Recognition (HTR)** - Extract text from historical document images
 - 🏷️ **Named Entity Recognition** - Identify people, places, dates, and more with contextual descriptions
-- 📊 **AI-Powered Summaries** - Generate timelines, track changes, and suggest research questions
-- 🌐 **Static Website Builder** - Create searchable, browsable document collections
+- 🌐 **Translation** - Translate transcriptions into a target language
+- 🔎 **Static Website Builder** - An 11ty + Pagefind site, editable via Sveltia CMS, deployable to GitHub Pages
 
 ## Installation
 
 ```bash
-pip install flatfish
+pip install ficherito
 ```
 
 ## Quick Start
 
 ```bash
 # Initialize a new project
-flatfish init
+ficherito init
 
 # Edit configuration
-nano flatfish.yaml
+nano ficherito.yaml
 nano .env
 
 # Validate setup
-flatfish validate
+ficherito validate
 
 # Process documents
-flatfish process
+ficherito process
 
 # Preview the site
-flatfish publish
+ficherito serve
 ```
 
 ## Configuration
 
-### flatfish.yaml
+### ficherito.yaml
 
 ```yaml
 dataset:
-  source: "username/dataset-name"
-  splits:
-    - "train"
-  image_column: "image"
+  images_dir: "images"
+  recursive: false
 
 processing:
   extract_entities: true
   entity_context: true
-
-summary:
-  enabled: true
-  model: "qwen-vl-max"
 
 website:
   title: "Document Collection"
@@ -68,28 +62,38 @@ website:
 ### .env
 
 ```bash
-HUGGINGFACE_TOKEN=hf_xxxxxxxxxxxxx
-DASHSCOPE_API_KEY=sk-xxxxxxxxxxxxx
+# OpenAI-compatible LLM endpoint (DashScope, OpenAI, local, etc.)
+OPENAI_BASE_URL=https://dashscope-intl.aliyuncs.com/compatible-mode/v1
+OPENAI_API_KEY=sk-xxxxxxxxxxxxx
+OPENAI_MODEL=qwen-vl-max
 ```
 
 ## Commands
 
 | Command | Description |
 |---------|-------------|
-| `flatfish init` | Initialize a new project |
-| `flatfish process` | Run the full pipeline |
-| `flatfish extract` | Extract text from images only |
-| `flatfish entities` | Extract entities only |
-| `flatfish summarize` | Generate AI summary only |
-| `flatfish build` | Build static site only |
-| `flatfish serve` | Preview site locally |
-| `flatfish deploy` | Deploy to Netlify |
-| `flatfish status` | Show processing status |
-| `flatfish validate` | Validate configuration |
+| `ficherito init` | Initialize a new project |
+| `ficherito process` | Run the full pipeline |
+| `ficherito extract` | Extract text from images only |
+| `ficherito entities` | Extract entities only |
+| `ficherito translate` | Translate transcriptions |
+| `ficherito build` | Emit content and build the 11ty + Pagefind site |
+| `ficherito serve` | Preview site locally |
+| `ficherito deploy` | Deploy to Netlify |
+| `ficherito status` | Show processing status |
+| `ficherito validate` | Validate configuration |
 
-## Deployment  .
+## Website
 
-Deploy your site to Netlify:
+`ficherito build` emits Markdown + frontmatter + images into an [Eleventy](https://www.11ty.dev/)
+site under `site/`, then runs Eleventy and [Pagefind](https://pagefind.app/) to
+produce `site/_site/`. Content is editable afterward through [Sveltia CMS](https://github.com/sveltia/sveltia-cms)
+at `/admin/`. See the [building sites guide](docs/usage/building-sites.md) for details.
+
+## Deployment
+
+Deploy your built site with GitHub Pages (see the [deployment guide](docs/usage/deployment.md)
+for the full workflow and Sveltia CMS setup), or deploy to Netlify:
 
 ```bash
 # Install netlify-python
@@ -100,13 +104,13 @@ export NETLIFY_TOKEN=your-token
 export NETLIFY_SITE_ID=your-site-id
 
 # Deploy a draft preview
-flatfish deploy
+ficherito deploy
 
 # Deploy to production
-flatfish deploy --prod
+ficherito deploy --prod
 
 # Specify a site ID directly
-flatfish deploy --prod --site your-site-id
+ficherito deploy --prod --site your-site-id
 ```
 
 ## Output
@@ -115,8 +119,10 @@ flatfish deploy --prod --site your-site-id
 project/
 ├── transcriptions/     # Extracted text files
 ├── entities/           # Entity JSON files
-├── summaries/          # AI-generated summaries
-└── _site/              # Built static website
+├── translations/       # Translated text files
+└── site/               # Eleventy site (scaffolded on first build)
+    ├── src/documents/  # Emitted document content
+    └── _site/          # Built static website
 ```
 
 ## License

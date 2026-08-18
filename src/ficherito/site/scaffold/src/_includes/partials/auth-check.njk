@@ -1,0 +1,7 @@
+<script>
+(function () {
+    if (!sessionStorage.getItem('ficherito_auth')) {
+        location.href = '{{ "/index.html" | url }}';
+    }
+})();
+</script>

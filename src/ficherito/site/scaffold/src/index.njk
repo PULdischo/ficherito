@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+{% include "partials/head-common.njk" %}
+<title>{{ site.title }}</title>
+<style>
+:root {
+    --hero-bg: {{ site.background_color }};
+    --accent: {{ site.accent_color }};
+}
+</style>
+</head>
+<body>
+<div class="password-page">
+    <div class="password-form">
+        <h1>{{ site.emoji }} {{ site.title }}</h1>
+        <p>Enter the password to continue.</p>
+        <form id="password-form" data-password="{{ site.password }}">
+            <input type="password" id="password" placeholder="Password" autofocus required>
+            <button type="submit">Enter</button>
+        </form>
+        <p class="password-error" id="password-error">Incorrect password.</p>
+    </div>
+</div>
+
+<script>
+document.getElementById('password-form').addEventListener('submit', function (event) {
+    event.preventDefault();
+    const entered = document.getElementById('password').value;
+    const correct = this.dataset.password;
+    if (entered === correct) {
+        sessionStorage.setItem('ficherito_auth', 'true');
+        window.location.href = '{{ "/main.html" | url }}';
+    } else {
+        document.getElementById('password-error').style.display = 'block';
+    }
+});
+</script>
+</body>
+</html>

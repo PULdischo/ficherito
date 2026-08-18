@@ -4,8 +4,8 @@ import pytest
 import yaml
 from pathlib import Path
 
-from flatfish.config import (
-    FlatfishConfig,
+from ficherito.config import (
+    FicheritoConfig,
     load_config,
     load_env,
     get_default_config,
@@ -24,15 +24,15 @@ def test_default_config():
 
 def test_load_config(temp_dir, sample_config):
     """Test loading config from file."""
-    config_path = temp_dir / "flatfish.yaml"
+    config_path = temp_dir / "ficherito.yaml"
     
     with open(config_path, "w") as f:
         yaml.dump(sample_config, f)
     
     config = load_config(config_path)
     
-    assert config.dataset.source == "test/dataset"
-    assert config.dataset.splits == ["train"]
+    assert config.dataset.images_dir == "images"
+    assert config.dataset.recursive is False
     assert config.website.title == "Test Collection"
 
 
@@ -44,7 +44,7 @@ def test_load_config_missing_file():
 
 def test_config_validation(temp_dir):
     """Test that invalid config raises error."""
-    config_path = temp_dir / "flatfish.yaml"
+    config_path = temp_dir / "ficherito.yaml"
     
     # Missing required field
     with open(config_path, "w") as f:
@@ -59,13 +59,15 @@ def test_load_env(temp_dir, monkeypatch):
     # Create .env file
     env_path = temp_dir / ".env"
     with open(env_path, "w") as f:
-        f.write("HUGGINGFACE_TOKEN=hf_test123\n")
-        f.write("DASHSCOPE_API_KEY=sk_test456\n")
+        f.write("OPENAI_BASE_URL=https://example.com/v1\n")
+        f.write("OPENAI_API_KEY=sk_test456\n")
+        f.write("OPENAI_MODEL=qwen-vl-max\n")
     
     # Change to temp dir so .env is found
     monkeypatch.chdir(temp_dir)
     
     env = load_env()
     
-    assert env.huggingface_token == "hf_test123"
-    assert env.dashscope_api_key == "sk_test456"
+    assert env.api_base_url == "https://example.com/v1"
+    assert env.api_key == "sk_test456"
+    assert env.api_model == "qwen-vl-max"

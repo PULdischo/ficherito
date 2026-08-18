@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+{% include "partials/head-common.njk" %}
+<title>{{ title }} - {{ site.title }}</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/openseadragon/4.1.0/openseadragon.min.js"></script>
+<style>
+    .pagefind-meta { display: none !important; }
+
+    .text-tabs {
+        display: flex;
+        border-bottom: 2px solid #e2e8f0;
+        margin-bottom: 1rem;
+    }
+
+    .text-tab {
+        padding: 0.75rem 1.5rem;
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 1rem;
+        font-weight: 500;
+        color: #64748b;
+        border-bottom: 2px solid transparent;
+        margin-bottom: -2px;
+        transition: all 0.2s;
+    }
+
+    .text-tab:hover { color: #2563eb; }
+    .text-tab.active { color: #2563eb; border-bottom-color: #2563eb; }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    .translation-notice {
+        background: #f0f9ff;
+        border: 1px solid #bae6fd;
+        border-radius: 6px;
+        padding: 0.75rem 1rem;
+        margin-bottom: 1rem;
+        font-size: 0.875rem;
+        color: #0369a1;
+    }
+
+    .search-highlight {
+        background-color: #fef08a;
+        padding: 0.1em 0.2em;
+        border-radius: 2px;
+    }
+</style>
+</head>
+<body>
+{% include "partials/auth-check.njk" %}
+{% include "partials/header.njk" %}
+
+<main>
+    <div class="pagefind-meta">
+        <span data-pagefind-filter="date">{{ date or 'Unknown' }}</span>
+        <span data-pagefind-meta="date">{{ date_display }}</span>
+        <span data-pagefind-meta="image:{{ ('/assets/images/documents/' + image) | url }}"></span>
+        {% for entity in entities %}
+        <span data-pagefind-filter="{{ entity.type | lower }}">{{ entity.text }}</span>
+        {% endfor %}
+    </div>
+
+    <div class="container">
+        <h1 data-pagefind-meta="title">{{ title }}</h1>
+        <nav class="doc-navigation">
+            {% if prev %}
+            <a href="{{ ('/documents/' + prev + '/') | url }}">← Previous</a>
+            {% else %}
+            <span></span>
+            {% endif %}
+
+            {% if next %}
+            <a href="{{ ('/documents/' + next + '/') | url }}">Next →</a>
+            {% else %}
+            <span></span>
+            {% endif %}
+        </nav>
+    </div>
+
+    <div class="document-viewer container">
+        <div class="image-viewer">
+            <div id="openseadragon" data-image="{{ ('/assets/images/documents/' + image) | url }}"></div>
+        </div>
+
+        <div class="document-content">
+            {% if translation %}
+            <section class="transcription-section">
+                <div class="text-tabs">
+                    <button class="text-tab {% if default_tab == 'transcription' %}active{% endif %}" data-tab="transcription">📜 Original</button>
+                    <button class="text-tab {% if default_tab == 'translation' %}active{% endif %}" data-tab="translation">🌐 Translation</button>
+                </div>
+
+                <div id="transcription-content" class="tab-content {% if default_tab == 'transcription' %}active{% endif %}" data-pagefind-body>
+                    <div class="transcription">{{ content | safe }}</div>
+                </div>
+
+                <div id="translation-content" class="tab-content {% if default_tab == 'translation' %}active{% endif %}">
+                    <div class="translation-notice">🌐 Machine translated to {{ target_language }}</div>
+                    <div class="transcription">{{ translation | markdownify | safe }}</div>
+                </div>
+            </section>
+            {% else %}
+            <section class="transcription-section" data-pagefind-body>
+                <h2>Transcription</h2>
+                <div class="transcription">{{ content | safe }}</div>
+            </section>
+            {% endif %}
+
+            {% if entities %}
+            <section class="entities-list">
+                <h3>Entities Found</h3>
+                {% for entity in entities %}
+                <div class="entity">
+                    <span class="entity-icon">
+                        {% if entity.type == 'PERSON' %}👤
+                        {% elif entity.type == 'LOCATION' %}📍
+                        {% elif entity.type == 'ORGANIZATION' %}🏛️
+                        {% elif entity.type == 'DATE' %}📅
+                        {% elif entity.type == 'MONEY' %}💰
+                        {% elif entity.type == 'LEGAL_TERM' %}⚖️
+                        {% elif entity.type == 'EVENT' %}📌
+                        {% else %}🏷️{% endif %}
+                    </span>
+                    <div>
+                        <div class="entity-text">{{ entity.text }}</div>
+                        <div class="entity-context">{{ entity.context }}</div>
+                    </div>
+                </div>
+                {% endfor %}
+            </section>
+            {% endif %}
+        </div>
+    </div>
+</main>
+
+{% include "partials/footer.njk" %}
+
+<script>
+    document.querySelectorAll('.text-tab').forEach(tab => {
+        tab.addEventListener('click', function () {
+            const tabName = this.dataset.tab;
+            document.querySelectorAll('.text-tab').forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.getElementById(tabName + '-content').classList.add('active');
+        });
+    });
+
+    (function initViewer() {
+        const el = document.getElementById('openseadragon');
+        if (!el || typeof OpenSeadragon === 'undefined') return;
+        OpenSeadragon({
+            id: 'openseadragon',
+            prefixUrl: 'https://cdnjs.cloudflare.com/ajax/libs/openseadragon/4.1.0/images/',
+            tileSources: { type: 'image', url: el.dataset.image },
+            showNavigator: true,
+            navigatorPosition: 'BOTTOM_RIGHT',
+            minZoomLevel: 0.5,
+            maxZoomLevel: 10,
+            visibilityRatio: 0.5,
+            constrainDuringPan: true,
+        });
+    })();
+
+    (function highlightSearchTerms() {
+        const params = new URLSearchParams(window.location.search);
+        const query = params.get('q');
+        if (!query) return;
+
+        const transcription = document.querySelector('.tab-content.active .transcription, .transcription-section:not(.text-tabs) .transcription');
+        if (!transcription) return;
+
+        const words = query.split(/\s+/).filter(w => w.length > 2);
+        if (words.length === 0) return;
+
+        const pattern = new RegExp('(' + words.map(w => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|') + ')', 'gi');
+
+        function highlightTextNode(node) {
+            if (node.nodeType === Node.TEXT_NODE) {
+                const text = node.textContent;
+                if (pattern.test(text)) {
+                    const span = document.createElement('span');
+                    span.innerHTML = text.replace(pattern, '<mark class="search-highlight">$1</mark>');
+                    node.parentNode.replaceChild(span, node);
+                }
+            } else if (node.nodeType === Node.ELEMENT_NODE && node.tagName !== 'MARK') {
+                Array.from(node.childNodes).forEach(highlightTextNode);
+            }
+        }
+
+        highlightTextNode(transcription);
+
+        const firstHighlight = document.querySelector('.search-highlight');
+        if (firstHighlight) firstHighlight.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    })();
+</script>
+</body>
+</html>

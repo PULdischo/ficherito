@@ -1,0 +1,11 @@
+{
+  "title": "Document Collection",
+  "emoji": "🐟",
+  "background_color": "#1e3a5f",
+  "accent_color": "#2563eb",
+  "password": "changeme",
+  "enable_search": true,
+  "enable_browse_dates": true,
+  "enable_browse_entities": true,
+  "default_sort": "date"
+}
