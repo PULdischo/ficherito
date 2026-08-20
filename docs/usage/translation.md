@@ -6,7 +6,7 @@ This guide covers translating transcribed documents to other languages.
 
 ## Overview
 
-Flatfish can automatically translate your transcribed documents using Google Translate. This is particularly useful for:
+Ficherito can automatically translate your transcribed documents using Google Translate. This is particularly useful for:
 
 - **Multilingual archives** - Making documents accessible to researchers who don't read the original language
 - **Spanish colonial records** - Translating historical Spanish documents to English
@@ -16,7 +16,7 @@ Flatfish can automatically translate your transcribed documents using Google Tra
 
 ## Enabling Translation
 
-Add the `translate` section to your `flatfish.yaml`:
+Add the `translate` section to your `ficherito.yaml`:
 
 ```yaml
 translate:
@@ -86,7 +86,7 @@ translate:
 Once configured, run the translate command:
 
 ```bash
-flatfish translate
+ficherito translate
 ```
 
 ### Progress Output
@@ -108,13 +108,13 @@ Validating language codes...
 
 ```bash
 # Translate a limited number of documents (for testing)
-flatfish translate --limit 10
+ficherito translate --limit 10
 
 # Force re-translation of all documents
-flatfish translate --force
+ficherito translate --force
 
 # Override source language
-flatfish translate --source auto
+ficherito translate --source auto
 ```
 
 ---
@@ -230,21 +230,22 @@ Consider translation as an **accessibility aid** rather than a scholarly replace
 
 ## Full Pipeline
 
-Translation fits into the Flatfish pipeline after transcription:
+`ficherito process` runs extraction, entities, and build, but **not**
+translation — run `translate` separately, before building:
 
 ```bash
-# Full pipeline
-flatfish extract     # Extract text from images
-flatfish entities    # Extract named entities  
-flatfish translate   # Translate to target language
-flatfish summarize   # Generate summaries
-flatfish build       # Build website with translations
+ficherito process       # extract + entities + build
+ficherito translate     # translate to target language
+ficherito build         # rebuild the site with translations included
 ```
 
-Or run everything at once:
+Or run the individual steps in order:
 
 ```bash
-flatfish process
+ficherito extract     # Extract text from images
+ficherito entities     # Extract named entities
+ficherito translate    # Translate to target language
+ficherito build         # Build website with translations
 ```
 
 ---

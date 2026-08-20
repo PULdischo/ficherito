@@ -1,558 +1,147 @@
-# API Reference
+# Python Usage
 
-Python API documentation for using Flatfish programmatically.
+Ficherito is primarily a CLI tool. There's no separate, stabilized public
+Python API — but since it's a regular installed package, you can import and
+call the same functions the CLI commands themselves use.
 
----
-
-## Overview
-
-While Flatfish is primarily a CLI tool, you can also use it as a Python library:
-
-```python
-from flatfish import Pipeline, Config
-from flatfish.summary import QwenSummarizer
-from flatfish.transcription import transcribe_document
-from flatfish.entities import extract_entities
+```{note}
+These are internal functions, not a versioned public API — signatures may
+change between releases. For scripting Ficherito, prefer shelling out to
+the CLI (`subprocess`) unless you specifically need Python-level access.
 ```
 
 ---
 
-## Quick Start
+## Configuration
 
 ```python
-from flatfish import Pipeline
+from ficherito.config import load_config, load_env, FicheritoConfig
 
-# Load configuration
-pipeline = Pipeline.from_config("flatfish.yaml")
+config: FicheritoConfig = load_config()          # reads ./ficherito.yaml
+env = load_env()                                   # reads ./.env
 
-# Run full pipeline
-results = pipeline.process()
-
-# Or run specific steps
-pipeline.transcribe()
-pipeline.extract_entities()
-pipeline.summarize()
-pipeline.combine()
-pipeline.build()
+print(config.dataset.images_dir)
+print(env.api_key is not None)
 ```
 
 ---
 
-## Core Classes
-
-### Pipeline
-
-Main orchestration class.
+## Running the Pipeline
 
 ```python
-from flatfish import Pipeline
+from ficherito.config import load_config, load_env
+from ficherito.pipeline import run_pipeline
 
-class Pipeline:
-    """Orchestrates the document processing pipeline."""
-    
-    @classmethod
-    def from_config(cls, config_path: str) -> "Pipeline":
-        """Load pipeline from configuration file."""
-        
-    def process(self, steps: list[str] = None) -> dict:
-        """Run pipeline steps.
-        
-        Args:
-            steps: Specific steps to run. If None, runs all.
-                   Options: ['transcribe', 'entities', 'summarize', 
-                            'combine', 'build']
-        
-        Returns:
-            dict with results from each step
-        """
-        
-    def transcribe(self, force: bool = False) -> list[dict]:
-        """Transcribe all documents."""
-        
-    def extract_entities(self, force: bool = False) -> list[dict]:
-        """Extract entities from transcriptions."""
-        
-    def summarize(self, force: bool = False) -> dict:
-        """Generate batch summaries."""
-        
-    def combine(self) -> dict:
-        """Combine batch summaries into final outputs."""
-        
-    def build(self, force: bool = False) -> None:
-        """Build static site."""
+config = load_config()
+env = load_env()
+
+run_pipeline(
+    config=config,
+    env=env,
+    limit=20,
+    max_concurrent=10,
+    batch_size=50,
+    skip_entities=False,
+    skip_build=False,
+    verbose=True,
+)
 ```
 
-#### Example
+### Individual Stages
 
 ```python
-from flatfish import Pipeline
+from ficherito.pipeline import run_extraction, run_entity_extraction
 
-# Initialize
-pipeline = Pipeline.from_config("flatfish.yaml")
-
-# Run with progress callback
-def on_progress(step, current, total):
-    print(f"{step}: {current}/{total}")
-
-results = pipeline.process(on_progress=on_progress)
-
-# Access results
-print(f"Transcribed: {len(results['transcriptions'])} documents")
-print(f"Entities: {results['entities']['total']}")
+run_extraction(config, env, limit=20, max_concurrent=10)
+run_entity_extraction(config, env, limit=20, max_concurrent=10)
 ```
 
 ---
 
-### Config
-
-Configuration management.
+## Working with Images
 
 ```python
-from flatfish import Config
+from ficherito.dataset import list_image_files, iter_document_images
 
-class Config:
-    """Manages Flatfish configuration."""
-    
-    @classmethod
-    def load(cls, path: str) -> "Config":
-        """Load configuration from YAML file."""
-        
-    @classmethod
-    def from_dict(cls, data: dict) -> "Config":
-        """Create configuration from dictionary."""
-        
-    def save(self, path: str) -> None:
-        """Save configuration to file."""
-        
-    # Properties
-    project: ProjectConfig
-    source: SourceConfig
-    processing: ProcessingConfig
-    summary: SummaryConfig
-    site: SiteConfig
-```
-
-#### Example
-
-```python
-from flatfish import Config
-
-# Load existing config
-config = Config.load("flatfish.yaml")
-
-# Modify settings
-config.processing.batch_size = 30
-config.summary.model = "qwen-vl-max"
-
-# Save changes
-config.save("flatfish.yaml")
-
-# Create from scratch
-config = Config.from_dict({
-    "project": {"name": "My Collection"},
-    "processing": {"batch_size": 20}
-})
+files = list_image_files(config)                        # sorted list of Path
+for doc in iter_document_images(config, limit=10):
+    print(doc.image_id, doc.filename, doc.date)
 ```
 
 ---
 
 ## Transcription
 
-### transcribe_document
-
-Transcribe a single document.
-
 ```python
-from flatfish.transcription import transcribe_document
+from ficherito.htr.engine import HTREngine, load_transcription
 
-async def transcribe_document(
-    image_path: str,
-    model: str = "qwen-vl-max",
-    prompt: str = None,
-    api_key: str = None
-) -> dict:
-    """Transcribe a document image.
-    
-    Args:
-        image_path: Path to image file
-        model: Model to use
-        prompt: Custom extraction prompt
-        api_key: API key (uses env if not provided)
-    
-    Returns:
-        dict with 'raw_text', 'cleaned_text', 'confidence'
-    """
-```
+engine = HTREngine(config, env=env)
+# engine.extract_batch_async(...) — see src/ficherito/htr/engine.py
 
-#### Example
-
-```python
-import asyncio
-from flatfish.transcription import transcribe_document
-
-async def main():
-    result = await transcribe_document(
-        "images/letter_001.jpg",
-        prompt="Transcribe this 19th-century letter..."
-    )
-    print(result['cleaned_text'])
-    print(f"Confidence: {result['confidence']}")
-
-asyncio.run(main())
-```
-
-### transcribe_batch
-
-Transcribe multiple documents.
-
-```python
-from flatfish.transcription import transcribe_batch
-
-async def transcribe_batch(
-    image_paths: list[str],
-    batch_size: int = 20,
-    **kwargs
-) -> list[dict]:
-    """Transcribe multiple documents.
-    
-    Args:
-        image_paths: List of image paths
-        batch_size: Images per API call
-        **kwargs: Passed to transcribe_document
-    
-    Returns:
-        List of transcription results
-    """
+text, metadata = load_transcription("transcriptions/letter_001.md")
 ```
 
 ---
 
-## Entity Extraction
-
-### extract_entities
-
-Extract entities from text.
+## Entities
 
 ```python
-from flatfish.entities import extract_entities
+from ficherito.entities.extractor import (
+    EntityExtractor,
+    load_entities,
+    consolidate_entities,
+)
 
-def extract_entities(
-    text: str,
-    model: str = "en_core_web_lg",
-    entity_types: list[str] = None,
-    min_confidence: float = 0.7
-) -> list[dict]:
-    """Extract named entities from text.
-    
-    Args:
-        text: Input text
-        model: spaCy model name
-        entity_types: Types to extract (None = all)
-        min_confidence: Minimum confidence threshold
-    
-    Returns:
-        List of entity dicts with 'text', 'label', 
-        'start', 'end', 'confidence'
-    """
-```
+result = load_entities("entities/letter_001.json")
+for entity in result.entities:
+    print(entity.text, entity.type, entity.context)
 
-#### Example
-
-```python
-from flatfish.entities import extract_entities
-
-text = "John Smith traveled to Philadelphia on March 15, 1865."
-
-entities = extract_entities(text)
-for entity in entities:
-    print(f"{entity['text']}: {entity['label']}")
-    
-# Output:
-# John Smith: PERSON
-# Philadelphia: GPE
-# March 15, 1865: DATE
-```
-
-### EntityExtractor
-
-Class-based entity extraction.
-
-```python
-from flatfish.entities import EntityExtractor
-
-class EntityExtractor:
-    """Configurable entity extractor."""
-    
-    def __init__(
-        self,
-        model: str = "en_core_web_lg",
-        custom_entities: dict = None
-    ):
-        """Initialize extractor.
-        
-        Args:
-            model: spaCy model name
-            custom_entities: Custom entity patterns
-        """
-        
-    def extract(self, text: str) -> list[dict]:
-        """Extract entities from text."""
-        
-    def extract_batch(self, texts: list[str]) -> list[list[dict]]:
-        """Extract entities from multiple texts."""
+consolidated = consolidate_entities([result])   # by_type / all_entities dict
 ```
 
 ---
 
-## Summarization
-
-### QwenSummarizer
-
-Main summarization class.
+## Translation
 
 ```python
-from flatfish.summary import QwenSummarizer
+from ficherito.translation import Translator, validate_languages
 
-class QwenSummarizer:
-    """Track-based document summarizer."""
-    
-    def __init__(
-        self,
-        config: Config,
-        api_key: str = None
-    ):
-        """Initialize summarizer.
-        
-        Args:
-            config: Flatfish configuration
-            api_key: DashScope API key
-        """
-        
-    async def summarize(
-        self,
-        transcriptions: list[dict],
-        output_dir: str = "batches/"
-    ) -> dict:
-        """Generate batch summaries for all tracks.
-        
-        Args:
-            transcriptions: List of transcription dicts
-            output_dir: Directory for batch files
-        
-        Returns:
-            dict with paths to generated files
-        """
-        
-    async def combine(
-        self,
-        batches_dir: str = "batches/",
-        output_dir: str = "output/"
-    ) -> dict:
-        """Combine batch summaries into final outputs.
-        
-        Args:
-            batches_dir: Directory with batch files
-            output_dir: Directory for final outputs
-        
-        Returns:
-            dict with paths to final files
-        """
-        
-    def save_summary(
-        self,
-        summary: dict,
-        output_dir: str = "output/"
-    ) -> None:
-        """Save summary to editable text files."""
-        
-    def load_summary(
-        self,
-        output_dir: str = "output/"
-    ) -> dict:
-        """Load summary from text or JSON files."""
-```
-
-#### Example
-
-```python
-import asyncio
-from flatfish import Config
-from flatfish.summary import QwenSummarizer
-
-async def main():
-    config = Config.load("flatfish.yaml")
-    summarizer = QwenSummarizer(config)
-    
-    # Load transcriptions
-    transcriptions = load_transcriptions("transcriptions/")
-    
-    # Generate summaries
-    batch_results = await summarizer.summarize(transcriptions)
-    
-    # Combine into final outputs
-    final_results = await summarizer.combine()
-    
-    print(f"Timeline: {final_results['timeline']}")
-    print(f"Key Changes: {final_results['key_changes']}")
-
-asyncio.run(main())
+is_valid, error = validate_languages(["es"], "en")
+translator = Translator(config=config)
+result = translator.translate_document("letter_001", text, "es")
 ```
 
 ---
 
 ## Site Building
 
-### SiteBuilder
-
-Generate static site.
-
 ```python
-from flatfish.site import SiteBuilder
+from ficherito.site.builder import build_site
 
-class SiteBuilder:
-    """Static site generator."""
-    
-    def __init__(
-        self,
-        config: Config,
-        template_dir: str = None
-    ):
-        """Initialize builder.
-        
-        Args:
-            config: Flatfish configuration
-            template_dir: Custom template directory
-        """
-        
-    def build(
-        self,
-        output_dir: str = "site/",
-        force: bool = False
-    ) -> dict:
-        """Build static site.
-        
-        Args:
-            output_dir: Output directory
-            force: Rebuild all pages
-        
-        Returns:
-            dict with build statistics
-        """
-        
-    def render_template(
-        self,
-        template_name: str,
-        context: dict
-    ) -> str:
-        """Render a single template."""
+site_dir = build_site(config, base_url="/", enable_search=True)
 ```
+
+This emits content into `site/src/` and shells out to `npm run build`
+inside it (Eleventy + Pagefind) — see [Building Sites](../usage/building-sites.md)
+for what that does under the hood.
 
 ---
 
-## Utilities
-
-### File Operations
+## Dates
 
 ```python
-from flatfish.utils import (
-    load_json,
-    save_json,
-    load_transcriptions,
-    ensure_directory
+from ficherito.utils.dates import (
+    extract_date_from_filename,
+    sort_by_date,
+    format_date_display,
 )
 
-# Load JSON file
-data = load_json("transcriptions/letter_001.json")
-
-# Save JSON file
-save_json(data, "output/result.json")
-
-# Load all transcriptions
-transcriptions = load_transcriptions("transcriptions/")
-
-# Ensure directory exists
-ensure_directory("output/summaries/")
+date = extract_date_from_filename("1863-04-15_page1.jpg")   # "1863-04-15"
+format_date_display(date)                                     # "April 15, 1863"
 ```
 
-### Progress Tracking
-
-```python
-from flatfish.utils import ProgressTracker
-
-tracker = ProgressTracker(total=100)
-
-for i in range(100):
-    # Do work
-    tracker.update(1)
-    print(tracker.progress_bar())
-```
-
----
-
-## Error Handling
-
-### Exceptions
-
-```python
-from flatfish.exceptions import (
-    FlatfishError,
-    ConfigError,
-    APIError,
-    TranscriptionError,
-    EntityError,
-    SummaryError,
-    BuildError
-)
-
-try:
-    pipeline.process()
-except ConfigError as e:
-    print(f"Configuration error: {e}")
-except APIError as e:
-    print(f"API error: {e.status_code} - {e.message}")
-except FlatfishError as e:
-    print(f"General error: {e}")
-```
-
----
-
-## Async Support
-
-Most operations are async-compatible:
-
-```python
-import asyncio
-from flatfish import Pipeline
-
-async def main():
-    pipeline = Pipeline.from_config("flatfish.yaml")
-    
-    # Async processing
-    await pipeline.transcribe_async()
-    await pipeline.summarize_async()
-    await pipeline.combine_async()
-
-asyncio.run(main())
-```
-
----
-
-## Type Hints
-
-Full type annotations available:
-
-```python
-from flatfish.types import (
-    TranscriptionResult,
-    EntityResult,
-    SummaryResult,
-    BatchResult
-)
-
-def process_transcription(result: TranscriptionResult) -> None:
-    text: str = result['cleaned_text']
-    confidence: float = result['confidence']
-```
+Dates are modeled with [undate](https://github.com/dh-tech/undate-python)
+to support partial precision (year-only, year-month, or full day).
 
 ---
 

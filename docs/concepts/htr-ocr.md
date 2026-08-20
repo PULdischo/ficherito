@@ -1,6 +1,6 @@
 # HTR and OCR
 
-Understand how Flatfish extracts text from handwritten and printed historical documents.
+Understand how Ficherito extracts text from handwritten and printed historical documents.
 
 ---
 
@@ -11,28 +11,20 @@ Understand how Flatfish extracts text from handwritten and printed historical do
 - Designed for **printed text**
 - Recognizes standard fonts
 - Very accurate for typed documents
-- Example tools: Tesseract, ABBYY
 
 ### HTR (Handwritten Text Recognition)
 
 - Designed for **handwritten text**
 - Learns to read different writing styles
 - More challenging due to variation
-- Example tools: Transkribus, Qwen-VL
 
-Flatfish uses **Qwen-VL**, which handles both printed and handwritten text.
+Ficherito uses a **vision-language model** (Qwen-VL by default, via
+DashScope), which handles both printed and handwritten text in a single
+pass.
 
 ---
 
-## How Qwen-VL Works
-
-Qwen-VL is a **vision-language model** from Alibaba. It can:
-
-1. **See** the image (vision component)
-2. **Understand** what it sees (language component)
-3. **Generate** text describing or transcribing the image
-
-### Why Vision-Language Models?
+## Why Vision-Language Models?
 
 Traditional OCR/HTR uses pattern matching. Vision-language models understand **context**:
 
@@ -65,7 +57,7 @@ Vision-Language:  "tbe" → outputs "the" (understands context)
          │
          ▼
 ┌─────────────────┐
-│ 3. Post-Process │  Cleanup with custom prompt
+│ 3. Post-Process │  Cleanup with the `text_extraction` prompt
 │    Cleaning     │  Preserves historical spelling
 └────────┬────────┘
          │
@@ -100,7 +92,7 @@ Vision-Language:  "tbe" → outputs "the" (understands context)
 | Ink condition | Medium | Faded ink harder |
 | Paper condition | Medium | Damage reduces accuracy |
 
-### What Qwen-VL Handles Well
+### What Vision-Language Models Handle Well
 
 - ✅ Cursive handwriting
 - ✅ Mixed print and handwriting
@@ -122,7 +114,7 @@ Vision-Language:  "tbe" → outputs "the" (understands context)
 
 ### Custom Prompts
 
-Tell the model what to expect:
+Tell the model what to expect via `prompts.text_extraction` in `ficherito.yaml`:
 
 ```yaml
 prompts:
@@ -132,21 +124,21 @@ prompts:
     - "thro" = through
     - "recd" = received
     - "&c" = etc.
-    
+
     Preserve original spelling but expand abbreviations in [brackets].
-    
+
     Raw OCR text:
     {raw_text}
 ```
 
 ### Pre-Processing Images
 
-Before uploading to Hugging Face:
+Before processing:
 
 1. **Crop** to document area (remove desk/background)
 2. **Rotate** to correct orientation
 3. **Adjust contrast** if faded
-4. **Convert** to standard format (JPEG or PNG)
+4. **Convert** to a standard format (JPEG or PNG) — or leave PDFs as-is, Ficherito renders them to page images automatically
 
 ### Post-Processing Transcriptions
 
@@ -161,13 +153,18 @@ After extraction, manually correct:
 
 ## Understanding Confidence Scores
 
-Each transcription includes a confidence score (0-1):
+When the model reports one, a confidence score (0-1) is stored in the
+transcription file's frontmatter:
 
-```json
-{
-  "cleaned_text": "...",
-  "confidence": 0.92
-}
+```markdown
+---
+title: document_001
+extracted_at: '2026-01-15T10:30:00Z'
+model: qwen-vl-max
+confidence: 0.92
+---
+
+Transcribed text here...
 ```
 
 | Score | Meaning | Action |
@@ -180,48 +177,19 @@ Each transcription includes a confidence score (0-1):
 ### Finding Low-Confidence Documents
 
 ```bash
-# List documents with confidence below 0.8
-grep -l '"confidence": 0.[0-7]' transcriptions/*.json
+grep -l "confidence: 0.[0-6]" transcriptions/*.md
 ```
-
----
-
-## Comparison with Other Tools
-
-### vs. Transkribus
-
-| Feature | Flatfish (Qwen-VL) | Transkribus |
-|---------|-------------------|-------------|
-| Training required | No | Yes (for custom models) |
-| Languages | Many | Many (with models) |
-| Historical scripts | Good | Excellent |
-| Cost | API usage | Subscription |
-| Integration | Built-in | External tool |
-
-### vs. Google Vision
-
-| Feature | Flatfish (Qwen-VL) | Google Vision |
-|---------|-------------------|---------------|
-| Handwriting | Excellent | Good |
-| Context understanding | Excellent | Limited |
-| Historical documents | Good | Fair |
-| Privacy | You control data | Google processes |
 
 ---
 
 ## Technical Details
 
-### Model Specifications
-
-- **Model**: Qwen-VL-Max
-- **Input**: Images up to 4096x4096 pixels
-- **Batch size**: 20 images per request
-- **Languages**: English, Chinese, and many others
-- **Context window**: ~32K tokens
-
 ### API Usage
 
-Flatfish uses DashScope (Alibaba Cloud) API:
+Ficherito talks to any **OpenAI-compatible** chat completions endpoint with
+image input — configured via `OPENAI_BASE_URL` / `OPENAI_API_KEY` /
+`OPENAI_MODEL` in `.env`. The default is DashScope (Alibaba Cloud), hosting
+Qwen-VL:
 
 ```python
 # Under the hood
@@ -237,15 +205,14 @@ response = client.chat.completions.create(
 )
 ```
 
+Swapping providers (OpenAI, a self-hosted model, etc.) is just a matter of
+changing `OPENAI_BASE_URL` and `OPENAI_MODEL` — no code changes needed.
+
 ---
 
 ## Tips for Specific Document Types
 
 ### Diaries
-
-- Usually single-hand writing
-- May have abbreviations
-- Often include dates in margins
 
 ```yaml
 prompts:
@@ -257,10 +224,6 @@ prompts:
 
 ### Letters
 
-- May have multiple hands (letter + envelope)
-- Formal opening/closing conventions
-- Often include dates and places
-
 ```yaml
 prompts:
   text_extraction: |
@@ -270,10 +233,6 @@ prompts:
 ```
 
 ### Legal Documents
-
-- Formal language and formatting
-- Names and places are critical
-- May include printed forms with handwriting
 
 ```yaml
 prompts:
@@ -288,5 +247,4 @@ prompts:
 ## Next Steps
 
 - **[Named Entities](named-entities.md)** - Extracting people, places, dates
-- **[AI Summarization](ai-summarization.md)** - Generating collection summaries
 - **[Transcription Guide](../usage/transcription.md)** - Practical tips

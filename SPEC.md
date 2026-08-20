@@ -291,9 +291,16 @@ project/
 
 ### Transcription File Format
 
-**File**: `transcriptions/img001.md`
+**File**: `transcriptions/img001.md` — Markdown with YAML frontmatter:
 
-```
+```markdown
+---
+title: img001
+extracted_at: '2026-01-15T10:30:00Z'
+model: qwen-vl-max
+confidence: 0.94
+---
+
 The honorable court is hereby petitioned
 by the undersigned plaintiff, John Smith,
 residing at 123 Main Street, Springfield...

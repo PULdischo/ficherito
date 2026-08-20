@@ -1,6 +1,6 @@
 # The Processing Pipeline
 
-Understand how Flatfish transforms document images into a searchable website.
+Understand how Ficherito transforms document images into a searchable, editable website.
 
 ---
 
@@ -8,47 +8,41 @@ Understand how Flatfish transforms document images into a searchable website.
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                    FLATFISH PIPELINE                            │
+│                    FICHERITO PIPELINE                            │
 └─────────────────────────────────────────────────────────────────┘
 
      ┌─────────────┐
-     │ HuggingFace │
-     │   Dataset   │
+     │ Local Folder│
+     │ of Images   │
      └──────┬──────┘
             │
             ▼
 ┌───────────────────┐     ┌─────────────────────────────────────┐
-│  1. EXTRACTION    │     │ • Download images                   │
-│                   │ ──▶ │ • Send to Qwen-VL for OCR           │
-│  flatfish extract │     │ • Clean and format transcriptions   │
+│  1. EXTRACTION    │     │ • Read images (+ render PDFs)       │
+│                   │ ──▶ │ • Send to vision-language model     │
+│  ficherito extract│     │ • Clean and format transcriptions   │
 └─────────┬─────────┘     └─────────────────────────────────────┘
           │
           ▼
 ┌───────────────────┐     ┌─────────────────────────────────────┐
-│  2. ENTITIES      │     │ • Analyze transcriptions            │
+│  2. ENTITIES      │     │ • Analyze transcriptions             │
 │                   │ ──▶ │ • Identify people, places, dates    │
-│  flatfish entities│     │ • Add contextual descriptions       │
+│ ficherito entities│     │ • Add contextual descriptions       │
 └─────────┬─────────┘     └─────────────────────────────────────┘
           │
           ▼
 ┌───────────────────┐     ┌─────────────────────────────────────┐
 │  3. TRANSLATE     │     │ • Translate to target language      │
-│                   │ ──▶ │ • Save translated text              │
-│flatfish translate │     │ • Support multiple source languages │
+│  (optional, run   │ ──▶ │ • Save translated text              │
+│  separately)      │     │ • Support multiple source languages │
+│ ficherito translate│    │                                     │
 └─────────┬─────────┘     └─────────────────────────────────────┘
           │
           ▼
 ┌───────────────────┐     ┌─────────────────────────────────────┐
-│  4. SUMMARIZE     │     │ • Process documents in batches      │
-│                   │ ──▶ │ • Generate timeline & changes       │
-│flatfish summarize │     │ • Create finding aid & questions    │
-└─────────┬─────────┘     └─────────────────────────────────────┘
-          │
-          ▼
-┌───────────────────┐     ┌─────────────────────────────────────┐
-│  5. BUILD         │     │ • Generate HTML pages               │
-│                   │ ──▶ │ • Create search index               │
-│  flatfish build   │     │ • Output static website             │
+│  4. BUILD         │     │ • Emit Markdown + frontmatter        │
+│                   │ ──▶ │ • Run Eleventy + Pagefind           │
+│  ficherito build  │     │ • Output static, editable website   │
 └─────────┬─────────┘     └─────────────────────────────────────┘
           │
           ▼
@@ -58,36 +52,38 @@ Understand how Flatfish transforms document images into a searchable website.
      └─────────────┘
 ```
 
+`ficherito process` runs stages 1, 2, and 4 (translation is opt-in and run
+separately, before rebuilding, so translated text is included).
+
 ---
 
 ## Stage 1: Extraction
 
 **Purpose:** Convert document images to text.
 
-**Input:** Images from Hugging Face dataset  
-**Output:** JSON files in `transcriptions/`
+**Input:** Images in `dataset.images_dir` (PDFs rendered to page images first)
+**Output:** Markdown files with YAML frontmatter in `transcriptions/`
 
 ### Process
 
-1. **Download** images from your configured dataset
-2. **Send** each image to Qwen-VL (vision-language model)
-3. **Extract** raw text using HTR/OCR
-4. **Clean** text using AI post-processing
-5. **Save** as JSON with metadata
+1. **Scan** the configured images folder
+2. **Send** each image to the configured vision-language model
+3. **Clean** the raw output using the `text_extraction` prompt
+4. **Save** as Markdown, with model/confidence/timestamp in frontmatter
 
 ### Output Format
 
-```json
-{
-  "id": "1863-04-15_001",
-  "date": "1863-04-15",
-  "filename": "1863-04-15_001.jpg",
-  "raw_text": "April 15th 1863...",
-  "cleaned_text": "April 15th, 1863\n\nDear Sarah...",
-  "confidence": 0.92,
-  "model": "qwen-vl-max",
-  "processed_at": "2024-01-15T14:32:00Z"
-}
+```markdown
+---
+title: 1863-04-15_001
+extracted_at: '2026-01-15T14:32:00Z'
+model: qwen-vl-max
+confidence: 0.92
+---
+
+April 15th, 1863
+
+Dear Sarah...
 ```
 
 ---
@@ -96,32 +92,28 @@ Understand how Flatfish transforms document images into a searchable website.
 
 **Purpose:** Identify named entities with context.
 
-**Input:** Transcription files  
-**Output:** JSON files in `entities/`
+**Input:** Transcription files
+**Output:** JSON files in `entities/`, plus `entities/consolidated.json`
 
 ### Process
 
-1. **Read** cleaned transcription text
-2. **Analyze** with AI to find entities
+1. **Read** transcription text
+2. **Analyze** with the LLM to find entities
 3. **Classify** each entity by type
-4. **Generate** contextual descriptions
-5. **Save** as JSON
+4. **Generate** contextual descriptions (if `entity_context: true`)
+5. **Save** per-document JSON, then consolidate across all documents
 
 ### Output Format
 
 ```json
 {
-  "document_id": "1863-04-15_001",
+  "source_image": "1863-04-15_001",
+  "extracted_at": "2026-01-15T14:32:00Z",
   "entities": [
     {
       "text": "Sarah",
       "type": "PERSON",
       "context": "Person; the recipient of the letter, likely the writer's wife"
-    },
-    {
-      "text": "Philadelphia",
-      "type": "LOCATION",
-      "context": "Location; city mentioned as destination"
     }
   ]
 }
@@ -129,29 +121,19 @@ Understand how Flatfish transforms document images into a searchable website.
 
 ---
 
-## Stage 3: Translation
+## Stage 3: Translation (optional)
 
-**Purpose:** Translate transcriptions to target language.
+**Purpose:** Translate transcriptions to a target language.
 
-**Input:** Transcription files  
+**Input:** Transcription files
 **Output:** Markdown files in `translations/`
 
 ### Process
 
-1. **Read** cleaned transcription text
-2. **Send** to Google Translate API
+1. **Read** the transcription text
+2. **Send** to Google Translate (via `deep-translator`)
 3. **Translate** from source to target language
-4. **Save** translated text as markdown
-
-### Output Format
-
-```markdown
-15 de abril de 1863
-
-Querida Sarah,
-
-Esta carta viene desde el campamento cerca de Filadelfia...
-```
+4. **Save** translated text as Markdown
 
 ### Configuration
 
@@ -161,63 +143,29 @@ translate:
   source_languages:
     - "en"
   target_language: "es"
-  default_tab: "translation"
+  default_tab: "transcription"
 ```
+
+This stage isn't part of `ficherito process` — run `ficherito translate`
+explicitly, then `ficherito build` to include it on the site.
 
 ---
 
-## Stage 4: Summarization
+## Stage 4: Build
 
-**Purpose:** Generate collection-level analysis.
+**Purpose:** Create the static website.
 
-**Input:** All transcription files  
-**Output:** Summary files in `summaries/`
-
-### Process
-
-1. **Sort** documents by date
-2. **Batch** into groups of 20 images
-3. **Process** each batch with 4 parallel tracks:
-   - Timeline events
-   - Key changes
-   - Research questions
-   - Narrative summary
-4. **Combine** results hierarchically
-5. **Save** to editable text files
-
-### Track-Based Processing
-
-```
-Batch 1 ──┬──▶ Timeline      ──┐
-          ├──▶ Key Changes   ──┼──▶ Combine ──▶ Final Timeline
-          ├──▶ Questions     ──┤
-          └──▶ Narrative     ──┘
-
-Batch 2 ──┬──▶ Timeline      ──┐
-          ├──▶ Key Changes   ──┼──▶ Combine ──▶ Final Changes
-          ├──▶ Questions     ──┤
-          └──▶ Narrative     ──┘
-
-...
-```
-
----
-
-## Stage 5: Build
-
-**Purpose:** Create static website.
-
-**Input:** All processed files  
-**Output:** HTML/CSS/JS in `_site/`
+**Input:** Transcriptions, entities, translations (all optional except transcriptions)
+**Output:** An Eleventy site in `site/`, built to `site/_site/`
 
 ### Process
 
-1. **Load** transcriptions, entities, summaries
-2. **Generate** document pages (one per document)
-3. **Generate** entity index
-4. **Generate** overview pages (summary, timeline, etc.)
-5. **Create** search index with Pagefind
-6. **Copy** images and assets
+1. **Load** transcriptions, entities, and translations
+2. **Sort** documents chronologically (via `undate`-aware date parsing)
+3. **Emit** each document as Markdown + frontmatter into `site/src/documents/`,
+   plus compressed images and `_data/site.json` / `_data/allEntities.json`
+4. **Run** `npm run build` inside `site/` — Eleventy renders the pages,
+   then Pagefind indexes them (via an `eleventy.after` hook)
 
 ---
 
@@ -227,7 +175,7 @@ Batch 2 ──┬──▶ Timeline      ──┐
 ┌──────────────────────────────────────────────────────────────┐
 │                        INPUT                                 │
 ├──────────────────────────────────────────────────────────────┤
-│  HuggingFace Dataset                                         │
+│  images/  (local folder)                                     │
 │  ├── image_001.jpg                                           │
 │  ├── image_002.jpg                                           │
 │  └── ...                                                     │
@@ -237,23 +185,22 @@ Batch 2 ──┬──▶ Timeline      ──┐
 ┌──────────────────────────────────────────────────────────────┐
 │                    INTERMEDIATE FILES                        │
 ├──────────────────────────────────────────────────────────────┤
-│  transcriptions/           entities/           summaries/    │
-│  ├── doc_001.json         ├── doc_001.json    ├── timeline   │
-│  ├── doc_002.json         ├── doc_002.json    ├── changes    │
-│  └── ...                  └── ...             └── questions  │
+│  transcriptions/       entities/            translations/    │
+│  ├── doc_001.md        ├── doc_001.json     ├── doc_001.md   │
+│  ├── doc_002.md        ├── doc_002.json     └── ...          │
+│  └── ...                └── consolidated.json                │
 └──────────────────────────────────────────────────────────────┘
                               │
                               ▼
 ┌──────────────────────────────────────────────────────────────┐
 │                        OUTPUT                                │
 ├──────────────────────────────────────────────────────────────┤
-│  _site/                                                      │
-│  ├── index.html                                              │
-│  ├── main.html                                               │
-│  ├── overview/                                               │
-│  ├── entities/                                               │
-│  ├── pagefind/                                               │
-│  └── images/                                                 │
+│  site/_site/                                                 │
+│  ├── index.html          (password gate)                     │
+│  ├── main.html            (search)                           │
+│  ├── documents/<id>/                                          │
+│  ├── browse/{dates,entities}.html                            │
+│  └── pagefind/            (search index)                     │
 └──────────────────────────────────────────────────────────────┘
 ```
 
@@ -264,41 +211,38 @@ Batch 2 ──┬──▶ Timeline      ──┐
 ### Full Pipeline
 
 ```bash
-flatfish process
+ficherito process
 ```
 
 ### Individual Stages
 
 ```bash
-flatfish extract      # Stage 1 only
-flatfish entities     # Stage 2 only
-flatfish summarize    # Stage 3 only
-flatfish build        # Stage 4 only
+ficherito extract      # Stage 1 only
+ficherito entities     # Stage 2 only
+ficherito translate    # Stage 3 only (opt-in, not part of `process`)
+ficherito build         # Stage 4 only
 ```
 
 ### Dependencies
 
 | Stage | Requires |
 |-------|----------|
-| Extract | Dataset access |
+| Extract | Images in `dataset.images_dir` |
 | Entities | Transcriptions |
-| Summarize | Transcriptions |
-| Build | Transcriptions (entities/summaries optional) |
+| Translate | Transcriptions |
+| Build | Transcriptions (entities/translations optional) |
 
 ---
 
 ## Resume Capability
 
-Each stage saves its output immediately. If processing is interrupted:
+`extract` and `entities` save output immediately per document and skip
+already-processed files, so an interrupted run can just be re-run:
 
 ```bash
-# Just run the same command again
-flatfish extract
-
-# Already-processed files are skipped
-Extracting text from 500 documents...
-  [1-450] Already processed, skipping...
-  [451/500] Processing...
+ficherito extract
+# Skipped 450 images with existing transcriptions
+# Extracting text (50/500)...
 ```
 
 ---
@@ -307,4 +251,4 @@ Extracting text from 500 documents...
 
 - **[HTR and OCR](htr-ocr.md)** - How text extraction works
 - **[Named Entities](named-entities.md)** - Understanding entity extraction
-- **[AI Summarization](ai-summarization.md)** - How summaries are generated
+- **[Building Sites](../usage/building-sites.md)** - The Eleventy build in detail

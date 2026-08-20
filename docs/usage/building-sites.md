@@ -20,7 +20,7 @@ for in-browser content editing, living in a `site/` subdirectory of your project
    and then Pagefind (indexing them) via an `eleventy.after` build hook.
 
 ```bash
-flatfish build
+ficherito build
 ```
 
 This creates a complete website in `site/_site/`.
@@ -83,8 +83,8 @@ data files to keep in sync) and support client-side filtering.
 ## Previewing Your Site
 
 ```bash
-flatfish build
-flatfish serve
+ficherito build
+ficherito serve
 ```
 
 Open [http://localhost:8000](http://localhost:8000) in your browser.
@@ -113,7 +113,7 @@ website:
   password: "research2024"
 ```
 
-These are written to `site/src/_data/site.json` on every `flatfish build` and
+These are written to `site/src/_data/site.json` on every `ficherito build` and
 read by the Nunjucks templates. Editing that file by hand will be overwritten
 on the next build — change `ficherito.yaml` instead.
 
@@ -143,7 +143,7 @@ website:
 ## Rebuilding After Changes
 
 ```bash
-flatfish build
+ficherito build
 ```
 
 Re-run this after editing transcriptions, entities, or `ficherito.yaml`. It
@@ -153,7 +153,7 @@ re-emits all document content, so it's safe to run repeatedly.
 
 ```bash
 rm -rf site/_site
-flatfish build
+ficherito build
 ```
 
 ---
@@ -188,7 +188,7 @@ the Sveltia CMS at `/admin/` once the site is deployed. See
 
 **Error:** `npm not found; skipping Eleventy/Pagefind build`
 
-Install [Node.js](https://nodejs.org/) (20+ recommended), then re-run `flatfish build`.
+Install [Node.js](https://nodejs.org/) (20+ recommended), then re-run `ficherito build`.
 
 ### Search Not Working
 
@@ -201,12 +201,12 @@ ls site/_site/pagefind/
 If missing, rebuild:
 
 ```bash
-flatfish build
+ficherito build
 ```
 
 ### Images Not Showing
 
-Check that images are being found for compression — `flatfish build` looks
+Check that images are being found for compression — `ficherito build` looks
 in `images/` and `data/images/` for `<document-id>.{jpg,jpeg,png,tiff,webp}`:
 
 ```bash

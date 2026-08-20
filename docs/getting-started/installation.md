@@ -1,16 +1,17 @@
 # Installation
 
-This guide will walk you through installing Flatfish on your computer. Don't worry if you're new to the command line—we'll explain every step!
+This guide will walk you through installing Ficherito on your computer.
 
 ---
 
 ## Prerequisites
 
-Before installing Flatfish, you'll need:
+Before installing Ficherito, you'll need:
 
-1. **Python 3.10 or newer** - The programming language Flatfish is written in
-2. **A terminal application** - To run commands
-3. **An internet connection** - To download packages and access AI services
+1. **Python 3.10 or newer** - The programming language Ficherito is written in
+2. **Node.js 20+** - Runs the Eleventy/Pagefind site build (`ficherito build`)
+3. **A terminal application** - To run commands
+4. **An internet connection** - To download packages and access AI services
 
 ### What's a Terminal?
 
@@ -23,7 +24,7 @@ Open **Terminal** (find it in Applications → Utilities → Terminal, or search
 :::
 
 :::{tab-item} Windows
-We recommend using **Windows Terminal** with **WSL** (Windows Subsystem for Linux) for the best experience. 
+We recommend using **Windows Terminal** with **WSL** (Windows Subsystem for Linux) for the best experience.
 
 1. Install WSL by opening PowerShell as Administrator and running:
    ```
@@ -32,7 +33,7 @@ We recommend using **Windows Terminal** with **WSL** (Windows Subsystem for Linu
 2. Restart your computer
 3. Open **Ubuntu** from the Start menu
 
-Alternatively, use **Git Bash** or **Anaconda Prompt**.
+Alternatively, use **Git Bash** or **PowerShell** directly.
 :::
 
 :::{tab-item} Linux
@@ -45,13 +46,11 @@ Open your distribution's terminal application (usually Ctrl+Alt+T).
 
 ## Step 1: Check Your Python Version
 
-First, let's make sure you have Python installed. Open your terminal and type:
-
 ```bash
 python --version
 ```
 
-You should see something like `Python 3.10.12` or higher. If you see an error or a version below 3.10, you'll need to install Python.
+You should see `Python 3.10.x` or higher.
 
 ```{note}
 On some systems, you may need to use `python3` instead of `python`.
@@ -62,22 +61,13 @@ On some systems, you may need to use `python3` instead of `python`.
 ::::{tab-set}
 
 :::{tab-item} macOS
-The easiest way is to use Homebrew:
-
 ```bash
-# Install Homebrew (if you don't have it)
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-
-# Install Python
 brew install python@3.11
 ```
-
 Or download directly from [python.org](https://www.python.org/downloads/).
 :::
 
 :::{tab-item} Windows (WSL)
-WSL Ubuntu comes with Python. If you need a newer version:
-
 ```bash
 sudo apt update
 sudo apt install python3.11 python3.11-venv python3-pip
@@ -85,8 +75,6 @@ sudo apt install python3.11 python3.11-venv python3-pip
 :::
 
 :::{tab-item} Linux
-Use your package manager:
-
 ```bash
 # Ubuntu/Debian
 sudo apt update
@@ -104,128 +92,113 @@ sudo pacman -S python
 
 ---
 
-## Step 2: Create a Virtual Environment
+## Step 2: Check Your Node.js Version
 
-A **virtual environment** is an isolated space for your project's packages. This prevents conflicts with other Python projects on your computer.
+Only needed for `ficherito build` (the site build). The rest of the pipeline
+works without it.
 
 ```bash
-# Create a new directory for your projects
-mkdir ~/flatfish-projects
-cd ~/flatfish-projects
+node --version
+```
 
-# Create a virtual environment
-python -m venv flatfish-env
+You should see `v20.x` or higher. If it's missing, install it from
+[nodejs.org](https://nodejs.org/) or via your package manager
+(`brew install node`, `sudo apt install nodejs npm`, etc.).
 
-# Activate the virtual environment
-source flatfish-env/bin/activate  # macOS/Linux
+---
+
+## Step 3: Create a Virtual Environment
+
+A **virtual environment** is an isolated space for your project's packages.
+
+```bash
+mkdir ~/ficherito-projects
+cd ~/ficherito-projects
+
+python -m venv ficherito-env
+
+source ficherito-env/bin/activate  # macOS/Linux
 # OR
-flatfish-env\Scripts\activate     # Windows
+ficherito-env\Scripts\activate     # Windows
 ```
 
 ```{important}
-You'll need to **activate** your virtual environment each time you open a new terminal window to work with Flatfish. You'll know it's active when you see `(flatfish-env)` at the start of your command prompt.
+You'll need to **activate** your virtual environment each time you open a new terminal window. You'll know it's active when you see `(ficherito-env)` at the start of your command prompt.
 ```
 
 ---
 
-## Step 3: Install Flatfish
-
-With your virtual environment activated, install Flatfish:
+## Step 4: Install Ficherito
 
 ```bash
-pip install flatfish
+pip install ficherito
 ```
-
-This will download Flatfish and all its dependencies. It may take a minute or two.
 
 ### Verify Installation
 
-Check that Flatfish installed correctly:
-
 ```bash
-flatfish --version
+ficherito --version
 ```
 
-You should see the version number, like `Flatfish 0.1.0`.
-
 ---
 
-## Step 4: Get Your API Keys
+## Step 5: Get an API Key
 
-Flatfish uses AI services to extract text and generate summaries. You'll need API keys for:
-
-1. **Hugging Face** - To access document datasets
-2. **DashScope (Alibaba Cloud)** - To use the Qwen AI models
-
-### Getting a Hugging Face Token
-
-1. Go to [huggingface.co](https://huggingface.co) and create a free account
-2. Click your profile picture → **Settings**
-3. Click **Access Tokens** in the left sidebar
-4. Click **New token**
-5. Give it a name like "flatfish" and select **Read** access
-6. Click **Generate token**
-7. **Copy the token** (it starts with `hf_`)—you won't be able to see it again!
-
-### Getting a DashScope API Key
-
-DashScope provides access to Alibaba's Qwen models, which power Flatfish's text extraction and AI features.
+Ficherito sends document images to a vision-language model for transcription
+and entity extraction, via any OpenAI-compatible endpoint. The default is
+DashScope (Alibaba Cloud), which hosts Qwen-VL:
 
 1. Go to [dashscope.aliyun.com](https://dashscope.aliyun.com/) (International version)
-2. Create an account or sign in with your Alibaba Cloud account
+2. Create an account or sign in
 3. Navigate to **API Key Management**
-4. Click **Create API Key**
-5. **Copy the key** (it starts with `sk-`)
+4. Click **Create API Key** and copy it (starts with `sk-`)
 
-:::{tip}
-DashScope offers a free tier with generous limits for getting started. Check their [pricing page](https://dashscope.aliyun.com/pricing) for current details.
-:::
+```{tip}
+Any OpenAI-compatible vision endpoint works — set `OPENAI_BASE_URL` to point
+at OpenAI, a self-hosted model, or another provider instead.
+```
 
 ---
 
-## Step 5: Store Your API Keys
+## Step 6: Store Your API Key
 
-Flatfish reads API keys from a `.env` file in your project directory. We'll set this up when you create your first project, but here's a preview:
+Ficherito reads configuration from a `.env` file in your project directory
+(created for you by `ficherito init`):
 
 ```bash
-# .env file
-HUGGINGFACE_TOKEN=hf_your_token_here
-DASHSCOPE_API_KEY=sk_your_key_here
+# .env
+OPENAI_BASE_URL=https://dashscope-intl.aliyuncs.com/compatible-mode/v1
+OPENAI_API_KEY=sk-your-key-here
+OPENAI_MODEL=qwen-vl-max
 ```
 
 ```{warning}
-**Never share your API keys** or commit them to version control (like Git). The `.env` file should always be in your `.gitignore`.
+**Never share your API key** or commit `.env` to version control. `ficherito init` adds it to `.gitignore` automatically.
 ```
 
 ---
 
 ## Troubleshooting
 
-### "command not found: flatfish"
+### "command not found: ficherito"
 
-Make sure your virtual environment is activated. You should see `(flatfish-env)` in your prompt.
+Make sure your virtual environment is activated. You should see `(ficherito-env)` in your prompt.
 
 ### "pip: command not found"
 
-Try using `pip3` instead of `pip`, or `python -m pip`.
+Try `pip3` instead of `pip`, or `python -m pip`.
 
 ### Permission errors on Linux/macOS
 
-Don't use `sudo pip install`. Instead, make sure you're using a virtual environment.
+Don't use `sudo pip install`. Use a virtual environment instead.
 
-### SSL certificate errors
+### `npm not found; skipping Eleventy/Pagefind build`
 
-This sometimes happens on corporate networks. Try:
-
-```bash
-pip install --trusted-host pypi.org --trusted-host pypi.python.org flatfish
-```
+This warning appears from `ficherito build` if Node.js isn't installed. Install it (Step 2 above) and re-run the build.
 
 ---
 
 ## Next Steps
-
-You're ready to go! Continue to:
 
 - **[Quick Start](quickstart.md)** - Process your first documents in 10 minutes
 - **[Your First Project](first-project.md)** - A complete walkthrough

@@ -92,8 +92,24 @@ at `/admin/`. See the [building sites guide](docs/usage/building-sites.md) for d
 
 ## Deployment
 
-Deploy your built site with GitHub Pages (see the [deployment guide](docs/usage/deployment.md)
-for the full workflow and Sveltia CMS setup), or deploy to Netlify:
+### GitHub Pages (recommended)
+
+Build locally, commit the site, and push — a GitHub Actions workflow
+(`.github/workflows/deploy.yml`) rebuilds with Eleventy + Pagefind and
+deploys on every push:
+
+```bash
+ficherito build
+git add site/
+git commit -m "Build site"
+git push
+```
+
+See the [deployment guide](docs/usage/deployment.md) for the full setup
+(enabling Pages, the workflow file, and configuring Sveltia CMS at `/admin/`
+so collaborators can edit content without touching git).
+
+### Netlify
 
 ```bash
 # Install netlify-python

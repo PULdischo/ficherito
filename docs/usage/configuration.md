@@ -1,48 +1,32 @@
 # Configuration
 
-This guide covers all configuration options for Flatfish projects.
+This guide covers all configuration options for Ficherito projects.
 
 ---
 
 ## Configuration Files
 
-Flatfish uses two configuration files:
+Ficherito uses two configuration files:
 
 | File | Purpose | Version Control |
 |------|---------|-----------------|
-| `flatfish.yaml` | Project settings | ✅ Commit to Git |
-| `.env` | API keys and secrets | ❌ Never commit |
+| `ficherito.yaml` | Project settings | ✅ Commit to Git |
+| `.env` | API key | ❌ Never commit |
 
 ---
 
-## flatfish.yaml Reference
-
-Here's a complete configuration file with all options:
+## ficherito.yaml Reference
 
 ```yaml
 # =============================================================================
 # DATASET CONFIGURATION
 # =============================================================================
 dataset:
-  # Hugging Face dataset identifier (required)
-  # Format: "username/dataset-name" or "organization/dataset-name"
-  source: "PULdischo/marshall-diaries"
-  
-  # Which splits to process (default: ["train"])
-  # Common splits: train, test, validation
-  splits:
-    - "train"
-  
-  # Column containing document images (required)
-  image_column: "image"
-  
-  # Column containing document dates (optional)
-  # If provided, documents will be sorted chronologically
-  date_column: "date"
-  
-  # Column containing document IDs (optional)
-  # If not provided, filenames or indices will be used
-  id_column: "id"
+  # Local folder of document images (required)
+  images_dir: "images"
+
+  # Search subfolders recursively (default: false)
+  recursive: false
 
 # =============================================================================
 # PROCESSING OPTIONS
@@ -50,37 +34,31 @@ dataset:
 processing:
   # Whether to extract named entities after transcription
   extract_entities: true
-  
+
   # Include contextual descriptions for entities
   # e.g., "Person; the plaintiff in the legal case" instead of just "Person"
   entity_context: true
-  
-  # Save intermediate results (useful for debugging)
-  save_intermediate: true
-  
-  # Number of concurrent API requests (be careful with rate limits)
-  concurrency: 3
 
 # =============================================================================
 # CUSTOM PROMPTS
 # =============================================================================
 prompts:
-  # Prompt for cleaning up raw OCR text
+  # Prompt for cleaning up raw OCR/HTR text
   # Available variable: {raw_text}
   text_extraction: |
-    You are a historical document transcription assistant. Given the raw OCR/HTR 
+    You are a historical document transcription assistant. Given the raw OCR/HTR
     output from a handwritten document, clean up and correct the text while:
-    
+
     1. Preserving the original spelling, including archaic forms
     2. Fixing obvious OCR errors (e.g., 'tbe' → 'the')
     3. Maintaining original line breaks where meaningful
     4. Preserving original punctuation style
     5. Marking unclear or illegible portions with [?] or [illegible]
     6. Expanding common abbreviations only if unambiguous
-    
+
     Raw OCR text:
     {raw_text}
-    
+
     Cleaned transcription:
 
   # Prompt for extracting named entities
@@ -88,63 +66,42 @@ prompts:
   ner_extraction: |
     You are a historical document analyst specializing in named entity recognition.
     Extract all named entities from the following transcribed document text.
-    
+
     For each entity, provide:
     1. The exact text as it appears
-    2. The entity type (PERSON, ORGANIZATION, LOCATION, DATE, MONEY, 
+    2. The entity type (PERSON, ORGANIZATION, LOCATION, DATE, MONEY,
        LEGAL_TERM, EVENT, DOCUMENT, OCCUPATION, RELATIONSHIP)
     3. A contextual description explaining the entity's role in THIS document
-    
+
     Document text:
     {document_text}
-    
+
     Return entities as a JSON array:
     [
       {
         "text": "John Smith",
-        "type": "PERSON", 
+        "type": "PERSON",
         "context": "Person; the plaintiff filing the complaint"
       }
     ]
-
-  # Prompt for document summarization
-  # Available variable: {documents}
-  summary: |
-    You are a historian analyzing a sequence of related documents...
-
-# =============================================================================
-# SUMMARY OPTIONS
-# =============================================================================
-summary:
-  # Enable/disable summary generation
-  enabled: true
-  
-  # Model to use for summarization
-  # Options: qwen-vl-max, qwen-vl-plus
-  model: "qwen-vl-max"
-  
-  # Maximum documents to include in summary
-  # For large collections, this samples evenly across the date range
-  sample_size: 100
 
 # =============================================================================
 # TRANSLATION OPTIONS
 # =============================================================================
 translate:
   # Enable/disable translation
-  enabled: true
-  
+  enabled: false
+
   # Source language(s) - ISO 639-1 codes
-  # Use "auto" for automatic detection
   source_languages:
     - "es"
-  
+
   # Target language - ISO 639-1 code
   target_language: "en"
-  
+
   # Which tab to show by default on document pages
   # Options: "transcription" or "translation"
-  default_tab: "translation"
+  default_tab: "transcription"
 
 # =============================================================================
 # WEBSITE OPTIONS
@@ -152,23 +109,31 @@ translate:
 website:
   # Site title (appears in header and browser tab)
   title: "Document Collection"
-  
-  # Site description (for SEO and overview page)
-  description: "A collection of historical documents"
-  
-  # Password protection (leave empty for public access)
-  password: ""
-  
-  # Custom CSS file (optional)
-  custom_css: ""
-  
-  # Google Analytics ID (optional)
-  analytics_id: ""
-  
-  # Show/hide specific sections
-  show_timeline: true
-  show_entities: true
-  show_summary: true
+
+  # Emoji shown next to the title
+  emoji: "🐟"
+
+  # Header/hero background color
+  background_color: "#1e3a5f"
+
+  # Accent color for links and buttons
+  accent_color: "#2563eb"
+
+  # Client-side password protection (not encryption — see building-sites.md)
+  password: "changeme"
+
+  # Enable/disable Pagefind search
+  enable_search: true
+
+  # Enable/disable the two browse pages
+  enable_browse_dates: true
+  enable_browse_entities: true
+
+  # Default sort order on browse pages
+  default_sort: "date"
+
+  # Optional: Netlify site ID, for `ficherito deploy`
+  netlify_site_id: ""
 
 # =============================================================================
 # OUTPUT DIRECTORIES
@@ -176,106 +141,66 @@ website:
 output:
   # Where to save transcriptions
   transcriptions_dir: "transcriptions"
-  
+
   # Where to save translations
   translations_dir: "translations"
-  
+
   # Where to save entity extractions
   entities_dir: "entities"
-  
-  # Where to save summaries
-  summaries_dir: "summaries"
-  
-  # Where to build the static site
-  site_dir: "_site"
-  
-  # Where to save downloaded images (optional)
-  images_dir: "images"
+
+  # Where the Eleventy (11ty) site project lives
+  eleventy_dir: "site"
+
+  # Where the built static site ends up (Eleventy's output dir)
+  site_dir: "site/_site"
 ```
 
 ---
 
 ## Environment Variables (.env)
 
-The `.env` file contains sensitive API keys:
-
 ```bash
-# Hugging Face token for dataset access
-# Get yours at: https://huggingface.co/settings/tokens
-HUGGINGFACE_TOKEN=hf_xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+# OpenAI-compatible LLM endpoint (DashScope, OpenAI, local, etc.)
+OPENAI_BASE_URL=https://dashscope-intl.aliyuncs.com/compatible-mode/v1
+OPENAI_API_KEY=sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+OPENAI_MODEL=qwen-vl-max
 
-# DashScope API key for Qwen models
-# Get yours at: https://dashscope.aliyun.com/
-DASHSCOPE_API_KEY=sk_xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-
-# Netlify token for deployment (optional)
-# Get yours at: https://app.netlify.com/user/applications
+# Netlify token for deployment (optional — GitHub Pages doesn't need this)
 NETLIFY_TOKEN=xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-
-# Netlify site ID for deployment (optional)
 NETLIFY_SITE_ID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 ```
 
 ```{warning}
-**Never commit `.env` to version control!** It contains secrets that could be misused if exposed.
+**Never commit `.env` to version control!** `ficherito init` adds it to `.gitignore` for you.
 ```
 
 ---
 
 ## Configuration Precedence
 
-Settings are loaded in this order (later overrides earlier):
-
-1. Default values (built into Flatfish)
-2. `flatfish.yaml` in current directory
-3. Environment variables
-4. Command-line options
+1. Default values (built into Ficherito's `FicheritoConfig` model)
+2. `ficherito.yaml` in the current directory
+3. Command-line options, where a command exposes them
 
 For example:
 ```bash
-# This overrides the config file's output directory
-flatfish build --output ./my-custom-site
+# Overrides output.site_dir for this run only
+ficherito build --output ./my-custom-site
 ```
 
 ---
 
 ## Validating Configuration
 
-Always validate your configuration before processing:
-
 ```bash
-flatfish validate
+ficherito validate
 ```
 
 This checks:
 
 - ✅ Configuration file syntax
-- ✅ Required fields present
-- ✅ API keys configured
-- ✅ Dataset accessible
-- ✅ Output directories writable
-
----
-
-## Per-Document Configuration
-
-For documents that need special handling, you can create per-document override files:
-
-```
-transcriptions/
-├── document_001.json
-├── document_001.override.yaml  # Override settings for this document
-├── document_002.json
-└── ...
-```
-
-Override file example:
-```yaml
-# document_001.override.yaml
-skip_entity_extraction: true
-custom_prompt: |
-  This document is in French. Transcribe it...
-```
+- ✅ `OPENAI_BASE_URL` / `OPENAI_API_KEY` / `OPENAI_MODEL`
+- ✅ Images folder exists
 
 ---
 
@@ -285,48 +210,42 @@ custom_prompt: |
 
 ```yaml
 dataset:
-  source: "my-username/my-dataset"
-  image_column: "image"
+  images_dir: "images"
 ```
 
-### Academic Research Project
+### Research Project with Password Protection
 
 ```yaml
 dataset:
-  source: "university-archive/civil-war-letters"
-  splits: ["train", "test"]
-  image_column: "scan"
-  date_column: "letter_date"
+  images_dir: "images"
 
 processing:
   extract_entities: true
   entity_context: true
 
-summary:
-  enabled: true
-  sample_size: 200
-
 website:
   title: "Smith Family Civil War Correspondence"
-  description: "Letters from the Smith family, 1861-1865"
-  password: "research2024"
+  password: "research2026"
 ```
 
-### Public Digital Collection
+### Public Collection with Translation
 
 ```yaml
 dataset:
-  source: "library/historic-newspapers"
-  image_column: "page_image"
+  images_dir: "images"
 
 processing:
   extract_entities: true
 
+translate:
+  enabled: true
+  source_languages: ["es"]
+  target_language: "en"
+  default_tab: "translation"
+
 website:
   title: "Historic Newspaper Archive"
-  description: "Digitized newspapers from 1850-1920"
   password: ""  # Public access
-  analytics_id: "G-XXXXXXXXXX"
 ```
 
 ---
@@ -334,5 +253,5 @@ website:
 ## Next Steps
 
 - **[Processing Documents](processing-documents.md)** - Learn about the processing pipeline
-- **[Custom Prompts](transcription.md)** - Fine-tune text extraction
+- **[Transcription](transcription.md)** - Fine-tune text extraction
 - **[Troubleshooting](../help/troubleshooting.md)** - Solve common issues

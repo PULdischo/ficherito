@@ -1,44 +1,43 @@
-# flatfish entities
+# ficherito entities
 
-Extract named entities (people, places, dates, organizations) from transcribed documents.
+Extract named entities (people, places, dates, organizations, and more) from transcribed documents.
 
 ---
 
 ## Usage
 
 ```bash
-flatfish entities [options]
+ficherito entities [options]
 ```
 
 ## Options
 
 | Option | Short | Description | Default |
-|--------|-------|-------------|---------|
-| `--config` | `-c` | Path to config file | `flatfish.yaml` |
-| `--source` | `-s` | Transcriptions directory | `transcriptions/` |
-| `--output` | `-o` | Output directory | `entities/` |
-| `--model` | `-m` | spaCy model to use | `en_core_web_lg` |
-| `--force` | `-f` | Reprocess existing | `False` |
-| `--file` | | Process single file | |
-| `--verbose` | `-v` | Verbose output | `False` |
+|--------|-------|--------------|---------|
+| `--config` | `-c` | Path to config file | `ficherito.yaml` |
+| `--limit` | `-l` | Limit number of documents | all |
+| `--concurrency` | `-j` | Concurrent API requests | `10` |
 
 ---
 
 ## What It Does
 
-The `entities` command:
-
-1. Reads transcription JSON files
-2. Runs spaCy NER on the text
-3. Extracts and categorizes named entities
-4. Saves entity data with context
+1. Reads transcription files from `transcriptions/`
+2. Sends each one, concurrently, to the LLM with the `ner_extraction` prompt
+3. Saves per-document entity JSON to `entities/`
+4. Regenerates `entities/consolidated.json` from **all** entity files (not just newly processed ones)
 
 ```
 transcriptions/
-├── letter_001.json  → entities/letter_001.json
-├── letter_002.json  → entities/letter_002.json
-└── ...
+├── letter_001.md  → entities/letter_001.json
+├── letter_002.md  → entities/letter_002.json
+└── ...                              → entities/consolidated.json
 ```
+
+Documents that already have an entity file are skipped, so it's safe to
+re-run after adding new transcriptions.
+
+**Prerequisite:** run `ficherito extract` first.
 
 ---
 
@@ -47,25 +46,13 @@ transcriptions/
 ### Extract All Entities
 
 ```bash
-flatfish entities
+ficherito entities
 ```
 
-### Process Single File
+### Test on a Subset
 
 ```bash
-flatfish entities --file transcriptions/letter_001.json
-```
-
-### Use Different Model
-
-```bash
-flatfish entities --model en_core_web_trf
-```
-
-### Force Reprocessing
-
-```bash
-flatfish entities --force
+ficherito entities --limit 10
 ```
 
 ---
@@ -74,286 +61,82 @@ flatfish entities --force
 
 ```json
 {
-  "source_file": "letter_001.json",
-  "processed_at": "2024-01-15T10:35:00",
-  "model": "en_core_web_lg",
+  "source_image": "letter_001",
+  "extracted_at": "2026-01-15T10:35:00Z",
   "entities": [
     {
       "text": "John Smith",
-      "label": "PERSON",
-      "start": 45,
-      "end": 55,
-      "confidence": 0.96,
-      "context": "...letter from John Smith regarding the..."
-    },
-    {
-      "text": "Philadelphia",
-      "label": "GPE",
-      "start": 89,
-      "end": 101,
-      "confidence": 0.99,
-      "context": "...traveling to Philadelphia next week..."
-    },
-    {
-      "text": "March 15, 1865",
-      "label": "DATE",
-      "start": 12,
-      "end": 26,
-      "confidence": 0.98,
-      "context": "Dated March 15, 1865\n\nDear Brother..."
+      "type": "PERSON",
+      "context": "Person; the writer of the letter",
+      "positions": [],
+      "confidence": null
     }
-  ],
-  "summary": {
-    "PERSON": 5,
-    "GPE": 3,
-    "DATE": 2,
-    "ORG": 1
-  }
+  ]
 }
 ```
 
----
-
 ## Entity Types
 
-spaCy recognizes these entity types:
-
-| Label | Description | Examples |
-|-------|-------------|----------|
-| `PERSON` | People, including fictional | John Smith, Dr. Wilson |
-| `GPE` | Countries, cities, states | Philadelphia, Virginia |
-| `LOC` | Non-GPE locations | Mississippi River, the farm |
-| `ORG` | Organizations | Congress, First Bank |
-| `DATE` | Dates or periods | March 15, 1865, yesterday |
-| `TIME` | Times | 3 o'clock, noon |
-| `MONEY` | Monetary values | $500, fifty dollars |
-| `EVENT` | Named events | the war, election |
-| `FAC` | Facilities | the mill, church |
-| `NORP` | Nationalities, groups | American, Baptist |
+| Type | Examples |
+|------|----------|
+| `PERSON` | John Smith, Dr. Wilson |
+| `ORGANIZATION` | Congress, First Bank |
+| `LOCATION` | Philadelphia, Virginia |
+| `DATE` | March 15, 1865, yesterday |
+| `MONEY` | $500, fifty dollars |
+| `LEGAL_TERM` | plaintiff, defendant, executor |
+| `EVENT` | the war, the election |
+| `DOCUMENT` | the deed, his will |
+| `OCCUPATION` | blacksmith, farmer, attorney |
+| `RELATIONSHIP` | my brother, her husband |
 
 ---
 
 ## Configuration
 
-### flatfish.yaml Settings
-
 ```yaml
-entities:
-  # spaCy model (sm, md, lg, or trf)
-  model: en_core_web_lg
-  
-  # Minimum confidence to keep
-  min_confidence: 0.7
-  
-  # Entity types to extract
-  types:
-    - PERSON
-    - GPE
-    - LOC
-    - DATE
-    - ORG
-    
-  # Context window (characters around entity)
-  context_window: 50
+processing:
+  extract_entities: true
+  entity_context: true   # include role descriptions, not just bare types
+
+prompts:
+  ner_extraction: |
+    You are a historical document analyst specializing in named entity recognition.
+    ...
 ```
 
-### Custom Entity Lists
-
-```yaml
-entities:
-  # Known entities for better recognition
-  custom_persons:
-    - "John Smith"
-    - "Mary Williams"
-    - "Gen. Harrison"
-    
-  custom_places:
-    - "Maple Grove Farm"
-    - "Smith Mill"
-    - "Old Lancaster Road"
-```
+See [Entity Extraction](../usage/entities.md#customizing-entity-extraction)
+for how to customize entity types and prompt guidance.
 
 ---
 
-## spaCy Models
-
-### Available Models
-
-| Model | Size | Accuracy | Speed |
-|-------|------|----------|-------|
-| `en_core_web_sm` | 12 MB | Good | Fast |
-| `en_core_web_md` | 40 MB | Better | Medium |
-| `en_core_web_lg` | 560 MB | Best | Slower |
-| `en_core_web_trf` | 438 MB | Excellent | Slowest |
-
-### Installing Models
+## Reviewing and Editing
 
 ```bash
-# Install the large model (recommended)
-python -m spacy download en_core_web_lg
+# Edit a single document's entities
+nano entities/letter_001.json
 
-# Or transformer model for best accuracy
-python -m spacy download en_core_web_trf
+# Find all PERSON entities across the collection
+grep -h '"type": "PERSON"' entities/*.json | sort | uniq -c | sort -rn
 ```
 
-### Non-English Models
-
-```bash
-# German
-python -m spacy download de_core_news_lg
-
-# French
-python -m spacy download fr_core_news_lg
-
-# Spanish
-python -m spacy download es_core_news_lg
-```
-
-Configure in yaml:
-
-```yaml
-entities:
-  model: de_core_news_lg
-```
-
----
-
-## Progress Output
-
-```
-Flatfish Entities
-═════════════════
-
-Processing 500 transcriptions
-
-Document 1/500: letter_001.json
-  ✓ Found 8 entities (3 PERSON, 2 GPE, 2 DATE, 1 ORG)
-
-Document 2/500: letter_002.json
-  ✓ Found 5 entities (2 PERSON, 2 DATE, 1 GPE)
-
-...
-
-═════════════════
-Complete: 500/500 documents
-Total entities: 3,456
-  PERSON: 1,245
-  GPE: 892
-  DATE: 756
-  ORG: 234
-  LOC: 189
-  OTHER: 140
-```
-
----
-
-## Aggregated Entity Report
-
-Generate a summary across all documents:
-
-```bash
-flatfish entities --report
-```
-
-Output: `entities/entity_report.json`
-
-```json
-{
-  "total_documents": 500,
-  "total_entities": 3456,
-  "by_type": {
-    "PERSON": {
-      "count": 1245,
-      "unique": 89,
-      "top": [
-        {"text": "John Smith", "count": 156},
-        {"text": "Mary Williams", "count": 98},
-        {"text": "William Smith", "count": 87}
-      ]
-    },
-    "GPE": {
-      "count": 892,
-      "unique": 34,
-      "top": [
-        {"text": "Philadelphia", "count": 234},
-        {"text": "Lancaster", "count": 89}
-      ]
-    }
-  },
-  "cooccurrence": [
-    {"entities": ["John Smith", "Philadelphia"], "count": 45},
-    {"entities": ["John Smith", "William Smith"], "count": 38}
-  ]
-}
-```
-
----
-
-## Entity Normalization
-
-Map variations to canonical forms:
-
-```yaml
-entities:
-  normalization:
-    "Jno. Smith": "John Smith"
-    "J. Smith": "John Smith"
-    "Mr. Smith": "John Smith"
-    "Phila.": "Philadelphia"
-    "N.Y.": "New York"
-```
-
-Or use a CSV file:
-
-```yaml
-entities:
-  normalization_file: "entity_mappings.csv"
-```
-
-```csv
-# entity_mappings.csv
-original,normalized
-"Jno. Smith","John Smith"
-"J. Smith","John Smith"
-"Phila.","Philadelphia"
-```
+After editing, run `ficherito build` to regenerate `consolidated.json` and
+the site. Once deployed, entities can also be edited through the Sveltia
+CMS at `/admin/`.
 
 ---
 
 ## Troubleshooting
 
-### Missing Entities
+### No Entities Extracted
 
-If expected entities aren't found:
+Check the transcription itself — very short or empty transcriptions
+produce no entities. Confirm `processing.extract_entities: true`.
 
-1. Check transcription quality
-2. Try larger spaCy model
-3. Add to custom entity list
-4. Adjust minimum confidence
+### Wrong Entity Types
 
-### False Positives
-
-If too many incorrect entities:
-
-1. Increase minimum confidence
-2. Filter by entity type
-3. Use post-processing rules
-
-### Performance Issues
-
-For large collections:
-
-```yaml
-entities:
-  # Disable less important features
-  context_window: 0  # Don't extract context
-  
-  # Limit entity types
-  types:
-    - PERSON
-    - GPE
-    - DATE
-```
+The LLM sometimes misclassifies (e.g. "Philadelphia" as PERSON). Edit the
+JSON file directly, or refine the `ner_extraction` prompt.
 
 ---
 

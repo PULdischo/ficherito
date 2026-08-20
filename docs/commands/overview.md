@@ -1,15 +1,15 @@
 # Command Reference
 
-Complete reference for all Flatfish CLI commands.
+Complete reference for all Ficherito CLI commands.
 
 ---
 
 ## Overview
 
-Flatfish uses a simple command structure:
+Ficherito uses a simple command structure:
 
 ```bash
-flatfish <command> [options]
+ficherito <command> [options]
 ```
 
 ### Available Commands
@@ -17,26 +17,24 @@ flatfish <command> [options]
 | Command | Description |
 |---------|-------------|
 | `init` | Create a new project |
-| `process` | Run the full pipeline |
-| `transcribe` | Extract text from images |
+| `validate` | Validate configuration and API connections |
+| `process` | Run the full pipeline (extract + entities + build) |
+| `extract` | Extract text from images |
 | `entities` | Extract named entities |
 | `translate` | Translate transcriptions |
-| `build` | Build the website (emits content and runs Eleventy + Pagefind) |
+| `build` | Build the website (emits content, runs Eleventy + Pagefind) |
 | `serve` | Preview site locally |
-| `deploy` | Deploy to hosting |
+| `status` | Show processing status |
+| `deploy` | Deploy to Netlify |
 
 ---
 
 ## Global Options
 
-These options work with any command:
-
 ```bash
-flatfish --help              # Show help
-flatfish --version           # Show version
-flatfish <cmd> --config FILE # Use specific config file
-flatfish <cmd> --verbose     # Verbose output
-flatfish <cmd> --quiet       # Minimal output
+ficherito --help              # Show help
+ficherito --version           # Show version
+ficherito <cmd> --config FILE # Use a specific config file (default: ficherito.yaml)
 ```
 
 ---
@@ -45,38 +43,41 @@ flatfish <cmd> --quiet       # Minimal output
 
 ```bash
 # Start a new project
-flatfish init my-collection
+mkdir my-collection && cd my-collection
+ficherito init
 
 # Run everything
-flatfish process
+ficherito process
 
 # Run specific steps
-flatfish transcribe
-flatfish entities
-flatfish translate
+ficherito extract
+ficherito entities
+ficherito translate
 
 # Build and preview
-flatfish build
-flatfish serve
+ficherito build
+ficherito serve
 
 # Deploy
-flatfish deploy --platform netlify
+ficherito deploy         # Netlify
+# — or push to GitHub after `ficherito build`; see the deployment guide for GitHub Pages
 ```
 
 ---
 
 ## Command Details
 
-See individual command pages:
-
-- **[init](init.md)** - Initialize new project
+- **[init](init.md)** - Initialize a new project
 - **[process](process.md)** - Full pipeline execution
-- **[transcribe](transcribe.md)** - Text extraction
+- **[extract](extract.md)** - Text extraction
 - **[entities](entities.md)** - Named entity recognition
 - **[translate](translate.md)** - Translation to target language
 - **[build](build.md)** - Website generation
 - **[serve](serve.md)** - Local preview server
-- **[deploy](deploy.md)** - Deployment to hosting
+- **[deploy](deploy.md)** - Deployment to Netlify
+
+`validate` and `status` don't have dedicated pages — see their
+`--help` output, or [Processing Documents](../usage/processing-documents.md#checking-processing-status).
 
 ---
 
@@ -85,58 +86,40 @@ See individual command pages:
 ### New Project
 
 ```bash
-flatfish init letters-collection
-cd letters-collection
+mkdir letters-collection && cd letters-collection
+ficherito init
 # Add your images to images/
-flatfish process
+ficherito process
 ```
 
-### Resume Interrupted Processing
-
-```bash
-# Continue from where you left off
-flatfish process --resume
-```
-
-### Reprocess Specific Steps
+### Reprocess Specific Documents
 
 ```bash
 # Only redo entities (keep transcriptions)
-flatfish entities --force
+rm entities/document_123.json
+ficherito entities
 ```
 
 ### Development Preview
 
 ```bash
-flatfish build
-flatfish serve
+ficherito build
+ficherito serve
 # Open http://localhost:8000
 ```
 
 ---
 
-## Exit Codes
-
-| Code | Meaning |
-|------|---------|
-| 0 | Success |
-| 1 | General error |
-| 2 | Configuration error |
-| 3 | API error |
-| 4 | File not found |
-| 5 | Permission error |
-
----
-
 ## Environment Variables
 
-Commands respect these environment variables:
+Read from `.env` in the project directory:
 
 ```bash
-DASHSCOPE_API_KEY    # Qwen API key
-HF_TOKEN             # Hugging Face token
-FLATFISH_CONFIG      # Default config file
-FLATFISH_VERBOSE     # Enable verbose mode
+OPENAI_BASE_URL      # LLM endpoint (default: provider default if unset)
+OPENAI_API_KEY        # Required for extract/entities
+OPENAI_MODEL           # Model name (default: provider default if unset)
+NETLIFY_TOKEN          # Required for `ficherito deploy`
+NETLIFY_SITE_ID        # Optional, or set website.netlify_site_id in ficherito.yaml
 ```
 
 ---
@@ -145,9 +128,9 @@ FLATFISH_VERBOSE     # Enable verbose mode
 
 ```bash
 # General help
-flatfish --help
+ficherito --help
 
 # Command-specific help
-flatfish process --help
-flatfish build --help
+ficherito process --help
+ficherito build --help
 ```

@@ -1,460 +1,150 @@
-# flatfish build
+# ficherito build
 
-Generate a static website from your processed documents.
+Emit content into an Eleventy site project and build it (Eleventy + Pagefind).
 
 ---
 
 ## Usage
 
 ```bash
-flatfish build [options]
+ficherito build [options]
 ```
 
 ## Options
 
 | Option | Short | Description | Default |
-|--------|-------|-------------|---------|
-| `--config` | `-c` | Path to config file | `flatfish.yaml` |
-| `--output` | `-o` | Output directory | `site/` |
-| `--template` | `-t` | Template theme | `default` |
-| `--force` | `-f` | Rebuild all pages | `False` |
-| `--verbose` | `-v` | Verbose output | `False` |
+|--------|-------|--------------|---------|
+| `--config` | `-c` | Path to config file | `ficherito.yaml` |
+| `--output` | `-o` | Override the built site's output directory | `output.site_dir` (`site/_site`) |
+| `--base-url` | | Path prefix the site is served under (e.g. `/my-repo/` for GitHub Pages project sites) | `/` |
 
 ---
 
 ## What It Does
 
-The `build` command:
-
-1. Reads all processed data (transcriptions, entities, summaries)
-2. Applies Jinja2 templates
-3. Generates static HTML pages
-4. Creates navigation and search index
+1. **Scaffolds** `site/` from Ficherito's bundled Eleventy/Pagefind/Sveltia
+   project template, if it doesn't already exist
+2. **Loads** transcriptions, entities, and translations; sorts documents chronologically
+3. **Emits** each document as Markdown + frontmatter into `site/src/documents/`,
+   compresses and copies images into `site/src/assets/images/documents/`,
+   and writes `site/src/_data/site.json` and `allEntities.json`
+4. **Installs** Node dependencies (`npm install`) inside `site/`, if `node_modules/` is missing
+5. **Runs** `npm run build`, which runs Eleventy (rendering pages) and then
+   Pagefind (indexing them, via an `eleventy.after` build hook)
 
 ```
 transcriptions/ ─┐
-entities/       ─┼─→ build ─→ site/
-output/         ─┘              ├── index.html
-                                ├── documents/
-                                ├── search.json
-                                └── assets/
+entities/       ─┼─→ build ─→ site/src/documents/, _data/*.json ─→ npm run build ─→ site/_site/
+translations/   ─┘
 ```
 
 ---
 
 ## Examples
 
-### Build Site
+### Build the Site
 
 ```bash
-flatfish build
-```
-
-### Use Custom Template
-
-```bash
-flatfish build --template minimal
-```
-
-### Force Full Rebuild
-
-```bash
-flatfish build --force
+ficherito build
 ```
 
 ### Custom Output Directory
 
 ```bash
-flatfish build --output public/
+ficherito build --output ./public
 ```
+
+### Build for a GitHub Pages Project Site
+
+```bash
+ficherito build --base-url "/my-repo/"
+```
+
+Sets `PATH_PREFIX` for the Eleventy build so internal links and asset paths
+resolve correctly under a subpath. Leave as `/` (the default) for a custom
+domain or a `<user>.github.io` root site.
 
 ---
 
 ## Generated Site Structure
 
 ```
-site/
-├── index.html              # Home page
-├── finding-aid/
-│   └── index.html          # Finding aid/summary
-├── timeline/
-│   └── index.html          # Timeline view
+site/_site/
+├── index.html              # Password gate
+├── main.html                # Search page
 ├── documents/
-│   ├── index.html          # Document list
 │   ├── letter_001/
-│   │   └── index.html      # Individual document
-│   ├── letter_002/
 │   │   └── index.html
 │   └── ...
-├── entities/
-│   ├── index.html          # Entity browser
-│   ├── persons/
-│   │   └── index.html      # People index
-│   ├── places/
-│   │   └── index.html      # Places index
-│   └── dates/
-│       └── index.html      # Dates index
-├── search.json             # Search index
+├── browse/
+│   ├── dates.html
+│   └── entities.html
 ├── assets/
-│   ├── css/
-│   ├── js/
-│   └── images/
-└── 404.html                # Error page
+│   ├── css/style.css
+│   └── images/documents/
+└── pagefind/                # Search index
 ```
-
----
-
-## Page Types
-
-### Home Page (`index.html`)
-
-- Collection title and description
-- Quick navigation
-- Summary statistics
-- Featured documents
-
-### Finding Aid (`finding-aid/`)
-
-- Collection overview
-- Scope and content
-- Organization
-- Research value
-
-### Timeline (`timeline/`)
-
-- Chronological event display
-- Date navigation
-- Event details with document links
-
-### Document Pages (`documents/`)
-
-- Document image viewer
-- Full transcription
-- Entity highlights
-- Related documents
-
-### Entity Browser (`entities/`)
-
-- Filterable entity list
-- Entity detail pages
-- Document connections
 
 ---
 
 ## Configuration
 
-### flatfish.yaml Settings
-
 ```yaml
-site:
-  # Site metadata
+website:
   title: "Smith Family Papers"
-  description: "Letters and diaries, 1865-1870"
-  author: "Archives Department"
-  
-  # URL configuration
-  base_url: "https://example.com/smith-papers/"
-  
-  # Template theme
-  template: default
-  
-  # Features
-  features:
-    search: true
-    entity_highlighting: true
-    image_viewer: true
-    timeline: true
-    
-  # Navigation
-  nav:
-    - title: "Home"
-      url: "/"
-    - title: "Finding Aid"
-      url: "/finding-aid/"
-    - title: "Documents"
-      url: "/documents/"
-    - title: "Timeline"
-      url: "/timeline/"
+  emoji: "📜"
+  background_color: "#2d3748"
+  accent_color: "#4a5568"
+  password: "changeme"
+  enable_search: true
+  enable_browse_dates: true
+  enable_browse_entities: true
+  default_sort: "date"
+
+output:
+  eleventy_dir: "site"        # where the Eleventy project lives
+  site_dir: "site/_site"      # where the built site ends up
 ```
 
-### Custom CSS
-
-```yaml
-site:
-  custom_css: "assets/custom.css"
-```
-
-Create `assets/custom.css`:
-
-```css
-/* Custom styles */
-.document-viewer {
-  max-width: 1200px;
-}
-
-.entity-person {
-  color: #2563eb;
-}
-
-.entity-place {
-  color: #059669;
-}
-```
+Editing `website.enable_search: false` sets `ENABLE_SEARCH=false` for the
+Eleventy build, skipping the Pagefind indexing step entirely.
 
 ---
 
-## Templates
+## Customizing the Site
 
-### Built-in Themes
-
-| Theme | Description |
-|-------|-------------|
-| `default` | Clean, accessible design |
-| `minimal` | Simplified layout |
-| `scholarly` | Academic styling |
-| `archival` | Traditional archive look |
-
-### Using a Theme
-
-```yaml
-site:
-  template: scholarly
-```
-
-### Custom Templates
-
-Create your own templates:
-
-```
-templates/
-├── base.html
-├── index.html
-├── document.html
-├── entity.html
-└── partials/
-    ├── header.html
-    ├── footer.html
-    └── navigation.html
-```
-
-Configure:
-
-```yaml
-site:
-  template_dir: "templates/"
-```
-
----
-
-## Template Variables
-
-### Available in All Templates
-
-```jinja
-{{ site.title }}
-{{ site.description }}
-{{ site.base_url }}
-{{ build_date }}
-{{ flatfish_version }}
-```
-
-### Document Templates
-
-```jinja
-{{ document.filename }}
-{{ document.transcription }}
-{{ document.entities }}
-{{ document.confidence }}
-{{ document.image_url }}
-```
-
-### Entity Templates
-
-```jinja
-{{ entity.text }}
-{{ entity.type }}
-{{ entity.count }}
-{{ entity.documents }}
-```
-
----
-
-## Search Index
-
-### Automatic Generation
-
-```yaml
-site:
-  features:
-    search: true
-```
-
-### search.json Format
-
-```json
-{
-  "documents": [
-    {
-      "id": "letter_001",
-      "title": "Letter from John Smith",
-      "content": "Dear Brother, I write to inform...",
-      "date": "1865-03-15",
-      "entities": ["John Smith", "Philadelphia"],
-      "url": "/documents/letter_001/"
-    }
-  ]
-}
-```
-
-### Client-Side Search
-
-Built-in uses [Lunr.js](https://lunrjs.com/) for client-side search.
-
----
-
-## Progress Output
-
-```
-Flatfish Build
-══════════════
-
-Building site from processed data
-
-Pages:
-  ✓ index.html
-  ✓ finding-aid/index.html
-  ✓ timeline/index.html
-  ✓ documents/index.html
-    ├── documents/letter_001/index.html
-    ├── documents/letter_002/index.html
-    └── ... (498 more)
-  ✓ entities/index.html
-    ├── entities/persons/index.html
-    └── ...
-
-Assets:
-  ✓ Copied CSS (3 files)
-  ✓ Copied JS (2 files)
-  ✓ Generated search.json
-
-══════════════
-Build complete!
-  520 pages generated
-  Site size: 15.2 MB
-  Output: site/
-```
-
----
-
-## Incremental Builds
-
-By default, only changed files are rebuilt:
-
-```bash
-flatfish build
-# Rebuilds only changed pages
-
-flatfish build --force
-# Rebuilds everything
-```
-
-### Cache Location
-
-```
-.flatfish/
-└── build_cache.json
-```
-
----
-
-## Image Handling
-
-### Options
-
-```yaml
-site:
-  images:
-    # Include full images in site
-    include: true
-    
-    # Generate thumbnails
-    thumbnails: true
-    thumbnail_size: 300
-    
-    # Link to external source
-    external_url: "https://example.com/images/"
-```
-
-### External Images
-
-For large collections, link to external storage:
-
-```yaml
-site:
-  images:
-    include: false
-    external_url: "https://cdn.example.com/smith-papers/"
-```
-
----
-
-## Accessibility
-
-Built-in templates include:
-
-- Semantic HTML5
-- ARIA labels
-- Keyboard navigation
-- Skip links
-- High contrast support
-- Screen reader optimization
-
-### Accessibility Checklist
-
-```yaml
-site:
-  accessibility:
-    # Require alt text for images
-    require_alt: true
-    
-    # Minimum color contrast
-    min_contrast: 4.5
-    
-    # Generate accessibility report
-    audit: true
-```
+Everything under `site/src/_includes/`, `site/src/assets/css/style.css`,
+`site/admin/config.yml`, and the top-level `.njk` files is yours to edit
+and commit — `ficherito build` only ever regenerates
+`site/src/documents/*.md`, `site/src/assets/images/documents/*`, and
+`site/src/_data/*.json`. See [Building Sites](../usage/building-sites.md).
 
 ---
 
 ## Troubleshooting
 
-### Build Errors
+### `npm not found; skipping Eleventy/Pagefind build`
 
-| Error | Cause | Solution |
-|-------|-------|----------|
-| "Template not found" | Missing template file | Check template path |
-| "No documents found" | Missing transcriptions | Run `flatfish process` first |
-| "Invalid config" | YAML syntax error | Check `flatfish.yaml` |
+Install [Node.js](https://nodejs.org/) 20+ and re-run `ficherito build`.
 
-### Slow Builds
+### "No documents found" / empty site
 
-For large collections:
+Run `ficherito extract` first — `build` reads from `transcriptions/`.
 
-```yaml
-site:
-  # Disable features
-  features:
-    search: false  # Generate separately
-    thumbnails: false
-    
-  # Limit pages
-  max_document_pages: 100  # For testing
+### Search Not Working
+
+```bash
+ls site/_site/pagefind/
 ```
+
+If missing, check `website.enable_search` is `true` and that `npm`/Node.js
+are installed, then rebuild.
 
 ---
 
 ## See Also
 
 - **[serve](serve.md)** - Preview site locally
-- **[deploy](deploy.md)** - Deploy to hosting
+- **[deploy](deploy.md)** - Deploy to Netlify
 - **[Building Sites](../usage/building-sites.md)** - Usage guide
+- **[Deployment](../usage/deployment.md)** - GitHub Pages + Sveltia CMS setup

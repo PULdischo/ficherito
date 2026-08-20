@@ -1,12 +1,10 @@
 # Entity Extraction
 
-Learn how Flatfish identifies people, places, dates, and other named entities in your documents.
+Learn how Ficherito identifies people, places, dates, and other named entities in your documents.
 
 ---
 
 ## What Are Named Entities?
-
-Named entities are specific things mentioned in text that can be classified into categories:
 
 | Type | Examples |
 |------|----------|
@@ -25,13 +23,16 @@ Named entities are specific things mentioned in text that can be classified into
 
 ## How Entity Extraction Works
 
-Flatfish analyzes each transcription with AI to:
+Ficherito sends each transcription to the same LLM used for HTR (an
+OpenAI-compatible endpoint, configured via `.env`) with the `ner_extraction`
+prompt from `ficherito.yaml`, asking it to:
 
 1. Find all mentions of named entities
 2. Classify them by type
-3. Add **contextual descriptions** explaining their role
+3. Add a **contextual description** explaining each entity's role in *this*
+   document (only if `processing.entity_context: true`)
 
-### Example Output
+### Example
 
 Input text:
 > "Dear Sarah, I write to you from camp near Gettysburg. Your brother John arrived yesterday with news from home."
@@ -53,11 +54,6 @@ Extracted entities:
     "text": "John",
     "type": "PERSON",
     "context": "Person; Sarah's brother who brought news from home"
-  },
-  {
-    "text": "yesterday",
-    "type": "DATE",
-    "context": "Date; relative date referring to the day before this letter was written"
   }
 ]
 ```
@@ -66,136 +62,124 @@ Extracted entities:
 
 ## Running Entity Extraction
 
-Extract entities from all transcribed documents:
-
 ```bash
-flatfish entities
+ficherito entities
 ```
 
-**Prerequisites:** You must run `flatfish extract` first.
+**Prerequisites:** Run `ficherito extract` first (entities are extracted
+from transcriptions, not images directly).
 
-**Output:** JSON files in `entities/` directory.
+**Options:**
+
+| Option | Short | Description | Default |
+|--------|-------|--------------|---------|
+| `--config` | `-c` | Path to config file | `ficherito.yaml` |
+| `--limit` | `-l` | Limit number of documents | all |
+| `--concurrency` | `-j` | Concurrent API requests | `10` |
+
+Already-extracted documents are skipped on subsequent runs, so it's safe to
+re-run after adding new transcriptions.
+
+**Output:** one JSON file per document in `entities/`, plus
+`entities/consolidated.json` (all entities merged, grouped by type, with
+mention counts — this is what powers **Browse by Entity**).
 
 ---
 
 ## Understanding Contextual Descriptions
 
-The key feature of Flatfish's entity extraction is **contextual descriptions**. Instead of just labeling "John" as a person, it explains *who John is in this document*.
+Instead of just labeling "John" as a person, Ficherito explains *who John
+is in this document*. Across 50 documents, "John" might be the writer's son
+in one, a business partner in another, and someone else entirely in a
+third — the context field disambiguates these.
 
-### Why Context Matters
-
-Consider "John" appearing in 50 documents:
-- Document 1: "John" = the writer's son
-- Document 15: "John" = a business partner
-- Document 32: "John" = a different person entirely
-
-Contextual descriptions help you understand these relationships.
-
-### Controlling Context
-
-Enable or disable context in your configuration:
+Disable it if you just want bare types:
 
 ```yaml
 processing:
-  entity_context: true  # Include descriptions (default)
-  # entity_context: false  # Just types, no descriptions
+  entity_context: false
 ```
 
 ---
 
 ## Customizing Entity Extraction
 
-### Custom Entity Types
-
-Add domain-specific entity types:
+Edit the `ner_extraction` prompt in `ficherito.yaml` to add domain-specific
+guidance. For example, for military records:
 
 ```yaml
 prompts:
   ner_extraction: |
-    Extract named entities from this historical legal document.
-    
+    You are a historical document analyst specializing in named entity recognition.
+    Extract all named entities from this Civil War military document.
+
     Use these entity types:
-    - PERSON: Individual people
-    - LOCATION: Places (cities, states, properties)
-    - DATE: Dates and time references
-    - ORGANIZATION: Companies, churches, government bodies
-    - MONEY: Monetary amounts
-    - PROPERTY: Land descriptions, buildings, goods
-    - LEGAL_ACTION: Lawsuits, contracts, agreements
-    - WITNESS: People who witnessed or signed
-    
-    For each entity, explain its role in the document.
-    
-    Document text:
-    {document_text}
-```
-
-### Specialized Collections
-
-For specific document types:
-
-**Military Records:**
-```yaml
-prompts:
-  ner_extraction: |
-    Extract entities from this Civil War military document.
-    
-    Entity types:
     - PERSON: Soldiers, officers, civilians
-    - MILITARY_UNIT: Regiments, companies, divisions
     - LOCATION: Camps, battlefields, towns
     - DATE: Dates of events
-    - RANK: Military ranks
-    - CASUALTY: References to killed, wounded, missing
-    
+    - ORGANIZATION: Regiments, companies, divisions
+    - EVENT: Battles, marches, casualties
+
+    For each entity, explain its role in the document.
+
     Document text:
     {document_text}
+
+    Return entities as a JSON array:
+    [
+      {
+        "text": "...",
+        "type": "...",
+        "context": "..."
+      }
+    ]
 ```
 
-**Genealogical Records:**
-```yaml
-prompts:
-  ner_extraction: |
-    Extract entities from this genealogical record.
-    
-    Entity types:
-    - PERSON: All named individuals
-    - RELATIONSHIP: Family relationships
-    - DATE: Birth, death, marriage dates
-    - LOCATION: Places of residence, birth, death
-    - OCCUPATION: Jobs and professions
-    - RELIGION: Churches, religious affiliations
-    
-    Document text:
-    {document_text}
-```
+Keep the JSON array output format — the parser expects `text`, `type`, and
+`context` keys per entity.
 
 ---
 
-## Entity Output Format
+## Entity File Format
 
-Each document's entities are saved as JSON:
+**File**: `entities/1863-04-15_page_001.json`
 
 ```json
 {
-  "document_id": "1863-04-15_page_001",
+  "source_image": "1863-04-15_page_001",
+  "extracted_at": "2026-01-15T14:35:00Z",
   "entities": [
     {
       "text": "Sarah",
       "type": "PERSON",
       "context": "Person; the recipient of the letter",
-      "positions": [
-        {"start": 5, "end": 10}
-      ]
-    },
-    {
-      "text": "Gettysburg",
-      "type": "LOCATION",
-      "context": "Location; a town in Pennsylvania"
+      "positions": [],
+      "confidence": null
     }
-  ],
-  "extracted_at": "2024-01-15T14:35:00Z",
-  "model": "qwen-vl-max"
+  ]
+}
+```
+
+**File**: `entities/consolidated.json`
+
+```json
+{
+  "total_entities": 3456,
+  "unique_texts": 892,
+  "by_type": {
+    "PERSON": [
+      {
+        "text": "Sarah",
+        "type": "PERSON",
+        "contexts": [
+          {"document": "1863-04-15_page_001", "context": "Person; the recipient of the letter"}
+        ],
+        "documents": ["1863-04-15_page_001"],
+        "count": 1
+      }
+    ]
+  },
+  "all_entities": ["..."]
 }
 ```
 
@@ -203,141 +187,58 @@ Each document's entities are saved as JSON:
 
 ## Reviewing and Editing Entities
 
-### View Entities for a Document
+### Edit Directly
 
 ```bash
-cat entities/document_001.json | jq '.entities'
+nano entities/1863-04-15_page_001.json
 ```
 
-### Edit Entities
+Then rebuild the site with `ficherito build` to regenerate
+`consolidated.json` from all entity files and pick up your changes.
+
+### Edit via the CMS
+
+Once deployed, collaborators can add/remove/edit entities per document
+through Sveltia CMS at `/admin/` instead — see
+[Deployment](deployment.md#editing-content-with-sveltia-cms).
+
+### Find a Specific Entity Type
 
 ```bash
-nano entities/document_001.json
-```
-
-You can:
-- Correct misidentified entities
-- Add missing entities
-- Improve context descriptions
-- Change entity types
-
-### Find Specific Entity Types
-
-```bash
-# Find all PERSON entities across all documents
 grep -h '"type": "PERSON"' entities/*.json | sort | uniq -c | sort -rn
 ```
 
 ---
 
-## Entity Statistics
+## Browsing Entities on the Site
 
-After extraction, view statistics:
-
-```bash
-flatfish status --entities
-```
-
-```
-Entity Statistics
-═════════════════
-
-Documents processed: 500
-Total entities: 4,523
-
-By type:
-  PERSON:       1,234 (27.3%)
-  LOCATION:       856 (18.9%)
-  DATE:           743 (16.4%)
-  ORGANIZATION:   412 (9.1%)
-  MONEY:          298 (6.6%)
-  OTHER:          980 (21.7%)
-
-Unique entities: 892
-Most frequent:
-  Sarah (PERSON): 145 mentions
-  Philadelphia (LOCATION): 89 mentions
-  John (PERSON): 76 mentions
-```
-
----
-
-## The Entity Index
-
-When you build your website, Flatfish creates an entity index that lets users:
-
-- Browse all entities by type
-- Click an entity to see all documents mentioning it
-- See context descriptions for each mention
-
----
-
-## Advanced: Entity Linking
-
-For research projects, you might want to link entities to external databases:
-
-### Manual Linking
-
-Add links to your entity files:
-
-```json
-{
-  "text": "Abraham Lincoln",
-  "type": "PERSON",
-  "context": "Person; the President mentioned in the letter",
-  "links": {
-    "wikipedia": "https://en.wikipedia.org/wiki/Abraham_Lincoln",
-    "viaf": "https://viaf.org/viaf/76349832",
-    "loc": "https://id.loc.gov/authorities/names/n79006779"
-  }
-}
-```
-
-### Future Feature
-
-Automatic entity linking to Wikidata and other knowledge bases is planned for a future release.
+The built site's **Browse by Entity** page groups entities by type, shows
+mention counts, and links each mention back to its document with its
+context — built from `entities/consolidated.json`.
 
 ---
 
 ## Troubleshooting
 
-### Entities Not Extracted
+### No Entities Extracted
 
-**Problem:** Some documents have no entities.
-
-**Causes:**
-- Very short documents
-- Documents with mostly illegible text
-- Non-standard document types
-
-**Solution:** Check the transcription quality first.
+- Check the transcription itself first — empty or very short transcriptions
+  produce no entities.
+- Confirm `processing.extract_entities: true` in `ficherito.yaml`.
 
 ### Wrong Entity Types
 
-**Problem:** "Philadelphia" marked as PERSON.
-
-**Solution:** The AI sometimes makes mistakes. Edit the entity file manually or refine your prompt.
+The LLM sometimes makes mistakes (e.g. "Philadelphia" tagged as PERSON).
+Edit the entity JSON file manually, or refine the `ner_extraction` prompt.
 
 ### Missing Important Entities
 
-**Problem:** Key names not extracted.
-
-**Solution:** Make your prompt more specific about what to look for:
-
-```yaml
-prompts:
-  ner_extraction: |
-    Pay special attention to:
-    - All people mentioned, even by nickname or title
-    - Place names, including informal references
-    - Any dates, even relative ones like "last week"
-    ...
-```
+Make the prompt more specific about what to look for — see
+[Customizing Entity Extraction](#customizing-entity-extraction) above.
 
 ---
 
 ## Next Steps
 
-- **[Summarization](summarization.md)** - Generate AI summaries
 - **[Building Sites](building-sites.md)** - Create your website
 - **[Command Reference](../commands/entities.md)** - Full command options

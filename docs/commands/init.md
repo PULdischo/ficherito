@@ -1,201 +1,107 @@
-# flatfish init
+# ficherito init
 
-Initialize a new Flatfish project with the standard directory structure.
+Initialize a new Ficherito project in a directory.
 
 ---
 
 ## Usage
 
 ```bash
-flatfish init <project-name> [options]
+ficherito init [path] [options]
 ```
 
 ## Arguments
 
-| Argument | Description | Required |
-|----------|-------------|----------|
-| `project-name` | Name for the project directory | Yes |
+| Argument | Description | Default |
+|----------|-------------|---------|
+| `path` | Directory to initialize the project in | `.` (current directory) |
 
 ## Options
 
 | Option | Short | Description | Default |
-|--------|-------|-------------|---------|
-| `--template` | `-t` | Project template to use | `default` |
-| `--no-git` | | Skip git initialization | `False` |
-| `--force` | `-f` | Overwrite existing directory | `False` |
+|--------|-------|--------------|---------|
+| `--force` | `-f` | Overwrite existing `ficherito.yaml` / `.env` | `False` |
 
 ---
 
 ## Examples
 
-### Basic Initialization
+### Initialize the Current Directory
 
 ```bash
-flatfish init civil-war-letters
+mkdir civil-war-letters && cd civil-war-letters
+ficherito init
 ```
 
-Creates:
-```
-civil-war-letters/
-├── flatfish.yaml
-├── .env.example
-├── images/
-│   └── .gitkeep
-├── transcriptions/
-├── entities/
-├── summaries/
-├── site/
-└── README.md
-```
-
-### Initialize in Current Directory
+### Initialize a New Directory Directly
 
 ```bash
-mkdir my-project && cd my-project
-flatfish init .
-```
-
-### With Specific Template
-
-```bash
-flatfish init family-papers --template diary
+ficherito init civil-war-letters
+cd civil-war-letters
 ```
 
 ### Force Overwrite
 
 ```bash
-flatfish init existing-project --force
+ficherito init --force
 ```
 
 ---
 
 ## Generated Files
 
-### flatfish.yaml
-
-Default configuration file:
-
-```yaml
-# Flatfish Configuration
-
-project:
-  name: civil-war-letters
-  description: ""
-
-source:
-  huggingface_repo: ""
-  
-processing:
-  batch_size: 20
-  
-output:
-  format: markdown
+```
+civil-war-letters/
+├── ficherito.yaml
+├── .env                # copied from .env.example if it doesn't exist yet
+├── .env.example
+├── images/
+├── transcriptions/
+├── translations/
+└── entities/
 ```
 
-### .env.example
+### ficherito.yaml
 
-Template for environment variables:
+Written with Ficherito's built-in defaults — see
+[Configuration](../usage/configuration.md) for the full reference.
+
+### .env.example / .env
 
 ```bash
-# Rename to .env and fill in your keys
-
-# Qwen API key (required)
-DASHSCOPE_API_KEY=your-key-here
-
-# Hugging Face token (for private repos)
-HF_TOKEN=your-token-here
-```
-
-### README.md
-
-Project documentation template:
-
-```markdown
-# civil-war-letters
-
-A historical document collection processed with Flatfish.
-
-## Quick Start
-
-1. Add your document images to `images/`
-2. Configure `flatfish.yaml`
-3. Set up `.env` with your API keys
-4. Run `flatfish process`
+# OpenAI-compatible LLM endpoint (DashScope, OpenAI, local, etc.)
+OPENAI_BASE_URL=https://dashscope-intl.aliyuncs.com/compatible-mode/v1
+OPENAI_API_KEY=sk-xxxxxxxxxxxxx
+OPENAI_MODEL=qwen-vl-max
 ```
 
 ---
 
 ## After Initialization
 
-### 1. Copy Environment Template
+### 1. Add Your API Key
 
 ```bash
-cp .env.example .env
+nano .env
 ```
 
-### 2. Add Your API Keys
+### 2. Add Images
 
-Edit `.env`:
-```bash
-DASHSCOPE_API_KEY=sk-your-actual-key
-HF_TOKEN=hf_your-actual-token
-```
-
-### 3. Configure Your Project
-
-Edit `flatfish.yaml`:
-```yaml
-project:
-  name: civil-war-letters
-  description: "Letters from the Smith family, 1861-1865"
-
-source:
-  huggingface_repo: "username/civil-war-letters"
-```
-
-### 4. Add Images
-
-Copy or link your document images:
 ```bash
 cp /path/to/scans/*.jpg images/
-# or
-ln -s /path/to/scans images/original
 ```
 
-### 5. Run Pipeline
+### 3. Validate
 
 ```bash
-flatfish process
+ficherito validate
 ```
 
----
+### 4. Run the Pipeline
 
-## Templates
-
-### default
-
-Standard project structure for general use.
-
-### diary
-
-Optimized for diary/journal collections:
-- Sequential date organization
-- Personal narrative prompts
-- Single-author configuration
-
-### correspondence
-
-Optimized for letter collections:
-- Sender/recipient tracking
-- Date and place emphasis
-- Multiple correspondents
-
-### legal
-
-Optimized for legal documents:
-- Formal language settings
-- Party identification
-- Document type classification
+```bash
+ficherito process
+```
 
 ---
 

@@ -7,7 +7,7 @@ Translate transcriptions to a target language using Google Translate.
 ## Synopsis
 
 ```bash
-flatfish translate [OPTIONS]
+ficherito translate [OPTIONS]
 ```
 
 ---
@@ -24,7 +24,7 @@ Translations are saved as individual markdown files in the `translations/` direc
 
 | Option | Short | Description |
 |--------|-------|-------------|
-| `--config` | `-c` | Path to config file (default: `flatfish.yaml`) |
+| `--config` | `-c` | Path to config file (default: `ficherito.yaml`) |
 | `--limit` | `-l` | Limit number of documents to translate |
 | `--force` | `-f` | Force re-translation even if translation exists |
 | `--source` | `-s` | Override source language (default: from config or 'auto') |
@@ -38,7 +38,7 @@ Translations are saved as individual markdown files in the `translations/` direc
 Translate all transcriptions using settings from config:
 
 ```bash
-flatfish translate
+ficherito translate
 ```
 
 ### Test with a Few Documents
@@ -46,7 +46,7 @@ flatfish translate
 Translate only the first 10 documents:
 
 ```bash
-flatfish translate --limit 10
+ficherito translate --limit 10
 ```
 
 ### Force Re-translation
@@ -54,7 +54,7 @@ flatfish translate --limit 10
 Re-translate all documents, even if translations already exist:
 
 ```bash
-flatfish translate --force
+ficherito translate --force
 ```
 
 ### Override Source Language
@@ -62,14 +62,14 @@ flatfish translate --force
 Translate from a specific source language:
 
 ```bash
-flatfish translate --source es
+ficherito translate --source es
 ```
 
 ---
 
 ## Configuration
 
-The translate command uses settings from the `translate:` section of `flatfish.yaml`:
+The translate command uses settings from the `translate:` section of `ficherito.yaml`:
 
 ```yaml
 translate:
@@ -115,7 +115,7 @@ Common language codes (ISO 639-1):
 For a complete list of supported languages, run:
 
 ```bash
-flatfish translate --help
+ficherito translate --help
 ```
 
 Or check the [Google Translate supported languages](https://cloud.google.com/translate/docs/languages).
@@ -160,5 +160,5 @@ The `default_tab` setting in your config controls which tab is shown first.
 ## See Also
 
 - **[Configuration](../usage/configuration.md)** - Full configuration reference
-- **[Transcription](transcribe.md)** - Extracting text from images
+- **[Extract](extract.md)** - Extracting text from images
 - **[Building Sites](../usage/building-sites.md)** - Generate the website with translations

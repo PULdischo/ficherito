@@ -1,6 +1,6 @@
 # Quick Start
 
-Get up and running with Flatfish in 10 minutes! This guide assumes you've already [installed Flatfish](installation.md).
+Get up and running with Ficherito in 10 minutes! This guide assumes you've already [installed Ficherito](installation.md).
 
 ---
 
@@ -8,8 +8,8 @@ Get up and running with Flatfish in 10 minutes! This guide assumes you've alread
 
 In this quick start, you'll:
 
-1. Create a new Flatfish project
-2. Configure it to process a sample dataset
+1. Create a new Ficherito project
+2. Add a few document images
 3. Run the processing pipeline
 4. Preview your generated website
 
@@ -17,224 +17,135 @@ In this quick start, you'll:
 
 ## Step 1: Create a New Project
 
-Open your terminal, make sure your virtual environment is activated, and create a new project:
-
 ```bash
-# Navigate to your projects folder
-cd ~/flatfish-projects
-
-# Create a new project
-flatfish init my-first-collection
+mkdir my-first-collection && cd my-first-collection
+ficherito init
 ```
 
-This creates a new folder called `my-first-collection` with the following structure:
+This creates:
 
 ```
 my-first-collection/
-├── flatfish.yaml     # Your project configuration
-├── .env.example      # Template for API keys
-├── .gitignore        # Files to exclude from version control
-└── README.md         # Project documentation
-```
-
-Now enter the project directory:
-
-```bash
-cd my-first-collection
+├── ficherito.yaml     # Your project configuration
+├── .env                # API key (created from .env.example)
+├── .env.example        # Template for API keys
+├── images/             # Put your document images here
+├── transcriptions/
+├── translations/
+└── entities/
 ```
 
 ---
 
-## Step 2: Add Your API Keys
+## Step 2: Add Your API Key
 
-Copy the example environment file and add your API keys:
-
-```bash
-cp .env.example .env
-```
-
-Now edit the `.env` file with your favorite text editor:
+`ficherito init` already created `.env` for you — just edit it:
 
 ```bash
 nano .env
 ```
 
-Add your keys:
-
 ```bash
-HUGGINGFACE_TOKEN=hf_your_token_here
-DASHSCOPE_API_KEY=sk_your_key_here
+OPENAI_BASE_URL=https://dashscope-intl.aliyuncs.com/compatible-mode/v1
+OPENAI_API_KEY=sk-your-key-here
+OPENAI_MODEL=qwen-vl-max
 ```
-
-Save and exit (in nano: `Ctrl+X`, then `Y`, then `Enter`).
 
 ---
 
-## Step 3: Configure Your Dataset
+## Step 3: Add Some Images
 
-Edit `flatfish.yaml` to point to your document dataset:
+Copy a handful of document images (JPEG, PNG, TIFF, WebP, HEIC, or PDF) into `images/`:
 
 ```bash
-nano flatfish.yaml
+cp /path/to/scans/*.jpg images/
 ```
 
-For this quick start, we'll use a sample dataset. Update the file to look like this:
-
-```yaml
-# Dataset Configuration
-dataset:
-  source: "PULdischo/marshall-diaries"  # Sample historical diary
-  splits:
-    - "train"
-  image_column: "image"
-
-# Processing Options
-processing:
-  extract_entities: true
-  entity_context: true
-
-# Summary Options
-summary:
-  enabled: true
-  model: "qwen-vl-max"
-  sample_size: 20  # Limit for quick testing
-
-# Website Options
-website:
-  title: "Marshall Diaries"
-  description: "A collection of historical diary pages"
-  password: ""  # Leave empty for public access
-
-# Output Directories
-output:
-  transcriptions_dir: "transcriptions"
-  entities_dir: "entities"
-  summaries_dir: "summaries"
-  site_dir: "_site"
-```
-
-Save and exit.
+`ficherito.yaml` already points `dataset.images_dir` at `images/`, so there's nothing else to configure for a quick test.
 
 ---
 
 ## Step 4: Validate Your Setup
 
-Before processing, let's make sure everything is configured correctly:
-
 ```bash
-flatfish validate
+ficherito validate
 ```
 
-You should see green checkmarks for each validation step:
-
 ```
-✓ Configuration file found
-✓ API keys configured
-✓ Dataset accessible
-✓ Output directories ready
-```
+✓ Config file valid
+✓ LLM base URL: https://dashscope-intl.aliyuncs.com/compatible-mode/v1
+✓ API key found
+✓ Model: qwen-vl-max
+✓ Images folder: images
 
-If you see any errors, double-check your API keys and configuration.
+Ready to process!
+```
 
 ---
 
 ## Step 5: Process Your Documents
 
-Now for the exciting part! Run the full processing pipeline:
-
 ```bash
-flatfish process
-```
-
-You'll see progress updates as Flatfish:
-
-1. Downloads document images from the dataset
-2. Extracts text from each image
-3. Identifies named entities (people, places, dates)
-4. Generates an AI-powered summary
-5. Builds a searchable static website
-
-```
-Downloading dataset...
-✓ Downloaded 100 images
-
-Extracting text...
-  Processing image 1/100...
-  Processing image 2/100...
-  ...
-✓ Text extraction complete
-
-Extracting entities...
-  ...
-✓ Entity extraction complete
-
-Generating summary...
-  Processing batch 1/5...
-  ...
-✓ Summary generated
-
-Building website...
-✓ Website built successfully
-
-Done! Your site is ready at _site/
+ficherito process --limit 5
 ```
 
 ```{tip}
-For large collections, this process can take a while. You can start with a subset by setting `sample_size` in your configuration.
+`--limit 5` processes just the first 5 images — useful for a quick test before running the whole collection. Drop it to process everything.
+```
+
+This extracts text, identifies entities, and builds the website in one go:
+
+```
+Extracting text (5/5)...
+Extracting entities (5/5)...
+Building website...
+
+✓ Pipeline complete!
+  Transcriptions: transcriptions/
+  Entities: entities/
+  Website: site/_site/
 ```
 
 ---
 
 ## Step 6: Preview Your Site
 
-Start the local preview server:
-
 ```bash
-flatfish serve
+ficherito serve
 ```
 
-You'll see:
-
 ```
-Starting local server...
-✓ Server running at http://localhost:8000
-
-Press Ctrl+C to stop
+Serving at http://localhost:8000
+Press Ctrl+C to stop.
 ```
 
-Open your web browser and go to [http://localhost:8000](http://localhost:8000). You'll see your document collection website!
+Open [http://localhost:8000](http://localhost:8000) — you'll land on a password gate (default password: `changeme`, set via `website.password` in `ficherito.yaml`), then the search page.
 
 ---
 
 ## What You've Built
 
-Your website includes:
-
-- **📄 Document Browser** - Page through all documents with images and transcriptions
-- **🔍 Full-Text Search** - Search across all transcriptions
-- **🏷️ Entity Index** - Browse all people, places, and dates mentioned
-- **📊 Collection Overview** - AI-generated summary with timeline and research questions
+- **📄 Document pages** - Zoomable image viewer + transcription + entities, with previous/next navigation
+- **🔍 Full-text search** - Powered by Pagefind
+- **🏷️ Browse by Entity** - People, places, dates, and more, with mention counts
+- **📅 Browse by Date** - Filterable by date range
 
 ---
 
 ## Next Steps
 
-Congratulations! You've processed your first document collection. Here's what to do next:
-
 - **[Your First Project](first-project.md)** - A deeper dive with your own documents
-- **[Configuration Guide](../usage/configuration.md)** - Customize Flatfish for your needs
-- **[Deployment](../usage/deployment.md)** - Share your site with the world
+- **[Configuration Guide](../usage/configuration.md)** - Customize Ficherito for your needs
+- **[Deployment](../usage/deployment.md)** - Share your site with the world (GitHub Pages)
 
 ---
 
 ## Cleaning Up
 
-If you want to start over or remove generated files:
-
 ```bash
 # Remove all generated files
-rm -rf transcriptions/ entities/ summaries/ _site/
+rm -rf transcriptions/ translations/ entities/ site/_site/
 
-# Or just remove the site
-rm -rf _site/
+# Or reset the site build entirely (including the Eleventy scaffold)
+rm -rf site/
 ```

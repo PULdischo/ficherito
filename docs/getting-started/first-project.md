@@ -1,17 +1,16 @@
 # Your First Project
 
-This tutorial walks you through creating a complete Flatfish project from start to finish. We'll work with a real historical document collection and explore all of Flatfish's features.
+This tutorial walks you through a complete Ficherito project from start to finish, using your own historical document images.
 
 ---
 
 ## What We'll Cover
 
-1. Understanding your source material
-2. Uploading documents to Hugging Face
-3. Configuring Flatfish
-4. Running individual pipeline stages
-5. Reviewing and editing outputs
-6. Building and deploying your site
+1. Preparing your document images
+2. Configuring Ficherito
+3. Running the pipeline step by step
+4. Reviewing and editing outputs
+5. Building, previewing, and deploying your site
 
 **Time needed:** 30-45 minutes
 
@@ -21,259 +20,119 @@ This tutorial walks you through creating a complete Flatfish project from start 
 
 Make sure you have:
 
-- [ ] Flatfish installed ([Installation Guide](installation.md))
-- [ ] Your API keys ready ([Getting API Keys](installation.md#step-4-get-your-api-keys))
-- [ ] A collection of document images (we'll show you how to prepare these)
+- [ ] Ficherito installed ([Installation Guide](installation.md))
+- [ ] An API key ready ([Getting an API Key](installation.md#step-5-get-an-api-key))
+- [ ] A folder of document images
 
 ---
 
 ## Part 1: Preparing Your Documents
 
-### Understanding Document Images
-
-Flatfish works best with:
-
-- **Clear, high-resolution scans** (300 DPI or higher)
-- **Individual pages** (one document per image)
-- **Common image formats** (JPEG, PNG, TIFF)
-- **Consistent orientation** (upright, not rotated)
-
-```{tip}
-If your documents are in PDF format, you'll need to convert them to images first. Tools like `pdftoppm` or Adobe Acrobat can help.
-```
-
-### Naming Your Files
-
-Good file naming helps Flatfish understand the order of your documents. We recommend including dates or sequence numbers:
-
-```
-# Good naming patterns
-1913-01-15_page_001.jpg
-1913-01-15_page_002.jpg
-1913-01-16_page_001.jpg
-
-# Also acceptable
-diary_001.jpg
-diary_002.jpg
-letter_1913-01-15.jpg
-```
+See [Preparing Your Images](creating-datasets.md) for naming and format
+recommendations. In short: clear scans (300 DPI+), one page per image, and
+filenames that include a date if you have one (`1863-04-15_page1.jpg`) —
+Ficherito uses it to sort documents chronologically and to drive Browse by
+Date.
 
 ---
 
-## Part 2: Creating a Hugging Face Dataset
-
-Flatfish reads documents from Hugging Face datasets. This makes it easy to share and version your collections.
-
-### Step 1: Create a Hugging Face Account
-
-If you haven't already, sign up at [huggingface.co](https://huggingface.co).
-
-### Step 2: Create a New Dataset
-
-1. Click the **+** icon in the top navigation
-2. Select **New Dataset**
-3. Give it a name like `my-document-collection`
-4. Choose **Private** (you can make it public later)
-5. Click **Create dataset**
-
-### Step 3: Upload Your Images
-
-The easiest way to upload is using the web interface:
-
-1. Click **Files and versions** tab
-2. Click **Add file** → **Upload files**
-3. Drag and drop your images
-4. Click **Commit changes**
-
-For larger collections, use the Hugging Face CLI:
-
-```bash
-# Install the CLI
-pip install huggingface_hub
-
-# Login
-huggingface-cli login
-
-# Upload a folder of images
-huggingface-cli upload your-username/your-dataset ./images --repo-type dataset
-```
-
-### Step 4: Create a Dataset Loading Script (Optional)
-
-For more control, create a `dataset.py` file that tells Hugging Face how to load your data:
-
-```python
-# This goes in your dataset repository
-import datasets
-from pathlib import Path
-
-class MyDocuments(datasets.GeneratorBasedBuilder):
-    def _info(self):
-        return datasets.DatasetInfo(
-            features=datasets.Features({
-                "image": datasets.Image(),
-                "filename": datasets.Value("string"),
-                "date": datasets.Value("string"),
-            })
-        )
-
-    def _split_generators(self, dl_manager):
-        return [
-            datasets.SplitGenerator(
-                name=datasets.Split.TRAIN,
-                gen_kwargs={"images_dir": "images/"},
-            ),
-        ]
-
-    def _generate_examples(self, images_dir):
-        for idx, image_path in enumerate(sorted(Path(images_dir).glob("*.jpg"))):
-            # Extract date from filename if present
-            date = image_path.stem.split("_")[0] if "_" in image_path.stem else ""
-            yield idx, {
-                "image": str(image_path),
-                "filename": image_path.name,
-                "date": date,
-            }
-```
-
----
-
-## Part 3: Setting Up Your Flatfish Project
+## Part 2: Setting Up Your Project
 
 ### Create the Project
 
 ```bash
-cd ~/flatfish-projects
-flatfish init civil-war-letters
-cd civil-war-letters
+cd ~/ficherito-projects
+mkdir civil-war-letters && cd civil-war-letters
+ficherito init
 ```
 
-### Configure Your API Keys
+### Add Your Images
 
 ```bash
-cp .env.example .env
+cp /path/to/scans/*.jpg images/
+```
+
+### Configure Your API Key
+
+`ficherito init` already created `.env` — edit it:
+
+```bash
 nano .env
 ```
 
-Add your keys:
-
 ```bash
-HUGGINGFACE_TOKEN=hf_xxxxxxxxxxxxx
-DASHSCOPE_API_KEY=sk_xxxxxxxxxxxxx
+OPENAI_BASE_URL=https://dashscope-intl.aliyuncs.com/compatible-mode/v1
+OPENAI_API_KEY=sk-your-key-here
+OPENAI_MODEL=qwen-vl-max
 ```
 
 ### Configure the Project
 
-Edit `flatfish.yaml`:
+Edit `ficherito.yaml`:
 
 ```yaml
-# Dataset Configuration
 dataset:
-  source: "your-username/your-dataset-name"
-  splits:
-    - "train"
-  image_column: "image"
-  date_column: "date"  # Optional: if your dataset has dates
+  images_dir: "images"
+  recursive: false
 
-# Processing Options
 processing:
   extract_entities: true
-  entity_context: true  # Include descriptions like "Person; the letter's recipient"
+  entity_context: true  # e.g. "Person; the letter's recipient"
 
-# Custom Prompts (optional - defaults work well for most documents)
+# Custom prompt (optional — the default works well for most documents)
 prompts:
   text_extraction: |
-    You are a historical document transcription assistant working with 
-    Civil War era letters. Given the raw OCR output from a handwritten 
+    You are a historical document transcription assistant working with
+    Civil War era letters. Given the raw OCR output from a handwritten
     document, clean up and correct the text while:
-    
+
     1. Preserving original 19th-century spelling conventions
     2. Maintaining original punctuation style
     3. Fixing obvious OCR errors
     4. Marking unclear portions with [?]
-    
+
     Raw OCR text:
     {raw_text}
-    
+
     Cleaned transcription:
 
-# Summary Options
-summary:
-  enabled: true
-  model: "qwen-vl-max"
-  sample_size: 100  # Process up to 100 documents for summary
-
-# Website Options
 website:
   title: "Civil War Family Letters"
-  description: "Letters from the Smith family, 1861-1865"
-  password: "family2024"  # Optional password protection
-
-# Output Directories
-output:
-  transcriptions_dir: "transcriptions"
-  entities_dir: "entities"
-  summaries_dir: "summaries"
-  site_dir: "_site"
+  password: "family2026"
 ```
 
 ### Validate Your Configuration
 
 ```bash
-flatfish validate
+ficherito validate
 ```
 
 ---
 
-## Part 4: Running the Pipeline Step by Step
+## Part 3: Running the Pipeline Step by Step
 
-While `flatfish process` runs everything at once, let's go through each step individually to understand what's happening.
+`ficherito process` runs everything at once, but let's go through each step individually.
 
 ### Step 1: Extract Text
 
 ```bash
-flatfish extract
+ficherito extract
 ```
 
-This downloads images and extracts text from each one. Progress is shown in the terminal:
-
-```
-Extracting text from 50 documents...
-  [1/50] 1863-04-15_page_001.jpg ✓
-  [2/50] 1863-04-15_page_002.jpg ✓
-  ...
-```
-
-**Output:** Transcriptions are saved to `transcriptions/` as JSON files:
-
-```json
-{
-  "id": "1863-04-15_page_001",
-  "date": "1863-04-15",
-  "raw_text": "April 15th 1863\nDear Sarah...",
-  "cleaned_text": "April 15th 1863\nDear Sarah,\n\nI write to you from camp...",
-  "confidence": 0.92
-}
-```
+**Output:** A Markdown transcription per document in `transcriptions/`, e.g. `transcriptions/1863-04-15_page1.md`.
 
 ### Step 2: Extract Entities
 
 ```bash
-flatfish entities
-```
-
-This identifies people, places, dates, and other entities:
-
-```
-Extracting entities from 50 documents...
-  [1/50] 1863-04-15_page_001.json ✓ (12 entities)
-  ...
+ficherito entities
 ```
 
 **Output:** Entities are saved to `entities/`:
 
 ```json
 {
+  "source_image": "1863-04-15_page1",
+  "extracted_at": "2026-01-15T14:35:00Z",
   "entities": [
     {
       "text": "Sarah",
@@ -289,141 +148,98 @@ Extracting entities from 50 documents...
 }
 ```
 
-### Step 3: Generate Summary
+A `consolidated.json` file grouping all entities by type is generated too.
+
+### Step 3: Build the Website
 
 ```bash
-flatfish summarize
+ficherito build
 ```
 
-This analyzes all documents and generates:
-
-- A timeline of events
-- Key changes across documents
-- Research questions
+This emits Markdown + frontmatter + images into `site/`, then runs Eleventy
+and Pagefind:
 
 ```
-Generating summary from 50 documents...
-  Processing batch 1/3...
-  Processing batch 2/3...
-  Processing batch 3/3...
-  Combining batches...
-✓ Summary generated
-```
-
-**Output:** Summary files in `summaries/`:
-
-- `finding_aid.txt` - Narrative summary in archival format
-- `timeline.txt` - Chronological events
-- `key_changes.txt` - Changes observed across documents
-- `research_questions.txt` - Suggested research questions
-
-### Step 4: Build the Website
-
-```bash
-flatfish build
-```
-
-This generates a static website from all your processed data:
-
-```
-Building website...
-  Generating document pages...
-  Generating entity index...
-  Generating overview pages...
-  Indexing for search...
-✓ Website built at _site/
+Installing site dependencies (npm install)...
+Running Eleventy build...
+✓ Site built to site/_site/
 ```
 
 ---
 
-## Part 5: Reviewing and Editing
+## Part 4: Reviewing and Editing
 
 ### Editing Transcriptions
 
-Sometimes the AI makes mistakes. You can edit the transcription files directly:
+Sometimes the AI makes mistakes. Edit the Markdown files directly:
 
 ```bash
-nano transcriptions/1863-04-15_page_001.json
+nano transcriptions/1863-04-15_page1.md
 ```
 
-Find the `cleaned_text` field and make corrections. Then rebuild the site:
+Then rebuild:
 
 ```bash
-flatfish build
+ficherito build
 ```
 
-### Editing the Summary
-
-The summary files are designed for human editing:
+### Editing Entities
 
 ```bash
-# Edit the timeline
-nano summaries/timeline.txt
-
-# Edit research questions
-nano summaries/research_questions.txt
+nano entities/1863-04-15_page1.json
 ```
 
-Timeline format:
-```
-# One event per line: DATE | DESCRIPTION
-1863-04-15 | John writes to Sarah from camp near Fredericksburg
-1863-04-18 | Regiment receives orders to march north
-```
+You can correct misidentified entities, add missing ones, or improve
+context descriptions — then rebuild.
 
-After editing, rebuild:
+### Editing via the CMS Instead
 
-```bash
-flatfish build
-```
+Once deployed, collaborators can make both kinds of edits — transcription
+text and entities — through the Sveltia CMS at `/admin/` instead of editing
+files directly. See [Deployment](../usage/deployment.md#editing-content-with-sveltia-cms).
 
 ---
 
-## Part 6: Preview and Deploy
+## Part 5: Preview and Deploy
 
 ### Preview Locally
 
 ```bash
-flatfish serve
+ficherito serve
 ```
 
 Open [http://localhost:8000](http://localhost:8000) to see your site.
 
 ### Deploy to the Web
 
-When you're ready to share your site:
-
 ```bash
-# Set your Netlify credentials
-export NETLIFY_TOKEN=your-token
-
-# Deploy (first time creates a new site)
-flatfish deploy
-
-# Or deploy to an existing site
-export NETLIFY_SITE_ID=your-site-id
-flatfish deploy
+git init
+git add .
+git commit -m "Initial commit"
+git remote add origin https://github.com/yourusername/civil-war-letters.git
+git push -u origin main
 ```
 
-Your site is now live! Flatfish will show you the URL.
+Then add the GitHub Actions workflow and enable Pages — see
+[Deployment](../usage/deployment.md#deploying-to-github-pages) for the full
+steps.
 
 ---
 
 ## Summary
 
-You've now completed a full Flatfish project! Here's what you accomplished:
+You've now completed a full Ficherito project:
 
-- ✅ Prepared and uploaded document images
-- ✅ Configured a Flatfish project
+- ✅ Prepared and organized document images
+- ✅ Configured a Ficherito project
 - ✅ Extracted text from historical handwriting
 - ✅ Identified named entities with context
-- ✅ Generated AI-powered summaries
-- ✅ Built and deployed a searchable website
+- ✅ Built and deployed a searchable, editable website
 
 ---
 
 ## Next Steps
 
 - **[Configuration Deep Dive](../usage/configuration.md)** - Customize prompts and settings
-- **[Working with Large Collections](../usage/processing-documents.md)** - Handle thousands of documents
+- **[Processing Documents](../usage/processing-documents.md)** - Handle large collections
 - **[Troubleshooting](../help/troubleshooting.md)** - Solve common problems

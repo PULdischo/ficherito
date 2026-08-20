@@ -27,7 +27,7 @@ parts:
       - file: commands/overview
       - file: commands/init
       - file: commands/process
-      - file: commands/transcribe
+      - file: commands/extract
       - file: commands/entities
       - file: commands/translate
       - file: commands/build

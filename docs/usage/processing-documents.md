@@ -1,62 +1,64 @@
 # Processing Documents
 
-Learn how to process document collections efficiently, handle large datasets, and troubleshoot common issues.
+Learn how the processing pipeline works, and how to handle large collections efficiently.
 
 ---
 
 ## The Processing Pipeline
 
-When you run `flatfish process`, several stages happen in sequence:
+`ficherito process` runs these stages in sequence:
 
 ```
 ┌─────────────────┐
-│  1. Download    │  Fetch images from Hugging Face
+│  1. Scan        │  Find image files in dataset.images_dir
+└────────┬────────┘  (rendering any PDFs to page images first)
+         │
+         ▼
+┌─────────────────┐
+│  2. Extract     │  HTR/OCR via the configured vision model
 └────────┬────────┘
          │
          ▼
 ┌─────────────────┐
-│  2. Extract     │  OCR/HTR to get raw text
+│  3. Entities    │  Extract people, places, dates (optional)
 └────────┬────────┘
          │
          ▼
 ┌─────────────────┐
-│  3. Clean       │  AI cleanup of transcription
-└────────┬────────┘
-         │
-         ▼
-┌─────────────────┐
-│  4. Entities    │  Extract people, places, dates
-└────────┬────────┘
-         │
-         ▼
-┌─────────────────┐
-│  5. Summarize   │  Generate timeline & analysis
-└────────┬────────┘
-         │
-         ▼
-┌─────────────────┐
-│  6. Build       │  Create static website
+│  4. Build       │  Emit content, run Eleventy + Pagefind
 └─────────────────┘
 ```
+
+Translation is not part of `ficherito process` — run `ficherito translate`
+separately (see [Translation](translation.md)).
 
 ---
 
 ## Running the Full Pipeline
 
-Process everything with one command:
-
 ```bash
-flatfish process
+ficherito process
 ```
 
-This is equivalent to running each stage separately:
+Equivalent to:
 
 ```bash
-flatfish extract
-flatfish entities
-flatfish summarize
-flatfish build
+ficherito extract
+ficherito entities
+ficherito build
 ```
+
+### Options
+
+| Option | Short | Description | Default |
+|--------|-------|--------------|---------|
+| `--config` | `-c` | Path to config file | `ficherito.yaml` |
+| `--limit` | `-l` | Limit number of documents | all |
+| `--concurrency` | `-j` | Concurrent API requests | `10` |
+| `--batch-size` | `-b` | Images per batch (memory) | `50` |
+| `--skip-entities` | | Skip entity extraction | `False` |
+| `--skip-build` | | Skip site building | `False` |
+| `--verbose` | `-V` | Verbose output | `False` |
 
 ---
 
@@ -65,225 +67,108 @@ flatfish build
 ### Extract Text Only
 
 ```bash
-flatfish extract
+ficherito extract
 ```
 
-**What it does:**
-- Downloads images from your Hugging Face dataset
-- Sends each image to the Qwen-VL model for text extraction
-- Cleans up the raw OCR output using your prompt
-- Saves results to `transcriptions/`
-
-**When to use:**
-- You only need transcriptions, not entities or summaries
-- You want to review transcriptions before proceeding
+- Sends each image to the configured vision model for text extraction
+- Saves results to `transcriptions/*.md`
+- Already-transcribed images are skipped
 
 ### Extract Entities Only
 
 ```bash
-flatfish entities
+ficherito entities
 ```
 
-**What it does:**
 - Reads transcriptions from `transcriptions/`
-- Identifies named entities (people, places, dates, etc.)
-- Adds contextual descriptions
-- Saves results to `entities/`
-
-**Prerequisites:**
-- Must run `flatfish extract` first
-
-### Generate Summary Only
-
-```bash
-flatfish summarize
-```
-
-**What it does:**
-- Reads transcriptions and sorts by date
-- Processes documents in batches (20 images per batch)
-- Generates timeline, key changes, and research questions
-- Saves results to `summaries/`
-
-**Prerequisites:**
-- Must run `flatfish extract` first
+- Saves results to `entities/*.json` plus `entities/consolidated.json`
+- **Prerequisite:** run `ficherito extract` first
 
 ### Build Website Only
 
 ```bash
-flatfish build
+ficherito build
 ```
 
-**What it does:**
-- Reads transcriptions, entities, and summaries
-- Generates HTML pages for each document
-- Creates entity index and search index
-- Outputs to `_site/`
-
-**Prerequisites:**
-- Must run `flatfish extract` first
-- Entities and summaries are optional
+- Emits Markdown + frontmatter + images into `site/`
+- Runs Eleventy and Pagefind
+- **Prerequisite:** run `ficherito extract` first (entities are optional)
 
 ---
 
 ## Working with Large Collections
 
-### Understanding Batch Processing
+### Concurrency and Batching
 
-For collections with more than 20 documents, Flatfish processes them in batches. This is necessary because:
-
-1. **AI model limits** - Qwen-VL can only process ~20 images per request
-2. **Memory management** - Processing thousands of images at once would crash
-3. **Resume capability** - If processing fails, you can resume from where you left off
-
-### Resuming Interrupted Processing
-
-If processing stops (network error, timeout, etc.), simply run the same command again:
+Images are processed concurrently (`--concurrency`, default 10) and in
+batches (`--batch-size`, default 50, to bound memory use while streaming
+results to disk as each one completes).
 
 ```bash
-flatfish extract
-```
+# Faster, if your API tier allows it
+ficherito process --concurrency 20
 
-Flatfish automatically:
-- Detects which documents are already processed
-- Skips completed documents
-- Continues from where it left off
-
-### Monitoring Progress
-
-Watch the terminal for progress updates:
-
-```
-Extracting text from 500 documents...
-  [125/500] document_125.jpg ✓ (25% complete)
-  Estimated time remaining: 45 minutes
-```
-
-### Setting Sample Size for Testing
-
-For large collections, test with a subset first:
-
-```yaml
-# In flatfish.yaml
-summary:
-  sample_size: 50  # Only use 50 documents for summary
-```
-
-Or use command-line options:
-
-```bash
-flatfish extract --limit 20  # Only process first 20 documents
-```
-
----
-
-## Performance Tips
-
-### Optimize for Speed
-
-```yaml
-processing:
-  concurrency: 5  # Process 5 documents at once (default: 3)
+# More conservative, for rate-limited tiers
+ficherito process --concurrency 3
 ```
 
 ```{warning}
-Higher concurrency may hit API rate limits. Start with 3 and increase gradually.
+Higher concurrency can hit API rate limits. Start conservative and increase gradually.
 ```
 
-### Optimize for Cost
+### Resuming Interrupted Processing
 
-```yaml
-summary:
-  model: "qwen-vl-plus"  # Cheaper than qwen-vl-max
-  sample_size: 100       # Limit documents in summary
+Both `extract` and `entities` skip files that already have output, so
+re-running the same command after an interruption picks up where it left
+off:
+
+```bash
+ficherito extract
+# Skipped 340 images with existing transcriptions
+# Extracting text (160/500)...
 ```
 
-### Estimate Processing Time
+### Testing on a Subset
 
-Rough estimates per document:
-- Text extraction: 5-15 seconds
-- Entity extraction: 3-8 seconds
-- Summary generation: 10-30 seconds per batch
-
-For a 500-document collection:
-- Text extraction: ~45-90 minutes
-- Entities: ~30-60 minutes
-- Summary: ~15-30 minutes
+```bash
+ficherito process --limit 20
+```
 
 ---
 
 ## Handling Errors
 
-### Common Errors
+Individual image failures are logged and skipped — processing continues
+for the rest of the collection. Common cases:
 
-**API Rate Limits**
-```
-Error: Rate limit exceeded. Retrying in 60 seconds...
-```
+**Rate limits** — the request is retried; if it persists, reduce `--concurrency`.
 
-Flatfish automatically retries with backoff. If it persists, reduce concurrency.
+**Invalid images** — check the file is a valid, supported format (JPEG,
+PNG, TIFF, WebP, HEIC, BMP, GIF, or PDF).
 
-**Timeout Errors**
-```
-Error: Request timed out for document_123.jpg
-```
-
-The document may be too large or complex. It will be skipped and noted.
-
-**Invalid Images**
-```
-Error: Cannot process document_456.jpg - invalid image format
-```
-
-Check that the file is a valid image (JPEG, PNG, TIFF).
-
-### Viewing Error Logs
-
-Check the detailed log file:
+**Verbose output** for debugging:
 
 ```bash
-cat flatfish.log
-```
-
-Or increase verbosity:
-
-```bash
-flatfish process --verbose
-```
-
-### Skipping Problematic Documents
-
-Create a `.flatfishignore` file:
-
-```
-# Skip these files
-document_corrupted.jpg
-batch_2023/*_draft.jpg
+ficherito process --verbose
 ```
 
 ---
 
 ## Checking Processing Status
 
-See what's been processed:
-
 ```bash
-flatfish status
+ficherito status
 ```
 
-Output:
 ```
-Processing Status
-═══════════════════════════════════════
-
-Dataset: PULdischo/marshall-diaries
-Total documents: 500
-
-Transcriptions:  450/500 (90%)  ▓▓▓▓▓▓▓▓▓░
-Entities:        450/500 (90%)  ▓▓▓▓▓▓▓▓▓░
-Summary:         ✓ Generated
-
-Last processed: 2024-01-15 14:32:00
+                Ficherito Status
+┏━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┓
+┃ Component      ┃ Status       ┃ Details        ┃
+┡━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━┩
+│ Transcriptions │ 450 files    │ transcriptions │
+│ Entities       │ 450 files    │ entities       │
+│ Website        │ Built        │ site/_site     │
+└────────────────┴──────────────┴────────────────┘
 ```
 
 ---
@@ -293,73 +178,41 @@ Last processed: 2024-01-15 14:32:00
 ### Reprocess Everything
 
 ```bash
-# Delete all outputs
-rm -rf transcriptions/ entities/ summaries/
-
-# Process again
-flatfish process
+rm -rf transcriptions/ entities/
+ficherito process
 ```
 
-### Reprocess Specific Documents
-
-Delete the specific output files:
+### Reprocess a Specific Document
 
 ```bash
-rm transcriptions/document_123.json
-rm entities/document_123.json
-
-flatfish extract
-flatfish entities
-```
-
-### Regenerate Summary Only
-
-```bash
-rm -rf summaries/
-flatfish summarize
-```
-
-### Regenerate Summary Combination Only
-
-If batch files exist but combining failed:
-
-```bash
-flatfish combine
+rm transcriptions/document_123.md entities/document_123.json
+ficherito extract
+ficherito entities
 ```
 
 ---
 
 ## Processing Different Document Types
 
-### Handwritten Documents
-
-Default settings work well. Consider customizing the prompt for specific handwriting styles:
+Customize `prompts.text_extraction` in `ficherito.yaml` for the material:
 
 ```yaml
+# Handwritten diaries
 prompts:
   text_extraction: |
-    This is a 19th-century American handwritten letter.
+    This is a 19th-century American handwritten diary entry.
     The writer uses common abbreviations of the period...
-```
 
-### Printed Historical Documents
-
-Printed text is usually cleaner:
-
-```yaml
+# Printed documents
 prompts:
   text_extraction: |
     This is a printed document from the early 20th century.
     Focus on preserving formatting and column structure...
 ```
 
-### Mixed Collections
-
-For collections with different document types, consider:
-
-1. Processing in separate batches
-2. Using different prompts for each type
-3. Creating multiple Flatfish projects
+For collections with very different document types, consider separate
+Ficherito projects (each with its own `ficherito.yaml` and prompts) rather
+than one shared configuration.
 
 ---
 
@@ -367,4 +220,4 @@ For collections with different document types, consider:
 
 - **[Transcription Details](transcription.md)** - Fine-tune text extraction
 - **[Entity Extraction](entities.md)** - Customize entity recognition
-- **[Summarization](summarization.md)** - Configure AI summaries
+- **[Building Sites](building-sites.md)** - Generate the website

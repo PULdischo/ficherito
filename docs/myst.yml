@@ -1,14 +1,14 @@
 # See docs at https://mystmd.org/guide/frontmatter
 version: 1
 project:
-  title: Flatfish Documentation
+  title: Ficherito Documentation
   description: Historical document analysis CLI - Extract, analyze, and present handwritten text from document images
   keywords:
     - historical documents
     - HTR
     - OCR
     - named entity recognition
-    - AI summarization
+    - static site generator
   authors:
     - name: Princeton University Library
       affiliation: Princeton University
@@ -27,6 +27,7 @@ project:
         - file: usage/processing-documents.md
         - file: usage/transcription.md
         - file: usage/entities.md
+        - file: usage/translation.md
         - file: usage/building-sites.md
         - file: usage/deployment.md
     - title: Concepts
@@ -39,8 +40,9 @@ project:
         - file: commands/overview.md
         - file: commands/init.md
         - file: commands/process.md
-        - file: commands/transcribe.md
+        - file: commands/extract.md
         - file: commands/entities.md
+        - file: commands/translate.md
         - file: commands/build.md
         - file: commands/serve.md
         - file: commands/deploy.md
@@ -53,7 +55,7 @@ project:
         - file: help/faq.md
         - file: help/glossary.md
 site:
-  title: Flatfish
+  title: Ficherito
   options:
     favicon: images/logo-light.png
     logo: images/logo-light.png

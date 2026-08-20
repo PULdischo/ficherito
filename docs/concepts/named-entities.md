@@ -1,6 +1,6 @@
 # Named Entity Recognition
 
-Learn how Flatfish identifies people, places, dates, and other important entities in your documents.
+Learn how Ficherito identifies people, places, dates, and other important entities in your documents.
 
 ---
 
@@ -10,82 +10,36 @@ Learn how Flatfish identifies people, places, dates, and other important entitie
 
 ```
 "John Smith traveled to Philadelphia on March 15, 1865."
- └── PERSON ──┘          └── PLACE ──┘  └── DATE ──────┘
+ └── PERSON ──┘          └── LOCATION ┘  └── DATE ──────┘
 ```
 
-NER transforms unstructured text into structured data that can be:
-- Searched
-- Filtered
-- Analyzed
-- Visualized
+NER turns unstructured text into structured data that can be browsed and searched.
 
 ---
 
 ## Entity Types
 
-Flatfish identifies these entity types:
+Ficherito's `ner_extraction` prompt recognizes these types:
 
-| Type | Code | Examples |
-|------|------|----------|
-| Person | `PER` | John Smith, Mrs. Wilson, General Grant |
-| Location | `LOC` | Philadelphia, Mississippi River, home |
-| Organization | `ORG` | Congress, First National Bank |
-| Date | `DATE` | March 15, 1865, yesterday, next week |
-| Time | `TIME` | 3 o'clock, noon, evening |
-| Money | `MONEY` | $5.00, fifty dollars, 3 shillings |
-| Event | `EVENT` | the war, harvest, election |
+| Type | Examples |
+|------|----------|
+| `PERSON` | John Smith, Mrs. Wilson, General Grant |
+| `LOCATION` | Philadelphia, Mississippi River, home |
+| `ORGANIZATION` | Congress, First National Bank |
+| `DATE` | March 15, 1865, yesterday, next week |
+| `MONEY` | $5.00, fifty dollars, 3 shillings |
+| `EVENT` | the war, harvest, election |
+| `DOCUMENT` | the deed, his will, this letter |
+| `LEGAL_TERM` | plaintiff, defendant, executor |
+| `OCCUPATION` | blacksmith, farmer, attorney |
+| `RELATIONSHIP` | my brother, her husband, the children |
 
----
-
-## How It Works
-
-### Step 1: Text Segmentation
-
-Break document into sentences:
-
-```
-"I saw Mr. Jones today. He mentioned traveling to New York."
-         ↓
-["I saw Mr. Jones today.", "He mentioned traveling to New York."]
-```
-
-### Step 2: Entity Detection
-
-Find entity spans:
-
-```
-"I saw Mr. Jones today."
-        └─────┘
-       PERSON at positions 6-15
-```
-
-### Step 3: Entity Classification
-
-Categorize each entity:
-
-```json
-{
-  "text": "Mr. Jones",
-  "label": "PER",
-  "start": 6,
-  "end": 15,
-  "confidence": 0.94
-}
-```
-
-### Step 4: Coreference Resolution
-
-Link mentions to the same entity:
-
-```
-"I saw Mr. Jones today. He was well."
-        └─────┘         └─┘
-        Same person!
-```
+You can add or change types by editing the `ner_extraction` prompt in
+`ficherito.yaml` — see [Entity Extraction](../usage/entities.md#customizing-entity-extraction).
 
 ---
 
-## The NER Process in Flatfish
+## How It Works in Ficherito
 
 ```
 ┌─────────────────┐
@@ -95,58 +49,85 @@ Link mentions to the same entity:
          │
          ▼
 ┌─────────────────┐
-│ spaCy NER       │  Identify entities using
-│ Model           │  trained language model
+│ LLM extraction  │  The `ner_extraction` prompt asks the model
+│ (same endpoint  │  to find entities and (optionally) explain
+│  as HTR)        │  each one's role in this specific document
 └────────┬────────┘
          │
          ▼
 ┌─────────────────┐
-│ Entity          │  Filter by confidence
-│ Filtering       │  Remove false positives
+│ Per-document    │  entities/<id>.json
+│ Entity File     │
 └────────┬────────┘
          │
          ▼
 ┌─────────────────┐
-│ Entity          │  Find variations and
-│ Normalization   │  standard forms
+│ Consolidation   │  Group by (text, type) across all documents,
+│                 │  track mention counts and per-document contexts
 └────────┬────────┘
          │
          ▼
 ┌─────────────────┐
-│ Entity          │
-│ Database        │
+│ consolidated    │  entities/consolidated.json
+│ .json           │  → powers Browse by Entity
 └─────────────────┘
 ```
+
+Unlike a classic NER pipeline, there's no separate span-detection /
+classification / coreference-resolution stage — the LLM does extraction
+and contextual description together in one call per document, guided by
+the prompt.
 
 ---
 
 ## Entity Output Format
 
-Entities are stored in JSON:
+**Per-document** (`entities/1865-03-15_letter.json`):
 
 ```json
 {
-  "document": "letter_1865_03_15.jpg",
+  "source_image": "1865-03-15_letter",
+  "extracted_at": "2026-01-15T14:35:00Z",
   "entities": [
     {
       "text": "John Smith",
-      "label": "PER",
-      "normalized": "Smith, John",
-      "start": 45,
-      "end": 55,
-      "confidence": 0.96,
-      "context": "...letter from John Smith regarding..."
+      "type": "PERSON",
+      "context": "Person; the writer of the letter",
+      "positions": [],
+      "confidence": null
     },
     {
       "text": "Philadelphia",
-      "label": "LOC",
-      "normalized": "Philadelphia, PA",
-      "start": 89,
-      "end": 101,
-      "confidence": 0.99,
-      "context": "...traveling to Philadelphia next week..."
+      "type": "LOCATION",
+      "context": "Location; where the writer traveled to",
+      "positions": [],
+      "confidence": null
     }
   ]
+}
+```
+
+**Consolidated** (`entities/consolidated.json`), grouped by type with
+mention counts and contexts across every document:
+
+```json
+{
+  "total_entities": 3456,
+  "unique_texts": 892,
+  "by_type": {
+    "PERSON": [
+      {
+        "text": "John Smith",
+        "type": "PERSON",
+        "contexts": [
+          {"document": "1865-03-15_letter", "context": "Person; the writer of the letter"}
+        ],
+        "documents": ["1865-03-15_letter"],
+        "count": 1
+      }
+    ]
+  },
+  "all_entities": ["..."]
 }
 ```
 
@@ -156,244 +137,86 @@ Entities are stored in JSON:
 
 ### Spelling Variations
 
-The same name may appear different ways:
-
 ```
 "Jno. Smith"     → John Smith
 "J. Smith Esq."  → John Smith
 "Mr Smith"       → John Smith
-"John Smyth"     → John Smith (or different person?)
+"John Smyth"     → John Smith (or a different person?)
 ```
 
-### Abbreviations
-
-Historical documents use many abbreviations:
-
-| Abbreviation | Meaning |
-|--------------|---------|
-| Jno. | John |
-| Wm. | William |
-| Thos. | Thomas |
-| Esq. | Esquire |
-| Mrs. | Mistress/Missus |
-| Col. | Colonel |
-| Rev. | Reverend |
+Ficherito doesn't automatically normalize these — the LLM will often
+resolve obvious abbreviations in context, but distinct spellings can still
+end up as separate entities in `consolidated.json`. Correct these by
+editing the entity JSON files directly (or via the CMS) and rebuilding.
 
 ### Context Dependency
 
-Same word, different entity types:
+The same word can be a different entity type depending on context:
 
 ```
 "Washington" → George Washington (PERSON)
 "Washington" → Washington, D.C. (LOCATION)
-"Washington" → Washington Army (ORGANIZATION)
+"Washington" → the Washington regiment (ORGANIZATION)
 ```
+
+The `entity_context` field — a short phrase explaining the entity's role in
+*that specific document* — is what disambiguates these on the site.
 
 ---
 
 ## Improving Entity Extraction
 
-### Custom Entity Lists
-
-Provide known entities:
+### Give the Prompt More Guidance
 
 ```yaml
-# flatfish.yaml
-entities:
-  custom_persons:
-    - "John Smith"
-    - "Mary Williams"
-    - "General Harrison"
-  custom_locations:
-    - "Maple Grove"
-    - "Smith Farm"
-    - "Old Mill Road"
+prompts:
+  ner_extraction: |
+    You are a historical document analyst specializing in named entity recognition.
+    Extract all named entities from the following transcribed document text.
+
+    Pay special attention to:
+    - All people mentioned, even by nickname or title
+    - Place names, including informal references
+    - Any dates, even relative ones like "last week"
+
+    Document text:
+    {document_text}
+
+    Return entities as a JSON array:
+    [
+      {"text": "...", "type": "...", "context": "..."}
+    ]
 ```
 
-### Gazetteer Files
+### Manual Review and Correction
 
-Reference lists for normalization:
-
-```csv
-# places.csv
-original,normalized,type
-"Phila.","Philadelphia, PA",city
-"N.Y.","New York, NY",city
-"Va.","Virginia",state
-```
-
-### Post-Processing
-
-Manual review and correction:
-
-1. Export entities to spreadsheet
-2. Review and correct
-3. Re-import corrections
-
----
-
-## Entity Linking
-
-Connect entities to external databases:
-
-### Example: Wikidata Linking
-
-```json
-{
-  "text": "Abraham Lincoln",
-  "label": "PER",
-  "wikidata_id": "Q91",
-  "wikipedia_url": "https://en.wikipedia.org/wiki/Abraham_Lincoln"
-}
-```
-
-### Example: GeoNames Linking
-
-```json
-{
-  "text": "Philadelphia",
-  "label": "LOC",
-  "geonames_id": "4560349",
-  "coordinates": {"lat": 39.9526, "lon": -75.1652}
-}
-```
+1. Extract entities with `ficherito entities`
+2. Review `entities/*.json` (or edit via the Sveltia CMS once deployed)
+3. Correct misidentified entities, fix types, improve context text
+4. Re-run `ficherito build` to regenerate `consolidated.json` and the site
 
 ---
 
 ## Using Entity Data
 
-### Search Index
-
-Find all documents mentioning a person:
-
-```python
-results = search.query(entity="John Smith", type="PER")
-```
-
-### Network Analysis
-
-Who appears together in documents?
-
-```
-John Smith ←→ Mary Williams (5 documents)
-John Smith ←→ Philadelphia (12 documents)
-John Smith ←→ First Bank (3 documents)
-```
-
-### Timeline Generation
-
-When do entities appear?
-
-```
-1865-01-15: John Smith mentioned (letter)
-1865-02-20: John Smith mentioned (diary)
-1865-03-15: John Smith mentioned (will)
-```
-
-### Geographic Mapping
-
-Where do events occur?
-
-```
-Philadelphia: 12 mentions
-New York: 5 mentions
-Boston: 3 mentions
-```
-
----
-
-## Entity Statistics
-
-Review your entity extraction:
-
-```bash
-# Count entities by type
-flatfish stats entities
-
-# Output:
-# PERSON:   245 entities
-# LOCATION: 189 entities
-# DATE:     156 entities
-# ORG:      34 entities
-```
-
----
-
-## spaCy Models
-
-Flatfish uses spaCy for NER. Available models:
-
-| Model | Size | Accuracy | Speed |
-|-------|------|----------|-------|
-| `en_core_web_sm` | 12 MB | Good | Fast |
-| `en_core_web_md` | 40 MB | Better | Medium |
-| `en_core_web_lg` | 560 MB | Best | Slower |
-| `en_core_web_trf` | 438 MB | Excellent | Slowest |
-
-Specify in configuration:
-
-```yaml
-# flatfish.yaml
-nlp:
-  model: en_core_web_lg
-```
-
----
-
-## Custom Models
-
-For specialized documents, train custom models:
-
-### When to Train Custom
-
-- Domain-specific entity types
-- Unusual abbreviations
-- Historical spelling variations
-- Non-English languages
-
-### Training Data Format
-
-```json
-[
-  ["John Smith traveled to Philadelphia.", 
-   {"entities": [[0, 10, "PER"], [24, 36, "LOC"]]}],
-  ["The letter is dated March 1865.", 
-   {"entities": [[22, 32, "DATE"]]}]
-]
-```
+The built site's **Browse by Entity** page groups entities by type, shows
+mention counts, and links each mention to its document with its context —
+built entirely from `entities/consolidated.json`. There's no separate
+network-graph or geographic-mapping feature currently; those would need to
+be built from the same consolidated JSON if you want them.
 
 ---
 
 ## Best Practices
 
-### 1. Start with Automatic Extraction
-
-Let Flatfish extract entities first, then refine.
-
-### 2. Review High-Value Documents
-
-Focus manual review on:
-- Low confidence scores
-- Important documents
-- Documents with many entities
-
-### 3. Build Entity Authority Files
-
-Maintain canonical lists of:
-- People in your collection
-- Places mentioned
-- Organizations referenced
-
-### 4. Document Entity Decisions
-
-Record why you normalized entities:
-- "Jno. Smith" = "John Smith" (standard abbreviation)
-- Keep "Smyth" vs "Smith" separate (different families)
+1. **Start with automatic extraction**, then refine — don't hand-author entities from scratch.
+2. **Review high-value documents first** — important documents, or ones with many entities.
+3. **Keep a mental list of your collection's recurring people/places** so you can spot mis-extractions quickly.
+4. **Rebuild after every edit** (`ficherito build`) so `consolidated.json` and the site stay in sync.
 
 ---
 
 ## Next Steps
 
-- **[AI Summarization](ai-summarization.md)** - Generate collection summaries
-- **[Track Summarization](track-summarization.md)** - Understand track-based approach
-- **[Entities Usage Guide](../usage/entities.md)** - Practical how-to
+- **[Entity Extraction Usage Guide](../usage/entities.md)** - Practical how-to
+- **[HTR and OCR](htr-ocr.md)** - How transcription works

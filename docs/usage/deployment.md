@@ -6,7 +6,7 @@ Learn how to publish your document collection website to the web.
 
 ## Deployment Options
 
-Flatfish generates static files that can be hosted anywhere. We recommend:
+Ficherito generates static files that can be hosted anywhere. We recommend:
 
 | Platform | Best For | Cost |
 |----------|----------|------|
@@ -23,7 +23,7 @@ Netlify is the recommended option because:
 - Free tier for most projects
 - Automatic HTTPS
 - Custom domains
-- Built-in integration with Flatfish
+- Built-in integration with Ficherito
 
 ### Step 1: Create a Netlify Account
 
@@ -36,7 +36,7 @@ Netlify is the recommended option because:
 1. Click your profile picture → **User settings**
 2. Click **Applications** in the sidebar
 3. Under "Personal access tokens", click **New access token**
-4. Give it a name like "flatfish"
+4. Give it a name like "ficherito"
 5. Click **Generate token**
 6. **Copy the token** (you won't see it again!)
 
@@ -57,7 +57,7 @@ export NETLIFY_TOKEN=your_token_here
 ### Step 4: Deploy
 
 ```bash
-flatfish deploy
+ficherito deploy
 ```
 
 First deployment creates a new Netlify site:
@@ -83,7 +83,7 @@ Save your site ID for future deployments:
 NETLIFY_SITE_ID=your-site-id
 ```
 
-Now `flatfish deploy` will update the same site.
+Now `ficherito deploy` will update the same site.
 
 ---
 
@@ -126,7 +126,7 @@ Netlify automatically provisions an SSL certificate. This may take a few minutes
 Unlike the other options here, GitHub Pages deployment does **not** run the
 Ficherito Python pipeline in CI — HTR, entity extraction, and image
 compression need API keys and local images, and are meant to be run once on
-your machine with `flatfish build`. CI only takes the content that build
+your machine with `ficherito build`. CI only takes the content that build
 already emitted into `site/src/documents/`, `site/src/assets/images/documents/`,
 and `site/src/_data/`, and re-runs Eleventy + Pagefind on it. This is also
 what makes the [Sveltia CMS](#editing-content-with-sveltia-cms) workflow
@@ -136,7 +136,7 @@ triggers this same rebuild.
 ### Step 1: Build locally and commit the site
 
 ```bash
-flatfish build
+ficherito build
 git add site/
 git commit -m "Build site"
 ```
@@ -252,7 +252,7 @@ Your site will be at: `https://yourusername.github.io/document-collection/`
 Whenever you reprocess documents or edit `ficherito.yaml`, rebuild and push again:
 
 ```bash
-flatfish build
+ficherito build
 git add site/
 git commit -m "Rebuild site"
 git push
@@ -265,7 +265,7 @@ git push
 Once deployed, `https://yourusername.github.io/document-collection/admin/`
 gives collaborators a form-based editor for transcriptions, translations, and
 entities — no Markdown or git knowledge required. It's configured in
-`site/admin/config.yml`, which `flatfish build` scaffolds but does not
+`site/admin/config.yml`, which `ficherito build` scaffolds but does not
 overwrite on later runs, so it's safe to keep customized.
 
 ### Step 1: Update the Backend Config
@@ -300,7 +300,7 @@ Changes made in the CMS commit directly to `site/src/documents/*.md` on the
 ```{note}
 The CMS edits `title`, `date`, `entities`, `translation`, and the
 transcription body. `id`, `order`, `prev`, and `next` are also editable but
-are normally left alone — they're set by `flatfish build` from your image
+are normally left alone — they're set by `ficherito build` from your image
 filenames and dates.
 ```
 
@@ -338,7 +338,7 @@ For custom domains and HTTPS, add CloudFront distribution.
 
 ## Password Protection
 
-### Basic Password (Flatfish Built-in)
+### Basic Password (Ficherito Built-in)
 
 ```yaml
 website:
@@ -377,14 +377,14 @@ Require valid-user
 ## Continuous Deployment
 
 **Netlify:** connect your Git repository, set build command to
-`pip install ficherito && flatfish build`, and publish directory to `site/_site`.
+`pip install ficherito && ficherito build`, and publish directory to `site/_site`.
 Every push to `main` automatically rebuilds and deploys.
 
 **GitHub Actions:** the workflow in
 [Deploying to GitHub Pages](#deploying-to-github-pages) already does this —
 any push touching `site/**` (including a Sveltia CMS edit) triggers a
 rebuild. Note it only re-runs Eleventy/Pagefind, not the Python pipeline; to
-pick up newly processed documents you still need to run `flatfish build`
+pick up newly processed documents you still need to run `ficherito build`
 locally and push the result.
 
 ---
@@ -393,9 +393,9 @@ locally and push the result.
 
 Before deploying:
 
-- [ ] All documents processed (`flatfish status`)
-- [ ] Site builds without errors (`flatfish build`)
-- [ ] Site looks correct locally (`flatfish serve`)
+- [ ] All documents processed (`ficherito status`)
+- [ ] Site builds without errors (`ficherito build`)
+- [ ] Site looks correct locally (`ficherito serve`)
 - [ ] Password set if needed (`website.password`)
 - [ ] API keys not in committed files
 
@@ -430,7 +430,7 @@ Regenerate if needed.
 
 Check the base URL setting:
 ```bash
-flatfish build --base-url /your-subdirectory/
+ficherito build --base-url /your-subdirectory/
 ```
 
 ### Images Not Loading
