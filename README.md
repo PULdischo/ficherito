@@ -17,9 +17,11 @@ Historical document analysis CLI - Extract, analyze, and present handwritten tex
 
 ## Installation
 
-```bash
-pip install ficherito
-```
+- Go to https://github.com/PULdischo/ficherito
+- Click on the green "Use this template button" and "Create new repository" to work on your own computer, or "Open in a codespace" if you prefer to work in the cloud
+- Give your project a name.
+- Choose public if you'd like the static site to be published. You can start with private if you prefer and change later.
+-  
 
 ## Quick Start
 
