@@ -103,7 +103,9 @@ class HTREngine:
                 prompt = DEFAULT_HTR_PROMPT
 
         # Extract text via DashScope
-        text, confidence = self.model.extract_text(img_base64, prompt)
+        text, confidence = self.model.extract_text(
+            img_base64, prompt, max_tokens=self.config.processing.max_output_tokens
+        )
 
         # Clean extracted text
         cleaned_text = clean_extracted_text(text)
@@ -165,7 +167,9 @@ class HTREngine:
                 prompt = DEFAULT_HTR_PROMPT
 
         # Extract text via async API
-        text, confidence = await self.model.extract_text_async(img_base64, prompt)
+        text, confidence = await self.model.extract_text_async(
+            img_base64, prompt, max_tokens=self.config.processing.max_output_tokens
+        )
 
         # Clean extracted text
         cleaned_text = clean_extracted_text(text)

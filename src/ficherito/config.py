@@ -20,6 +20,18 @@ class ProcessingConfig(BaseModel):
 
     extract_entities: bool = Field(default=True, description="Enable entity extraction")
     entity_context: bool = Field(default=True, description="Include contextual descriptions")
+    max_output_tokens: int = Field(
+        default=4096,
+        ge=1,
+        description=(
+            "Maximum tokens the model may generate per request, for both "
+            "transcription and entity extraction. Many providers default to "
+            "a low limit (e.g. 512-1024) when this isn't set explicitly, "
+            "which silently truncates transcriptions of multi-page or "
+            "dense document images. Raise this if transcriptions are "
+            "getting cut off or entity extraction returns nothing."
+        ),
+    )
 
 
 class PromptsConfig(BaseModel):
@@ -193,6 +205,7 @@ def get_default_config() -> dict[str, Any]:
         "processing": {
             "extract_entities": True,
             "entity_context": True,
+            "max_output_tokens": ProcessingConfig().max_output_tokens,
         },
         "prompts": {
             "text_extraction": PromptsConfig().text_extraction,

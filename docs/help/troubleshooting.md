@@ -105,6 +105,26 @@ prompts:
 
 ---
 
+### Truncated Transcriptions
+
+If a transcription stops mid-page — common with multi-page images (e.g. two
+pages of a diary scanned into one photo) — the model likely hit its output
+token limit before finishing. Check the log for:
+
+```
+HTR response truncated at max_tokens=...
+```
+
+**Solution:** raise `processing.max_output_tokens` in `ficherito.yaml`
+(default: 4096) and re-run `ficherito extract`:
+
+```yaml
+processing:
+  max_output_tokens: 8192
+```
+
+---
+
 ### Wrong Language Detected
 
 ```yaml
@@ -141,6 +161,11 @@ Extracted entities from 0 documents
 ```bash
 cat transcriptions/sample.md
 ```
+3. The log for a truncated response (`Entity extraction response truncated
+   at max_tokens=...`) — a cut-off response can't be parsed as valid JSON,
+   so it silently yields zero entities. Raise `processing.max_output_tokens`
+   (see [Truncated Transcriptions](#truncated-transcriptions) above) and
+   re-run `ficherito entities`.
 
 ---
 

@@ -39,6 +39,14 @@ processing:
   # e.g., "Person; the plaintiff in the legal case" instead of just "Person"
   entity_context: true
 
+  # Maximum tokens the model may generate per request (transcription and
+  # entity extraction). Many providers default to a low limit (e.g.
+  # 512-1024) when this isn't set, which silently truncates transcriptions
+  # of multi-page or dense document images -- and can leave entity
+  # extraction with no valid JSON to parse. Raise this if transcriptions
+  # are getting cut off or entities aren't showing up. (default: 4096)
+  max_output_tokens: 4096
+
 # =============================================================================
 # CUSTOM PROMPTS
 # =============================================================================

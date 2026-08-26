@@ -114,7 +114,15 @@ class EntityExtractor:
             completion = self.sync_client.chat.completions.create(
                 model=model,
                 messages=[{"role": "user", "content": prompt}],
+                max_tokens=self.config.processing.max_output_tokens,
             )
+
+            if completion.choices[0].finish_reason == "length":
+                logger.warning(
+                    f"Entity extraction response truncated at "
+                    f"max_tokens={self.config.processing.max_output_tokens} for {image_id}; "
+                    "increase processing.max_output_tokens in ficherito.yaml"
+                )
 
             content = completion.choices[0].message.content or ""
             logger.debug(f"Entity extraction response: {content[:500]}...")
@@ -159,9 +167,17 @@ class EntityExtractor:
                 self.async_client.chat.completions.create(
                     model=model,
                     messages=[{"role": "user", "content": prompt}],
+                    max_tokens=self.config.processing.max_output_tokens,
                 ),
                 timeout=self.timeout
             )
+
+            if completion.choices[0].finish_reason == "length":
+                logger.warning(
+                    f"Entity extraction response truncated at "
+                    f"max_tokens={self.config.processing.max_output_tokens} for {image_id}; "
+                    "increase processing.max_output_tokens in ficherito.yaml"
+                )
 
             content = completion.choices[0].message.content or ""
             entities = self._parse_entities(content, cleaned_text)

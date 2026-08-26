@@ -21,7 +21,25 @@ Historical document analysis CLI - Extract, analyze, and present handwritten tex
 - Click on the green "Use this template button" and "Create new repository" to work on your own computer, or "Open in a codespace" if you prefer to work in the cloud
 - Give your project a name.
 - Choose public if you'd like the static site to be published. You can start with private if you prefer and change later.
--  
+- Clone your new repository and install Ficherito from it using [uv](https://docs.astral.sh/uv/):
+
+```bash
+# Install uv if you don't already have it
+curl -LsSf https://astral.sh/uv/install.sh | sh   # macOS/Linux
+# Windows (PowerShell): powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
+
+git clone https://github.com/<you>/<your-repo>.git
+cd <your-repo>
+
+uv venv
+source .venv/bin/activate  # Windows: .venv\Scripts\activate
+
+uv pip install -e .
+```
+
+Requires Python 3.10+ and, for `ficherito build`, Node.js 20+. See the
+[installation guide](docs/getting-started/installation.md) for full details
+and troubleshooting.
 
 ## Quick Start
 
@@ -55,6 +73,7 @@ dataset:
 processing:
   extract_entities: true
   entity_context: true
+  max_output_tokens: 4096  # raise if transcriptions of dense/multi-page images get cut off
 
 website:
   title: "Document Collection"

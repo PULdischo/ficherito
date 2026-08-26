@@ -73,12 +73,16 @@ class HTRModel:
         self,
         image_base64: str,
         prompt: str,
+        max_tokens: Optional[int] = None,
     ) -> tuple[str, Optional[float]]:
         """Extract text from an image using Qwen-VL (sync).
 
         Args:
             image_base64: Base64-encoded image data.
             prompt: Prompt for text extraction.
+            max_tokens: Maximum tokens to generate. Many providers default to
+                a low limit when this isn't set, silently truncating longer
+                (e.g. multi-page) transcriptions.
 
         Returns:
             Tuple of (extracted_text, confidence).
@@ -99,7 +103,14 @@ class HTRModel:
                         {"type": "image_url", "image_url": {"url": image_url}},
                     ]
                 }],
+                max_tokens=max_tokens,
             )
+
+            if completion.choices[0].finish_reason == "length":
+                logger.warning(
+                    f"HTR response truncated at max_tokens={max_tokens}; "
+                    "increase processing.max_output_tokens in ficherito.yaml"
+                )
 
             text = completion.choices[0].message.content or ""
             return text.strip(), None
@@ -112,12 +123,16 @@ class HTRModel:
         self,
         image_base64: str,
         prompt: str,
+        max_tokens: Optional[int] = None,
     ) -> tuple[str, Optional[float]]:
         """Extract text from an image using Qwen-VL (async).
 
         Args:
             image_base64: Base64-encoded image data.
             prompt: Prompt for text extraction.
+            max_tokens: Maximum tokens to generate. Many providers default to
+                a low limit when this isn't set, silently truncating longer
+                (e.g. multi-page) transcriptions.
 
         Returns:
             Tuple of (extracted_text, confidence).
@@ -139,9 +154,16 @@ class HTRModel:
                             {"type": "image_url", "image_url": {"url": image_url}},
                         ]
                     }],
+                    max_tokens=max_tokens,
                 ),
                 timeout=self.timeout
             )
+
+            if completion.choices[0].finish_reason == "length":
+                logger.warning(
+                    f"HTR response truncated at max_tokens={max_tokens}; "
+                    "increase processing.max_output_tokens in ficherito.yaml"
+                )
 
             text = completion.choices[0].message.content or ""
             return text.strip(), None

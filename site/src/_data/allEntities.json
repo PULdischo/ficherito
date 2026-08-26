@@ -1,6 +1,496 @@
 {
-  "total_entities": 0,
-  "unique_texts": 0,
-  "by_type": {},
-  "all_entities": []
+  "total_entities": 17,
+  "unique_texts": 17,
+  "by_type": {
+    "PERSON": [
+      {
+        "text": "N. C. Marshall",
+        "type": "PERSON",
+        "contexts": [
+          {
+            "document": "NCM_Diary_19431017-19450922IMG_003",
+            "context": "Person; the author/owner of the diary recording the trips to Colombia"
+          }
+        ],
+        "documents": [
+          "NCM_Diary_19431017-19450922IMG_003"
+        ],
+        "count": 1
+      },
+      {
+        "text": "A. F. Daily",
+        "type": "PERSON",
+        "contexts": [
+          {
+            "document": "NCM_Diary_19431017-19450922IMG_090",
+            "context": "Person; an individual brought home by the diarist for dinner on October 10; also referenced later as a director at SAGP's director's meeting"
+          }
+        ],
+        "documents": [
+          "NCM_Diary_19431017-19450922IMG_090"
+        ],
+        "count": 1
+      },
+      {
+        "text": "Chapman",
+        "type": "PERSON",
+        "contexts": [
+          {
+            "document": "NCM_Diary_19431017-19450922IMG_090",
+            "context": "Person; a director at SAGP who, along with Daily, answered questions regarding their report"
+          }
+        ],
+        "documents": [
+          "NCM_Diary_19431017-19450922IMG_090"
+        ],
+        "count": 1
+      },
+      {
+        "text": "Daily",
+        "type": "PERSON",
+        "contexts": [
+          {
+            "document": "NCM_Diary_19431017-19450922IMG_090",
+            "context": "Person; a director at SAGP (likely the same A. F. Daily as on Oct. 10) who answered questions regarding the report"
+          }
+        ],
+        "documents": [
+          "NCM_Diary_19431017-19450922IMG_090"
+        ],
+        "count": 1
+      }
+    ],
+    "LOCATION": [
+      {
+        "text": "276 Ridgewood Ave.",
+        "type": "LOCATION",
+        "contexts": [
+          {
+            "document": "NCM_Diary_19431017-19450922IMG_003",
+            "context": "Location; the street address associated with the diary's author"
+          }
+        ],
+        "documents": [
+          "NCM_Diary_19431017-19450922IMG_003"
+        ],
+        "count": 1
+      },
+      {
+        "text": "New Ridge, N.J.",
+        "type": "LOCATION",
+        "contexts": [
+          {
+            "document": "NCM_Diary_19431017-19450922IMG_003",
+            "context": "Location; the city and state (New Jersey) where the author is based"
+          }
+        ],
+        "documents": [
+          "NCM_Diary_19431017-19450922IMG_003"
+        ],
+        "count": 1
+      },
+      {
+        "text": "Colombia",
+        "type": "LOCATION",
+        "contexts": [
+          {
+            "document": "NCM_Diary_19431017-19450922IMG_003",
+            "context": "Location; the country that is the destination of the trips recorded in the diary"
+          }
+        ],
+        "documents": [
+          "NCM_Diary_19431017-19450922IMG_003"
+        ],
+        "count": 1
+      }
+    ],
+    "DATE": [
+      {
+        "text": "October 17, 1943",
+        "type": "DATE",
+        "contexts": [
+          {
+            "document": "NCM_Diary_19431017-19450922IMG_003",
+            "context": "Date; the starting date of the period covered by the diary entries"
+          }
+        ],
+        "documents": [
+          "NCM_Diary_19431017-19450922IMG_003"
+        ],
+        "count": 1
+      },
+      {
+        "text": "October 11, 1945",
+        "type": "DATE",
+        "contexts": [
+          {
+            "document": "NCM_Diary_19431017-19450922IMG_003",
+            "context": "Date; the ending date of the period covered by the diary entries"
+          }
+        ],
+        "documents": [
+          "NCM_Diary_19431017-19450922IMG_003"
+        ],
+        "count": 1
+      },
+      {
+        "text": "Oct. 10 Wed.",
+        "type": "DATE",
+        "contexts": [
+          {
+            "document": "NCM_Diary_19431017-19450922IMG_090",
+            "context": "Date; the date of the first diary entry recording the dinner and shareholders meeting"
+          }
+        ],
+        "documents": [
+          "NCM_Diary_19431017-19450922IMG_090"
+        ],
+        "count": 1
+      },
+      {
+        "text": "3 PM",
+        "type": "DATE",
+        "contexts": [
+          {
+            "document": "NCM_Diary_19431017-19450922IMG_090",
+            "context": "Date/time; the scheduled time of the SAGP annual shareholders meeting"
+          }
+        ],
+        "documents": [
+          "NCM_Diary_19431017-19450922IMG_090"
+        ],
+        "count": 1
+      },
+      {
+        "text": "Oct. 11 Thursday",
+        "type": "DATE",
+        "contexts": [
+          {
+            "document": "NCM_Diary_19431017-19450922IMG_090",
+            "context": "Date; the date of the second diary entry recording the SAGP director's meeting"
+          }
+        ],
+        "documents": [
+          "NCM_Diary_19431017-19450922IMG_090"
+        ],
+        "count": 1
+      }
+    ],
+    "DOCUMENT": [
+      {
+        "text": "Diary of my trips to Colombia",
+        "type": "DOCUMENT",
+        "contexts": [
+          {
+            "document": "NCM_Diary_19431017-19450922IMG_003",
+            "context": "Document; the title/caption identifying this text as a personal diary of travel to Colombia"
+          }
+        ],
+        "documents": [
+          "NCM_Diary_19431017-19450922IMG_003"
+        ],
+        "count": 1
+      },
+      {
+        "text": "their report",
+        "type": "DOCUMENT",
+        "contexts": [
+          {
+            "document": "NCM_Diary_19431017-19450922IMG_090",
+            "context": "Document; a report submitted by Chapman and Daily in their capacity as SAGP directors, which was the subject of questions at the director's meeting"
+          }
+        ],
+        "documents": [
+          "NCM_Diary_19431017-19450922IMG_090"
+        ],
+        "count": 1
+      }
+    ],
+    "ORGANIZATION": [
+      {
+        "text": "SAGP",
+        "type": "ORGANIZATION",
+        "contexts": [
+          {
+            "document": "NCM_Diary_19431017-19450922IMG_090",
+            "context": "Organization; a company holding both an annual shareholders meeting and a director's meeting during this two-day period"
+          }
+        ],
+        "documents": [
+          "NCM_Diary_19431017-19450922IMG_090"
+        ],
+        "count": 1
+      }
+    ],
+    "EVENT": [
+      {
+        "text": "annual shareholders meeting",
+        "type": "EVENT",
+        "contexts": [
+          {
+            "document": "NCM_Diary_19431017-19450922IMG_090",
+            "context": "Event; the SAGP annual shareholders meeting scheduled for 3 PM on October 10"
+          }
+        ],
+        "documents": [
+          "NCM_Diary_19431017-19450922IMG_090"
+        ],
+        "count": 1
+      },
+      {
+        "text": "director's meeting",
+        "type": "EVENT",
+        "contexts": [
+          {
+            "document": "NCM_Diary_19431017-19450922IMG_090",
+            "context": "Event; the SAGP directors' meeting held on October 11 in which questions were answered regarding a report"
+          }
+        ],
+        "documents": [
+          "NCM_Diary_19431017-19450922IMG_090"
+        ],
+        "count": 1
+      }
+    ]
+  },
+  "all_entities": [
+    {
+      "text": "N. C. Marshall",
+      "type": "PERSON",
+      "contexts": [
+        {
+          "document": "NCM_Diary_19431017-19450922IMG_003",
+          "context": "Person; the author/owner of the diary recording the trips to Colombia"
+        }
+      ],
+      "documents": [
+        "NCM_Diary_19431017-19450922IMG_003"
+      ],
+      "count": 1
+    },
+    {
+      "text": "276 Ridgewood Ave.",
+      "type": "LOCATION",
+      "contexts": [
+        {
+          "document": "NCM_Diary_19431017-19450922IMG_003",
+          "context": "Location; the street address associated with the diary's author"
+        }
+      ],
+      "documents": [
+        "NCM_Diary_19431017-19450922IMG_003"
+      ],
+      "count": 1
+    },
+    {
+      "text": "New Ridge, N.J.",
+      "type": "LOCATION",
+      "contexts": [
+        {
+          "document": "NCM_Diary_19431017-19450922IMG_003",
+          "context": "Location; the city and state (New Jersey) where the author is based"
+        }
+      ],
+      "documents": [
+        "NCM_Diary_19431017-19450922IMG_003"
+      ],
+      "count": 1
+    },
+    {
+      "text": "Colombia",
+      "type": "LOCATION",
+      "contexts": [
+        {
+          "document": "NCM_Diary_19431017-19450922IMG_003",
+          "context": "Location; the country that is the destination of the trips recorded in the diary"
+        }
+      ],
+      "documents": [
+        "NCM_Diary_19431017-19450922IMG_003"
+      ],
+      "count": 1
+    },
+    {
+      "text": "October 17, 1943",
+      "type": "DATE",
+      "contexts": [
+        {
+          "document": "NCM_Diary_19431017-19450922IMG_003",
+          "context": "Date; the starting date of the period covered by the diary entries"
+        }
+      ],
+      "documents": [
+        "NCM_Diary_19431017-19450922IMG_003"
+      ],
+      "count": 1
+    },
+    {
+      "text": "October 11, 1945",
+      "type": "DATE",
+      "contexts": [
+        {
+          "document": "NCM_Diary_19431017-19450922IMG_003",
+          "context": "Date; the ending date of the period covered by the diary entries"
+        }
+      ],
+      "documents": [
+        "NCM_Diary_19431017-19450922IMG_003"
+      ],
+      "count": 1
+    },
+    {
+      "text": "Diary of my trips to Colombia",
+      "type": "DOCUMENT",
+      "contexts": [
+        {
+          "document": "NCM_Diary_19431017-19450922IMG_003",
+          "context": "Document; the title/caption identifying this text as a personal diary of travel to Colombia"
+        }
+      ],
+      "documents": [
+        "NCM_Diary_19431017-19450922IMG_003"
+      ],
+      "count": 1
+    },
+    {
+      "text": "Oct. 10 Wed.",
+      "type": "DATE",
+      "contexts": [
+        {
+          "document": "NCM_Diary_19431017-19450922IMG_090",
+          "context": "Date; the date of the first diary entry recording the dinner and shareholders meeting"
+        }
+      ],
+      "documents": [
+        "NCM_Diary_19431017-19450922IMG_090"
+      ],
+      "count": 1
+    },
+    {
+      "text": "A. F. Daily",
+      "type": "PERSON",
+      "contexts": [
+        {
+          "document": "NCM_Diary_19431017-19450922IMG_090",
+          "context": "Person; an individual brought home by the diarist for dinner on October 10; also referenced later as a director at SAGP's director's meeting"
+        }
+      ],
+      "documents": [
+        "NCM_Diary_19431017-19450922IMG_090"
+      ],
+      "count": 1
+    },
+    {
+      "text": "SAGP",
+      "type": "ORGANIZATION",
+      "contexts": [
+        {
+          "document": "NCM_Diary_19431017-19450922IMG_090",
+          "context": "Organization; a company holding both an annual shareholders meeting and a director's meeting during this two-day period"
+        }
+      ],
+      "documents": [
+        "NCM_Diary_19431017-19450922IMG_090"
+      ],
+      "count": 1
+    },
+    {
+      "text": "annual shareholders meeting",
+      "type": "EVENT",
+      "contexts": [
+        {
+          "document": "NCM_Diary_19431017-19450922IMG_090",
+          "context": "Event; the SAGP annual shareholders meeting scheduled for 3 PM on October 10"
+        }
+      ],
+      "documents": [
+        "NCM_Diary_19431017-19450922IMG_090"
+      ],
+      "count": 1
+    },
+    {
+      "text": "3 PM",
+      "type": "DATE",
+      "contexts": [
+        {
+          "document": "NCM_Diary_19431017-19450922IMG_090",
+          "context": "Date/time; the scheduled time of the SAGP annual shareholders meeting"
+        }
+      ],
+      "documents": [
+        "NCM_Diary_19431017-19450922IMG_090"
+      ],
+      "count": 1
+    },
+    {
+      "text": "Oct. 11 Thursday",
+      "type": "DATE",
+      "contexts": [
+        {
+          "document": "NCM_Diary_19431017-19450922IMG_090",
+          "context": "Date; the date of the second diary entry recording the SAGP director's meeting"
+        }
+      ],
+      "documents": [
+        "NCM_Diary_19431017-19450922IMG_090"
+      ],
+      "count": 1
+    },
+    {
+      "text": "director's meeting",
+      "type": "EVENT",
+      "contexts": [
+        {
+          "document": "NCM_Diary_19431017-19450922IMG_090",
+          "context": "Event; the SAGP directors' meeting held on October 11 in which questions were answered regarding a report"
+        }
+      ],
+      "documents": [
+        "NCM_Diary_19431017-19450922IMG_090"
+      ],
+      "count": 1
+    },
+    {
+      "text": "Chapman",
+      "type": "PERSON",
+      "contexts": [
+        {
+          "document": "NCM_Diary_19431017-19450922IMG_090",
+          "context": "Person; a director at SAGP who, along with Daily, answered questions regarding their report"
+        }
+      ],
+      "documents": [
+        "NCM_Diary_19431017-19450922IMG_090"
+      ],
+      "count": 1
+    },
+    {
+      "text": "Daily",
+      "type": "PERSON",
+      "contexts": [
+        {
+          "document": "NCM_Diary_19431017-19450922IMG_090",
+          "context": "Person; a director at SAGP (likely the same A. F. Daily as on Oct. 10) who answered questions regarding the report"
+        }
+      ],
+      "documents": [
+        "NCM_Diary_19431017-19450922IMG_090"
+      ],
+      "count": 1
+    },
+    {
+      "text": "their report",
+      "type": "DOCUMENT",
+      "contexts": [
+        {
+          "document": "NCM_Diary_19431017-19450922IMG_090",
+          "context": "Document; a report submitted by Chapman and Daily in their capacity as SAGP directors, which was the subject of questions at the director's meeting"
+        }
+      ],
+      "documents": [
+        "NCM_Diary_19431017-19450922IMG_090"
+      ],
+      "count": 1
+    }
+  ]
 }

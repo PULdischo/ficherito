@@ -17,7 +17,13 @@ from PIL import Image
 from ficherito.config import FicheritoConfig
 from ficherito.entities.extractor import load_entities, consolidate_entities
 from ficherito.htr.engine import load_transcription
-from ficherito.utils.dates import sort_by_date, format_date_display, extract_date_from_filename
+from ficherito.utils.dates import (
+    sort_by_date,
+    format_date_display,
+    extract_date_from_filename,
+    extract_full_date_from_text,
+    infer_document_date,
+)
 from ficherito.utils.logging import get_logger
 
 logger = get_logger("site.builder")
@@ -92,14 +98,14 @@ class SiteBuilder:
 
     def _load_documents(self) -> list[dict]:
         """Load all processed documents."""
-        documents = []
         transcriptions_dir = Path(self.config.output.transcriptions_dir)
         translations_dir = Path(self.config.output.translations_dir)
         entities_dir = Path(self.config.output.entities_dir)
 
         if not transcriptions_dir.exists():
-            return documents
+            return []
 
+        raw = []
         for txt_file in sorted(transcriptions_dir.glob("*.md")):
             doc_id = txt_file.stem
             text, _metadata = load_transcription(txt_file)
@@ -119,16 +125,40 @@ class SiteBuilder:
                     for e in result.entities
                 ]
 
-            date = extract_date_from_filename(doc_id)
-
-            documents.append({
+            raw.append({
                 "id": doc_id,
                 "filename": f"{doc_id}.jpg",
-                "date": date,
-                "date_display": format_date_display(date),
+                "filename_date": extract_date_from_filename(doc_id),
                 "transcription": text,
                 "translation": translation_text,
                 "entities": entities,
+            })
+
+        # If every page resolves to the same filename date, the filename is
+        # encoding the whole volume's date range (e.g. a multi-page diary
+        # named "Diary_19431017-19450922_IMG_003"), not this page's date.
+        # Fall back to dates written in each page's own transcribed text,
+        # carrying the date forward across pages that don't have one.
+        filename_dates = {d["filename_date"] for d in raw if d["filename_date"]}
+        volume_wide_naming = len(raw) > 1 and len(filename_dates) == 1
+
+        documents = []
+        previous_date = raw[0]["filename_date"] if raw and volume_wide_naming else None
+        for doc in raw:
+            if volume_wide_naming:
+                date = infer_document_date(doc["transcription"], previous_date)
+            else:
+                date = extract_full_date_from_text(doc["transcription"]) or doc["filename_date"]
+            previous_date = date
+
+            documents.append({
+                "id": doc["id"],
+                "filename": doc["filename"],
+                "date": date,
+                "date_display": format_date_display(date),
+                "transcription": doc["transcription"],
+                "translation": doc["translation"],
+                "entities": doc["entities"],
             })
 
         return documents

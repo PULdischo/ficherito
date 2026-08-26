@@ -1,9 +1,10 @@
 dataset:
-  images_dir: images
-  recursive: false
+  images_dir: NCM_Diary_19431017-19450922
+  recursive: false # Set to true if you want to include images from subdirectories
 processing:
   extract_entities: true
   entity_context: true
+  max_output_tokens: 4096 # Raise if transcriptions of multi-page images get cut off
 prompts:
   text_extraction: "You are a historical document transcription assistant. Given the\
     \ raw OCR/HTR \noutput from a handwritten document, clean up and correct the text\
@@ -27,7 +28,7 @@ translate:
   source_languages:
     - en
   target_language: es
-  default_tab: transcription #translation
+  default_tab: transcription # or translation
 output:
   transcriptions_dir: transcriptions
   translations_dir: translations
