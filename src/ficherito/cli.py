@@ -166,8 +166,47 @@ def validate(
         else:
             rprint(f"[yellow]![/yellow] Images folder not found: {images_dir}")
 
+        # Live API check: run one real extraction on a random image so a bad
+        # base URL / key / model is caught here instead of during `process`.
+        if env.api_key and images_dir.exists():
+            import random
+
+            from PIL import Image
+
+            from ficherito.dataset import list_image_files
+            from ficherito.htr.engine import HTREngine
+
+            try:
+                image_files = list_image_files(cfg)
+            except FileNotFoundError:
+                image_files = []
+
+            if not image_files:
+                rprint("[yellow]![/yellow] No images found to test extraction")
+            else:
+                sample = random.choice(image_files)
+                rprint(f"[dim]Testing extraction on {sample.name}...[/dim]")
+                try:
+                    with Image.open(sample) as im:
+                        text = HTREngine(cfg, env).test_connection(im)
+                except Exception as e:
+                    rprint(f"[red]✗[/red] Extraction test failed: {e}")
+                    rprint(
+                        "[dim]Check OPENAI_BASE_URL, OPENAI_API_KEY and "
+                        "OPENAI_MODEL in .env[/dim]"
+                    )
+                    raise typer.Exit(1)
+
+                preview = " ".join(text.split())[:60]
+                rprint(
+                    f"[green]✓[/green] Extraction test passed "
+                    f'([dim]"{preview}…"[/dim])'
+                )
+
         rprint("\n[bold green]Ready to process![/bold green]")
 
+    except typer.Exit:
+        raise
     except FileNotFoundError as e:
         rprint(f"[red]Error:[/red] {e}")
         raise typer.Exit(1)

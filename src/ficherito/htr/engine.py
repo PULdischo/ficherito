@@ -118,6 +118,55 @@ class HTREngine:
             extracted_at=datetime.utcnow().isoformat() + "Z",
         )
 
+    def test_connection(self, image: Image.Image) -> str:
+        """Run one real extraction to verify the API endpoint, key and model.
+
+        Unlike :meth:`extract_text`, connection and API errors are allowed to
+        propagate so callers (e.g. ``ficherito validate``) can surface a clear
+        failure instead of an empty transcription.
+
+        Args:
+            image: A sample PIL Image to send.
+
+        Returns:
+            The extracted text (may be empty if the image has no text).
+        """
+        from openai import BadRequestError
+
+        img = prepare_for_ocr(image, max_size=(2048, 2048))
+        img_base64 = image_to_base64(img)
+
+        request = dict(
+            model=self.model.model_name,
+            messages=[{
+                "role": "user",
+                "content": [
+                    {
+                        "type": "text",
+                        "text": "Transcribe any text visible in this image. "
+                        "Reply with the transcription only.",
+                    },
+                    {
+                        "type": "image_url",
+                        "image_url": {"url": f"data:image/jpeg;base64,{img_base64}"},
+                    },
+                ],
+            }],
+            max_tokens=64,
+            timeout=120,
+        )
+
+        try:
+            # Keep the check fast/cheap on reasoning models (e.g. Qwen3);
+            # providers that don't know the flag reject it, so we retry plain.
+            completion = self.model.sync_client.chat.completions.create(
+                **request, extra_body={"enable_thinking": False}
+            )
+        except BadRequestError:
+            completion = self.model.sync_client.chat.completions.create(**request)
+
+        return (completion.choices[0].message.content or "").strip()
+
     def extract_batch(
         self,
         images: list[tuple[Image.Image, str]],

@@ -33,7 +33,7 @@ classifiers = [
     "Topic :: Text Processing",
 ]
 dependencies = [
-    "typer[all]>=0.12",
+    "typer>=0.12",
     "pyyaml>=6.0",
     "pydantic>=2.0",
     "pydantic-settings>=2.0",

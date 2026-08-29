@@ -6,7 +6,7 @@
 
 # Ficherito
 
-Historical document analysis CLI - Extract, analyze, and present handwritten text from document images.
+Historical document analysis CLI - Extract, analyze, and publish handwritten text from document images to a searchable static website.
 
 ## Features
 

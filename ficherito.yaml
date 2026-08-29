@@ -4,7 +4,7 @@ dataset:
 processing:
   extract_entities: true
   entity_context: true
-  max_output_tokens: 4096 # Raise if transcriptions of multi-page images get cut off
+  max_output_tokens: 8096 # Raise if transcriptions of multi-page images get cut off
 prompts:
   text_extraction: "You are a historical document transcription assistant. Given the\
     \ raw OCR/HTR \noutput from a handwritten document, clean up and correct the text\
