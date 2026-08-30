@@ -48,10 +48,16 @@ def prepare_for_ocr(
 
     # Convert to RGB if needed
     if convert_to_rgb and img.mode not in ("RGB", "L"):
-        if img.mode == "RGBA":
-            # Handle transparency by compositing on white background
+        if img.mode in ("RGBA", "LA") or (img.mode == "P" and "transparency" in img.info):
+            # Handle transparency by compositing on white background. A
+            # paletted image (mode "P", e.g. GIF/PNG-8) needs converting to
+            # RGBA first so its transparency becomes an alpha channel/mask
+            # rather than being dropped straight to black by a plain
+            # convert("RGB").
+            if img.mode != "RGBA":
+                img = img.convert("RGBA")
             background = Image.new("RGB", img.size, (255, 255, 255))
-            background.paste(img, mask=img.split()[3])
+            background.paste(img, mask=img.split()[-1])
             img = background
         else:
             img = img.convert("RGB")

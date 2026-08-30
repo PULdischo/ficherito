@@ -114,7 +114,13 @@ class WebsiteConfig(BaseModel):
     emoji: str = Field(default="🐟", description="Emoji displayed next to title")
     background_color: str = Field(default="#1e3a5f", description="Primary background color for header/hero")
     accent_color: str = Field(default="#2563eb", description="Accent color for links and buttons")
-    password: str = Field(default="changeme", description="Simple password protection")
+    password: Optional[str] = Field(
+        default=None,
+        description=(
+            "Simple client-side password protection. Leave unset, commented "
+            "out, or empty ('') to disable the password gate entirely."
+        ),
+    )
     enable_search: bool = Field(default=True, description="Enable Pagefind search")
     enable_browse_dates: bool = Field(default=True, description="Enable browse by dates")
     enable_browse_entities: bool = Field(default=True, description="Enable browse by entities")

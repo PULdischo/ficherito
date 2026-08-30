@@ -1,3 +1,4 @@
+{% if site.password %}
 <script>
 (function () {
     if (!sessionStorage.getItem('ficherito_auth')) {
@@ -5,3 +6,4 @@
     }
 })();
 </script>
+{% endif %}

@@ -38,6 +38,8 @@ class EntityExtractionResult:
     source_image: str
     extracted_at: str
     entities: list[Entity]
+    success: bool = True
+    error: Optional[str] = None
 
 
 class EntityExtractor:
@@ -127,16 +129,20 @@ class EntityExtractor:
             content = completion.choices[0].message.content or ""
             logger.debug(f"Entity extraction response: {content[:500]}...")
             entities = self._parse_entities(content, cleaned_text)
+            error = None
 
         except Exception as e:
             logger.error(f"Entity extraction failed: {e}")
             logger.debug(f"Raw response content was: {content if 'content' in dir() else 'N/A'}")
             entities = []
+            error = str(e)
 
         return EntityExtractionResult(
             source_image=image_id,
             extracted_at=datetime.utcnow().isoformat() + "Z",
             entities=entities,
+            success=error is None,
+            error=error,
         )
 
     async def extract_entities_async(
@@ -181,18 +187,23 @@ class EntityExtractor:
 
             content = completion.choices[0].message.content or ""
             entities = self._parse_entities(content, cleaned_text)
+            error = None
 
         except asyncio.TimeoutError:
             logger.error(f"Entity extraction timed out after {self.timeout}s")
             entities = []
+            error = f"Timed out after {self.timeout}s"
         except Exception as e:
             logger.error(f"Entity extraction failed: {e}")
             entities = []
+            error = str(e)
 
         return EntityExtractionResult(
             source_image=image_id,
             extracted_at=datetime.utcnow().isoformat() + "Z",
             entities=entities,
+            success=error is None,
+            error=error,
         )
 
     async def extract_batch_async(

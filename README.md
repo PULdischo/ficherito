@@ -6,7 +6,7 @@
 
 # Ficherito
 
-Historical document analysis CLI - Extract, analyze, and publish handwritten text from document images to a searchable static website.
+Extract, analyze, and publish handwritten text from document images to a searchable static website.
 
 ## Features
 
@@ -80,6 +80,13 @@ website:
   password: "changeme"
 ```
 
+`dataset.images_dir` accepts:
+
+- **Images** — jpg/jpeg, png, tif/tiff, webp, bmp, gif, heic/heif
+- **PDFs** — each page is rendered to a PNG (at 200 DPI) before processing; multi-page PDFs produce one page image per page
+
+Set `dataset.recursive: true` to also pick up files in subfolders.
+
 ### .env
 
 ```bash
@@ -130,25 +137,6 @@ See the [deployment guide](docs/usage/deployment.md) for the full setup
 (enabling Pages, the workflow file, and configuring Sveltia CMS at `/admin/`
 so collaborators can edit content without touching git).
 
-### Netlify
-
-```bash
-# Install netlify-python
-pip install netlify-python
-
-# Set your Netlify token (get from https://app.netlify.com/user/applications)
-export NETLIFY_TOKEN=your-token
-export NETLIFY_SITE_ID=your-site-id
-
-# Deploy a draft preview
-ficherito deploy
-
-# Deploy to production
-ficherito deploy --prod
-
-# Specify a site ID directly
-ficherito deploy --prod --site your-site-id
-```
 
 ## Output
 

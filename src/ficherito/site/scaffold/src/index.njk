@@ -3,6 +3,9 @@
 <head>
 {% include "partials/head-common.njk" %}
 <title>{{ site.title }}</title>
+{% if not site.password %}
+<meta http-equiv="refresh" content="0; url={{ '/main.html' | url }}">
+{% endif %}
 <style>
 :root {
     --hero-bg: {{ site.background_color }};
@@ -11,6 +14,7 @@
 </style>
 </head>
 <body>
+{% if site.password %}
 <div class="password-page">
     <div class="password-form">
         <h1>{{ site.emoji }} {{ site.title }}</h1>
@@ -36,5 +40,11 @@ document.getElementById('password-form').addEventListener('submit', function (ev
     }
 });
 </script>
+{% else %}
+{# No password configured: the <meta refresh> in <head> already redirects
+   here without needing JS. This link is just a fallback in case a browser
+   or extension blocks meta refresh. #}
+<p><a href="{{ "/main.html" | url }}">Continue to {{ site.title }}</a></p>
+{% endif %}
 </body>
 </html>

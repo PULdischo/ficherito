@@ -54,6 +54,36 @@ def test_config_validation(temp_dir):
         load_config(config_path)
 
 
+@pytest.mark.parametrize(
+    "website_yaml",
+    [
+        {},  # password key missing entirely
+        {"password": None},  # explicit null
+        {"password": ""},  # explicit empty string
+    ],
+)
+def test_password_unset_disables_gate(temp_dir, website_yaml):
+    """Missing/null/empty password should resolve to a falsy value so the
+    site templates skip the password gate (see WebsiteConfig.password)."""
+    config_path = temp_dir / "ficherito.yaml"
+    with open(config_path, "w") as f:
+        yaml.dump({"dataset": {"images_dir": "images"}, "website": website_yaml}, f)
+
+    config = load_config(config_path)
+
+    assert not config.website.password
+
+
+def test_password_set_is_kept(temp_dir):
+    config_path = temp_dir / "ficherito.yaml"
+    with open(config_path, "w") as f:
+        yaml.dump({"dataset": {"images_dir": "images"}, "website": {"password": "secret"}}, f)
+
+    config = load_config(config_path)
+
+    assert config.website.password == "secret"
+
+
 def test_load_env(temp_dir, monkeypatch):
     """Test loading environment variables."""
     # Create .env file

@@ -21,19 +21,29 @@ def remove_code_tags(text: str) -> str:
 
 
 def remove_repeated_phrases(text: str) -> str:
-    """Remove consecutive repeated phrases.
-    
-    Detects and removes phrases (1-6 words) that are immediately repeated.
-    Common in OCR/HTR output due to model repetition issues.
-    
+    """Remove consecutive repeated phrases caused by model repetition glitches.
+
+    A repeated 3-6 word phrase is collapsed as soon as it repeats once, since
+    natural writing essentially never restates a whole phrase back to back —
+    that pattern is a hallmark of an HTR/LLM repetition loop. A repeated
+    1-2 word phrase is left alone until it repeats 3+ times in a row, since
+    short doublings ("no no", "very very", "ha ha", a repeated place or day
+    name) are common in ordinary writing and this is a historical-document
+    transcription tool where preserving exactly what was written matters.
+
     Args:
         text: Input text that may contain repeated phrases.
-        
+
     Returns:
-        Text with consecutive repeated phrases collapsed to single occurrence.
+        Text with runaway repeated phrases collapsed to a single occurrence.
     """
-    pattern = r"(\b\w+(?: \w+){0,5}\b)( \1)+"
-    return re.sub(pattern, r"\1", text)
+    long_phrase = r"(\b\w+(?: \w+){2,5}\b)( \1)+"
+    text = re.sub(long_phrase, r"\1", text)
+
+    short_phrase = r"(\b\w+(?: \w+)?\b)( \1){2,}"
+    text = re.sub(short_phrase, r"\1", text)
+
+    return text
 
 
 def remove_repeated_lines(text: str) -> str:

@@ -60,12 +60,13 @@ def run_pipeline(
         progress.update(task, completed=True, total=1)
 
         # Step 2: Run HTR
-        run_extraction(config, env, limit=limit, progress=progress, 
+        extraction_errors = run_extraction(config, env, limit=limit, progress=progress,
                        max_concurrent=max_concurrent, batch_size=batch_size)
 
         # Step 3: Extract entities
+        entity_errors = 0
         if not skip_entities:
-            run_entity_extraction(config, env, limit=limit, progress=progress, max_concurrent=max_concurrent)
+            entity_errors = run_entity_extraction(config, env, limit=limit, progress=progress, max_concurrent=max_concurrent)
 
         # Step 4: Build site
         if not skip_build:
@@ -79,6 +80,12 @@ def run_pipeline(
         console.print(f"  Entities: {config.output.entities_dir}/")
     if not skip_build:
         console.print(f"  Website: {config.output.site_dir}/")
+    if extraction_errors or entity_errors:
+        console.print(
+            f"\n[yellow]![/yellow] {extraction_errors} extraction error(s), "
+            f"{entity_errors} entity extraction error(s) — these were left "
+            "unsaved and will be retried the next time you run 'ficherito process'."
+        )
 
 
 def run_extraction(
@@ -88,7 +95,7 @@ def run_extraction(
     progress: Optional[Progress] = None,
     max_concurrent: int = 10,
     batch_size: int = 50,
-) -> None:
+) -> int:
     """Run text extraction from images using async concurrent processing.
 
     Args:
@@ -98,6 +105,10 @@ def run_extraction(
         progress: Optional progress bar.
         max_concurrent: Maximum concurrent API requests.
         batch_size: Number of images to process per batch (for memory efficiency).
+
+    Returns:
+        Number of images that failed extraction (and were left unsaved so
+        they're retried on the next run).
     """
     # Scan local image folder
     files = list_image_files(config)
@@ -125,16 +136,25 @@ def run_extraction(
     
     def on_complete(result):
         """Save result immediately as it completes."""
-        try:
-            engine.save_transcription(result, transcriptions_dir)
-            processed[0] += 1
-        except Exception as e:
-            logger.error(f"Failed to save transcription {result.image_id}: {e}")
+        if not result.text:
+            # extract_text_async swallows API/connection errors and returns
+            # an empty string rather than raising. Don't write a transcription
+            # file for it: an empty .md would satisfy the "already processed"
+            # check on the next run and permanently skip this image instead
+            # of retrying it.
+            logger.error(f"No text extracted for {result.image_id}; will retry on next run")
             errors[0] += 1
-        
+        else:
+            try:
+                engine.save_transcription(result, transcriptions_dir)
+                processed[0] += 1
+            except Exception as e:
+                logger.error(f"Failed to save transcription {result.image_id}: {e}")
+                errors[0] += 1
+
         if progress and task is not None:
             progress.advance(task)
-            progress.update(task, description=f"Extracting text ({processed[0]}/{total})...")
+            progress.update(task, description=f"Extracting text ({processed[0]}/{total}, {errors[0]} errors)...")
 
     async def process_batch(batch_docs):
         """Process a batch of documents, saving results as they stream in."""
@@ -178,6 +198,8 @@ def run_extraction(
         if errors[0]:
             console.print(f"[yellow]![/yellow] {errors[0]} errors occurred")
 
+    return errors[0]
+
 
 def run_entity_extraction(
     config: FicheritoConfig,
@@ -185,7 +207,7 @@ def run_entity_extraction(
     limit: Optional[int] = None,
     progress: Optional[Progress] = None,
     max_concurrent: int = 10,
-) -> None:
+) -> int:
     """Run entity extraction from transcriptions using async concurrent processing.
 
     Args:
@@ -194,6 +216,10 @@ def run_entity_extraction(
         limit: Optional limit on documents to process.
         progress: Optional progress bar.
         max_concurrent: Maximum concurrent API requests.
+
+    Returns:
+        Number of documents that failed extraction (and were left unsaved
+        so they're retried on the next run).
     """
     transcriptions_dir = Path(config.output.transcriptions_dir)
     entities_dir = Path(config.output.entities_dir)
@@ -206,7 +232,7 @@ def run_entity_extraction(
 
     if not txt_files:
         console.print("[yellow]No transcriptions found. Run extraction first.[/yellow]")
-        return
+        return 0
 
     # Initialize extractor
     extractor = EntityExtractor(config, env)
@@ -236,7 +262,7 @@ def run_entity_extraction(
     if not files_to_process:
         if not progress:
             console.print("[green]✓[/green] All entities already extracted")
-        return
+        return 0
 
     # Load documents that need processing
     documents = []
@@ -250,19 +276,33 @@ def run_entity_extraction(
     # Track results for consolidation
     all_results = []
     processed = [0]
-    
+    errors = [0]
+
     def on_complete(result):
         """Save entity result immediately as it completes."""
-        try:
-            extractor.save_entities(result, entities_dir)
-            all_results.append(result)
-            processed[0] += 1
-        except Exception as e:
-            logger.error(f"Failed to save entities for {result.source_image}: {e}")
-        
+        if not result.success:
+            # extract_entities_async swallows API/connection errors and
+            # returns an empty entity list rather than raising. Don't write
+            # an entities file for it: an empty-but-present JSON file would
+            # satisfy the "already processed" check on the next run and
+            # permanently skip this document instead of retrying it.
+            logger.error(
+                f"Entity extraction failed for {result.source_image}: "
+                f"{result.error}; will retry on next run"
+            )
+            errors[0] += 1
+        else:
+            try:
+                extractor.save_entities(result, entities_dir)
+                all_results.append(result)
+                processed[0] += 1
+            except Exception as e:
+                logger.error(f"Failed to save entities for {result.source_image}: {e}")
+                errors[0] += 1
+
         if progress and task is not None:
             progress.advance(task)
-            progress.update(task, description=f"Extracting entities ({processed[0]}/{total})...")
+            progress.update(task, description=f"Extracting entities ({processed[0]}/{total}, {errors[0]} errors)...")
 
     # Run async extraction with streaming results
     async def extract_all():
@@ -295,3 +335,7 @@ def run_entity_extraction(
 
     if not progress:
         console.print(f"[green]✓[/green] Extracted entities from {len(all_results)} documents")
+        if errors[0]:
+            console.print(f"[yellow]![/yellow] {errors[0]} errors occurred")
+
+    return errors[0]

@@ -40,8 +40,18 @@ class TestRemoveCodeTags:
 class TestRemoveRepeatedPhrases:
     """Tests for remove_repeated_phrases function."""
 
-    def test_removes_repeated_single_word(self):
+    def test_preserves_natural_single_word_doubling(self):
+        # A word repeated just once ("no no", "very very") is common in
+        # ordinary writing, so it's left alone rather than treated as an
+        # HTR/LLM repetition glitch.
         text = "the the quick fox"
+        result = remove_repeated_phrases(text)
+        assert result == "the the quick fox"
+
+    def test_removes_tripled_single_word(self):
+        # Three or more repeats in a row is not natural writing and is
+        # treated as a repetition glitch.
+        text = "the the the quick fox"
         result = remove_repeated_phrases(text)
         assert result == "the quick fox"
 
