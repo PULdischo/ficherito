@@ -44,11 +44,8 @@ and troubleshooting.
 ## Quick Start
 
 ```bash
-# Initialize a new project
-ficherito init
-
-# Edit configuration
-nano ficherito.yaml
+# Edit configuration files
+nano ficherito.yaml 
 nano .env
 
 # Validate setup
