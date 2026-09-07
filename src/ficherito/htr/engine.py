@@ -133,6 +133,8 @@ class HTREngine:
         """
         from openai import BadRequestError
 
+        from ficherito.utils.openai_compat import create_chat_completion
+
         img = prepare_for_ocr(image, max_size=(2048, 2048))
         img_base64 = image_to_base64(img)
 
@@ -159,11 +161,11 @@ class HTREngine:
         try:
             # Keep the check fast/cheap on reasoning models (e.g. Qwen3);
             # providers that don't know the flag reject it, so we retry plain.
-            completion = self.model.sync_client.chat.completions.create(
-                **request, extra_body={"enable_thinking": False}
+            completion = create_chat_completion(
+                self.model.sync_client, **request, extra_body={"enable_thinking": False}
             )
         except BadRequestError:
-            completion = self.model.sync_client.chat.completions.create(**request)
+            completion = create_chat_completion(self.model.sync_client, **request)
 
         return (completion.choices[0].message.content or "").strip()
 

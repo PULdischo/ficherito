@@ -12,6 +12,10 @@ from openai import OpenAI, AsyncOpenAI
 
 from ficherito.config import FicheritoConfig, EnvSettings
 from ficherito.utils.logging import get_logger
+from ficherito.utils.openai_compat import (
+    create_chat_completion,
+    create_chat_completion_async,
+)
 from ficherito.utils.text import extract_json_from_response, clean_extracted_text
 
 logger = get_logger("entities.extractor")
@@ -113,7 +117,8 @@ class EntityExtractor:
         prompt = self.config.prompts.ner_extraction.format(document_text=cleaned_text)
 
         try:
-            completion = self.sync_client.chat.completions.create(
+            completion = create_chat_completion(
+                self.sync_client,
                 model=model,
                 messages=[{"role": "user", "content": prompt}],
                 max_tokens=self.config.processing.max_output_tokens,
@@ -170,7 +175,8 @@ class EntityExtractor:
 
         try:
             completion = await asyncio.wait_for(
-                self.async_client.chat.completions.create(
+                create_chat_completion_async(
+                    self.async_client,
                     model=model,
                     messages=[{"role": "user", "content": prompt}],
                     max_tokens=self.config.processing.max_output_tokens,

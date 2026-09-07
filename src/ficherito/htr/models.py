@@ -9,6 +9,10 @@ from typing import Optional, Union, Callable
 from openai import OpenAI, AsyncOpenAI
 
 from ficherito.utils.logging import get_logger
+from ficherito.utils.openai_compat import (
+    create_chat_completion,
+    create_chat_completion_async,
+)
 
 logger = get_logger("htr.models")
 
@@ -94,7 +98,8 @@ class HTRModel:
             image_url = image_base64
 
         try:
-            completion = self.sync_client.chat.completions.create(
+            completion = create_chat_completion(
+                self.sync_client,
                 model=self.model_name,
                 messages=[{
                     "role": "user",
@@ -145,7 +150,8 @@ class HTRModel:
 
         try:
             completion = await asyncio.wait_for(
-                self.async_client.chat.completions.create(
+                create_chat_completion_async(
+                    self.async_client,
                     model=self.model_name,
                     messages=[{
                         "role": "user",
