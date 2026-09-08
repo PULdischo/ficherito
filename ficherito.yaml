@@ -1,10 +1,10 @@
 dataset:
-  images_dir: NCM_Diary_19431017-19450922
+  images_dir: images
   recursive: false # Set to true if you want to include images from subdirectories
 processing:
   extract_entities: true
   entity_context: true
-  max_output_tokens: 8096 # Raise if transcriptions of multi-page images get cut off
+  max_output_tokens: 4096 # Raise if transcriptions of multi-page images get cut off
 prompts:
   text_extraction: "You are a historical document transcription assistant. Given the\
     \ raw OCR/HTR \noutput from a handwritten document, clean up and correct the text\
@@ -36,13 +36,13 @@ output:
   eleventy_dir: site
   site_dir: site/_site
 website:
-  title: Marshall Diary
+  title: My Documents
   emoji: "📔"
   background_color: "#2d3748"
   accent_color: "#4a5568"
-  password: marshall
+  password: ""
   enable_search: true
   enable_browse_dates: true
   enable_browse_entities: true
   default_sort: date
-  netlify_site_id: "7c0c0383-1582-45fb-98e2-1a07571d8dbc"  # Your Netlify site ID
+  netlify_site_id: ""  # Your Netlify site ID
