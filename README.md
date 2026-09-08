@@ -28,9 +28,6 @@ Extract, analyze, and publish handwritten text from document images to a searcha
 curl -LsSf https://astral.sh/uv/install.sh | sh   # macOS/Linux
 # Windows (PowerShell): powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
 
-git clone https://github.com/<you>/<your-repo>.git
-cd <your-repo>
-
 uv venv
 source .venv/bin/activate  # Windows: .venv\Scripts\activate
 
@@ -48,7 +45,7 @@ and troubleshooting.
 nano ficherito.yaml 
 nano .env
 
-# Validate setup
+# Validate setup and send a sample image to the model
 ficherito validate
 
 # Process documents
