@@ -164,7 +164,8 @@ def validate(
         if images_dir.exists():
             rprint(f"[green]✓[/green] Images folder: {images_dir}")
         else:
-            rprint(f"[yellow]![/yellow] Images folder not found: {images_dir}")
+            rprint(f"[red]✗[/red] Images folder not found: {images_dir}")
+            raise typer.Exit(1)
 
         # Live API check: run one real extraction on a random image so a bad
         # base URL / key / model is caught here instead of during `process`.
